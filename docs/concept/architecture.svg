@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="architecture.svg">
   <defs
      id="defs4">
     <marker
@@ -202,7 +202,7 @@
          sodipodi:role="line"
          id="tspan3021"
          x="112.12693"
-         y="381.62088">mobile app</tspan></text>
+         y="381.62088">phonegap mobile app</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1.17225111px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
        d="m 304.14205,520.0114 43.95552,0"

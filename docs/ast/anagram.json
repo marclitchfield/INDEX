@@ -1,0 +1,291 @@
+{
+  "module": "anagram.js",
+  "expressions": [
+    {
+      "assignment": {
+        "op": "=",
+        "lvalue": {
+          "var": "Word"
+        },
+        "rvalue": {
+          "function": {
+            "name": "",
+            "args": ["letters"],
+            "expressions": [
+              {
+                "assignment": {
+                  "op": "=",
+                  "lvalue": {
+                    "var": "lowercaseLetters"
+                  },
+                  "rvalue": {
+                    "ref": {
+                      "name": "letters",
+                      "prop": {
+                        "call": {
+                          "name": "toLowerCase",
+                          "args": []
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "assignment": {
+                  "op": "=",
+                  "lvalue": {
+                    "var": "lowercaseSortedLetters"
+                  },
+                  "rvalue": {
+                    "call": {
+                      "name": "sortedLetters",
+                      "args": [
+                        {
+                          "ref": {
+                            "name": "lowercaseLetters"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "function": {
+                  "name": "sortedLetters",
+                  "args": ["letters"],
+                  "expressions": [
+                    {
+                      "return": {
+                        "ref": {
+                          "name": "letters",
+                          "prop": {
+                            "call": {
+                              "name": "split",
+                              "args": [
+                                {
+                                  "literal": {
+                                    "type": "string",
+                                    "value": ""
+                                  }
+                                }
+                              ],
+                              "prop": {
+                                "call": {
+                                  "name": "sort",
+                                  "args": [],
+                                  "prop": {
+                                    "call": {
+                                      "name": "join",
+                                      "args": [
+                                        {
+                                          "literal": {
+                                            "type": "string",
+                                            "value": ""
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "return": {
+                  "hash": {
+                    "entries": [
+                      {
+                        "key": "isDifferentThan",
+                        "value": {
+                          "function": {
+                            "args": ["otherWord"],
+                            "expressions": [
+                              {
+                                "return": {
+                                  "binary": {
+                                    "op": "!==",
+                                    "left": {
+                                      "ref": {
+                                        "name": "lowercaseLetters"
+                                      }
+                                    },
+                                    "right": {
+                                      "ref": {
+                                        "name": "otherWord",
+                                        "prop": {
+                                          "call": {
+                                            "name": "toLowerCase",
+                                            "args": []
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "assignment": {
+        "op": "=",
+        "lvalue": {
+          "var": "Anagram"
+        },
+        "rvalue": {
+          "function": {
+            "name": "",
+            "args": ["letters"],
+            "expressions": [
+              {
+                "assignment": {
+                  "op": "=",
+                  "lvalue": {
+                    "var": "word"
+                  },
+                  "rvalue": {
+                    "new": {
+                      "name": "Word",
+                      "args": [
+                        {
+                          "ref": {
+                            "name": "letters"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              {
+                "function": {
+                  "name": "isAnagramOf",
+                  "args": ["testWord"],
+                  "expressions": [
+                    {
+                      "return": {
+                        "binary": {
+                          "op": "&&",
+                          "left": {
+                            "ref": {
+                              "name": "word",
+                              "prop": {
+                                "call": {
+                                  "name": "isDifferentThan",
+                                  "args": [
+                                    {
+                                      "ref": {
+                                        "name": "testWord"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "right": {
+                            "ref": {
+                              "name": "word",
+                              "prop": {
+                                "call": {
+                                  "name": "hasSameLettersAs",
+                                  "args": [
+                                    {
+                                      "ref": {
+                                        "name": "testWord"
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "return": {
+                  "hash": {
+                    "entries": [
+                      {
+                        "key": "match",
+                        "value": {
+                          "function": {
+                            "name": "",
+                            "args": ["testWords"],
+                            "expressions": [
+                              {
+                                "return": {
+                                  "ref": {
+                                    "name": "testWords",
+                                    "prop": {
+                                      "call": {
+                                        "name": "filter",
+                                        "args": [
+                                          {
+                                            "ref": {
+                                              "name": "isAnagramOf"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "assignment": {
+        "op": "=",
+        "lvalue": {
+          "ref": {
+            "name": "module",
+            "prop": {
+              "ref": {
+                "name": "exports"
+              }
+            }
+          }
+        },
+        "rvalue": {
+          "ref": {
+            "name": "Anagram"
+          }
+        }
+      }
+    }
+  ]
+}

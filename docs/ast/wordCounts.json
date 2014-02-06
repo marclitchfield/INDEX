@@ -102,24 +102,26 @@
                                       "binary": {
                                         "op": "+",
                                         "left": {
-                                          "binary": {
-                                            "op": "||",
-                                            "left": {
-                                              "ref": {
-                                                "name": "counts",
-                                                "sub": [
-                                                  {
-                                                    "ref": {
-                                                      "name": "word"
+                                          "parens": {
+                                            "binary": {
+                                              "op": "||",
+                                              "left": {
+                                                "ref": {
+                                                  "name": "counts",
+                                                  "sub": [
+                                                    {
+                                                      "ref": {
+                                                        "name": "word"
+                                                      }
                                                     }
-                                                  }
-                                                ]
-                                              }
-                                            },
-                                            "right": {
-                                              "literal": {
-                                                "type": "number",
-                                                "value": 0
+                                                  ]
+                                                }
+                                              },
+                                              "right": {
+                                                "literal": {
+                                                  "type": "number",
+                                                  "value": 0
+                                                }
                                               }
                                             }
                                           }

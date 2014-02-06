@@ -1,7 +1,7 @@
 (function() {
 
   function loadVisualEditor(container) {
-    $.get('ast/beerSong.json').success(function(ast) {
+    $.get('ast/wordCounts.json').success(function(ast) {
       container.append(buildVisualEditor(JSON.parse(ast)));
     });    
   }
@@ -20,6 +20,10 @@
     var el = $('<div>');
     el.addClass(expressionType);
     renderers[expressionType](expression[expressionType], el);
+    if (expression[expressionType].prop !== undefined) {
+      el.append($('<span>').addClass('prop').text('.'));
+      appendExpression(expression[expressionType].prop, el);
+    }
     parent.append(el);
   }
 
@@ -73,10 +77,6 @@
           subBlock.append($('<span>').text(']'))
         }        
       }
-      if ('prop' in ref) {
-        el.append($('<span>').addClass('prop').text('.'));
-        appendExpression(ref.prop, el);
-      }
     },
 
     'return': function(ret, el) {
@@ -121,6 +121,14 @@
       var argsBlock = $('<div>').addClass('args');
       appendExpressions(instantiation.args, argsBlock);
       el.append(argsBlock);
+    },
+
+    'ternary': function(ternary, el) {
+      appendExpression(ternary['if'], el);
+      el.append($('<span>').addClass('then').text('?'));
+      appendExpression(ternary['then'], el);
+      el.append($('<span>').addClass('else').text(':'));
+      appendExpression(ternary['else'], el);
     }
   };
 

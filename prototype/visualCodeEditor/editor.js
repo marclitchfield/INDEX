@@ -1,9 +1,10 @@
 (function() {
 
   function loadVisualEditor(container) {
-    $.get('ast/anagram.json').success(function(ast) {
-      container.append(buildVisualEditor(JSON.parse(ast)));
-    });    
+    var astFile = document.location.search.replace('?', '') || 'anagram.json';
+    $.getJSON('ast/' + astFile).success(function(ast) {
+      container.append(buildVisualEditor(ast));
+    });
   }
 
   function buildVisualEditor(ast) {
@@ -152,8 +153,36 @@
       appendExpression(ternary['then'], el);
       el.append($('<span>').addClass('else op').text(':'));
       appendExpression(ternary['else'], el);
+    },
+
+    'if': function(ifexpression, el) {
+      el.append($('<span>').text('if'));
+      appendExpression(ifexpression.condition, el);
+      var thenBlock = $('<div>').addClass('then');
+      appendExpression(ifexpression.then, thenBlock);
+      el.append(thenBlock);
+      if (ifexpression.else) {
+        var elseContainer = $('<div>');
+        elseContainer.append($('<span>').text('else'));
+        var elseBlock = $('<div>').addClass('else');
+        appendExpression(ifexpression.else, elseBlock);
+        elseContainer.append(elseBlock);
+        el.append(elseContainer);
+      }
     }
   };
 
   loadVisualEditor($('.editor'));
+
+  $('.editor').on('click', '.function > .collapse', function() {
+    var expressions = $(this).closest('.function').children('.expressions:first');
+    if (expressions.hasClass('collapsed')) {
+      expressions.removeClass('collapsed');
+      expressions.addClass('expanded');
+    } else {
+      expressions.removeClass('expanded');
+      expressions.addClass('collapsed');
+    }
+  });      
+
 })();

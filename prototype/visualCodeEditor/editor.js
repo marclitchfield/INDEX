@@ -1,7 +1,7 @@
 (function() {
 
   function loadVisualEditor(container) {
-    $.get('ast/wordCounts.json').success(function(ast) {
+    $.get('ast/anagram.json').success(function(ast) {
       container.append(buildVisualEditor(JSON.parse(ast)));
     });    
   }
@@ -17,11 +17,10 @@
     if (!(expressionType in renderers)) {
       throw 'No renderer for expression type: ' + expressionType;
     }
-    var el = $('<div>');
-    el.addClass(expressionType);
+    var el = $('<div>').addClass(expressionType);
     renderers[expressionType](expression[expressionType], el);
     if (expression[expressionType].prop !== undefined) {
-      el.append($('<span>').addClass('prop').text('.'));
+      el.append($('<span>').addClass('prop op').text('.'));
       appendExpression(expression[expressionType].prop, el);
     }
     parent.append(el);
@@ -47,23 +46,32 @@
 
     'assignment': function(assignment, el) {
       el.append($('<div>').addClass('op').text(assignment.op));
-      appendExpression(assignment.lvalue, el);
-      appendExpression(assignment.rvalue, el);
+      var lvalueBlock = $('<div>').addClass('lvalue');
+      appendExpression(assignment.lvalue, lvalueBlock, 'lvalue');
+      var rvalueBlock = $('<div>').addClass('rvalue');
+      appendExpression(assignment.rvalue, rvalueBlock, 'rvalue');
+      el.append(lvalueBlock);
+      el.append(rvalueBlock);
     },
 
     'var': function(variable, el) {
       el.append($('<span>').text('var'));
-      el.append($('<div>').addClass('ref').text(variable));
+      el.append($('<div>').addClass('name').text(variable));
     },
 
     'function': function(func, el) {
       el.append($('<span>').text('function'));
-      el.append($('<div>').addClass('name').text(func.name));
-      var args = $('<div>').addClass('args');
+      if (func.name) {
+        el.append($('<div>').addClass('name').text(func.name));
+      }
+      var argsBlock = $('<div>').addClass('args');
       func.args.forEach(function(arg) {
-        args.append($('<div>').addClass('arg').text(arg));
+        argsBlock.append($('<div>').addClass('arg').text(arg));
       });
-      el.append(args);
+      if (func.args.length === 0) {
+        argsBlock.html('&nbsp;');
+      }
+      el.append(argsBlock);
       appendExpressionBlock(func.expressions, el);
     },
 
@@ -80,6 +88,7 @@
     },
 
     'return': function(ret, el) {
+      el.append($('<span>').text('return'));
       appendExpression(ret, el);
     },
 
@@ -87,13 +96,16 @@
       el.append($('<div>').addClass('name').text(call.name));
       var argsBlock = $('<div>').addClass('args');
       appendExpressions(call.args, argsBlock);
+      if (call.args.length === 0) {
+        argsBlock.html('&nbsp;');
+      }
       el.append(argsBlock);
     },
 
     'binary': function(binary, el) {
+      appendExpression(binary.left, el, 'left');
       el.append($('<div>').addClass('op').text(binary.op));
-      appendExpression(binary.left, el);
-      appendExpression(binary.right, el);
+      appendExpression(binary.right, el, 'right');
     },
 
     'parens': function(parens, el) {
@@ -101,22 +113,28 @@
     },
 
     'literal': function(literal, el) {
-      el.append($('<div>').addClass(literal.type).text(literal.value));
+      var literalValue = (literal.value === '' ? '&nbsp;' : literal.value).toString().replace(' ', '&nbsp;');
+      el.append($('<div>').addClass(literal.type).html(literalValue));
     },
 
     'hash': function(hash, el) {
-      var entriesBlock = $('<div>').addClass('entries');
-      hash.entries.forEach(function(entry) {
-        var entryBlock = $('<div>').addClass('entry');
-        entryBlock.append($('<div>').addClass('key').text(entry.key));
-        entryBlock.append($('<span>').text(':'));
-        appendExpression(entry.value, entryBlock);
-        entriesBlock.append(entryBlock);
-      });
-      el.append(entriesBlock);
+      el.append($('<span>').addClass('op').text('{'));
+      if (hash.entries.length) {
+        var entriesBlock = $('<div>').addClass('entries');
+        hash.entries.forEach(function(entry) {
+          var entryBlock = $('<div>').addClass('entry');
+          entryBlock.append($('<div>').addClass('key').text(entry.key));
+          entryBlock.append($('<span>').text(':'));
+          appendExpression(entry.value, entryBlock);
+          entriesBlock.append(entryBlock);
+        });
+        el.append(entriesBlock);
+      }
+      el.append($('<span>').addClass('op').text('}'));
     },
 
     'new': function(instantiation, el) {
+      el.append($('<span>').text('new'));
       el.append($('<div>').addClass('name').text(instantiation.name));
       var argsBlock = $('<div>').addClass('args');
       appendExpressions(instantiation.args, argsBlock);
@@ -125,9 +143,9 @@
 
     'ternary': function(ternary, el) {
       appendExpression(ternary['if'], el);
-      el.append($('<span>').addClass('then').text('?'));
+      el.append($('<span>').addClass('then op').text('?'));
       appendExpression(ternary['then'], el);
-      el.append($('<span>').addClass('else').text(':'));
+      el.append($('<span>').addClass('else op').text(':'));
       appendExpression(ternary['else'], el);
     }
   };

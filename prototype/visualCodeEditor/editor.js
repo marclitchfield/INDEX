@@ -61,16 +61,19 @@
 
     'function': function(func, el) {
       el.append($('<span>').text('function'));
+      el.append($('<div>').addClass('collapse'));
       if (func.name) {
         el.append($('<div>').addClass('name').text(func.name));
       }
       var argsBlock = $('<div>').addClass('args');
+      argsBlock.append($('<span>').text('('));
       func.args.forEach(function(arg) {
         argsBlock.append($('<div>').addClass('arg').text(arg));
       });
       if (func.args.length === 0) {
         argsBlock.html('&nbsp;');
       }
+      argsBlock.append($('<span>').text(')'));
       el.append(argsBlock);
       appendExpressionBlock(func.expressions, el);
     },
@@ -95,10 +98,12 @@
     'call': function(call, el) {
       el.append($('<div>').addClass('name').text(call.name));
       var argsBlock = $('<div>').addClass('args');
+      argsBlock.append($('<span>').text('('));
       appendExpressions(call.args, argsBlock);
       if (call.args.length === 0) {
-        argsBlock.html('&nbsp;');
+        argsBlock.append('&nbsp;');
       }
+      argsBlock.append($('<span>').text(')'));
       el.append(argsBlock);
     },
 

@@ -49,7 +49,7 @@ body {
   color: #222b00;
 }
 
-.binary, .ternary, .var, .call, .new, .keyword {
+.binary, .ternary, .var, .call, .new, .keyword, .name {
   display: inline-block;
 }
 
@@ -76,6 +76,14 @@ body {
   margin: .2rem .4rem;
 }
 
+.keyword {
+  font-weight: bold;
+}
+
+.function > .keyword {
+  font-weight: normal;
+}
+
 .assignment > .op {
   float: right;
   margin: .3rem .3rem 0 0;
@@ -85,14 +93,16 @@ body {
   margin: .4rem 0;
 }
 
-.op, .entry > span {
+.op, .entry {
   display: inline-block;
+}
+
+.op {
   font-weight: bold;
 }
 
 .prop {
   margin: 0 .2rem;
-  font-weight: bold;
   font-size: 1.2em;
 }
 
@@ -105,11 +115,11 @@ body {
   display: inline-block;
 }
 
-.keyword, .var > .keyword, .args > .arg {
+.module .expressions .name, .args > .arg {
   display: inline-block;
   padding: .2rem .4rem;
   margin: .1rem .2rem;
-  background-color: #ccff00;
+  background-color: #73bf1d;
   color: #000;
 }
 

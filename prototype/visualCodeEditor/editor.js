@@ -21,7 +21,7 @@
     var el = $('<div>').addClass(expressionType);
     renderers[expressionType](expression[expressionType], el);
     if (expression[expressionType].prop !== undefined) {
-      el.append($('<span>').addClass('prop op').text('.'));
+      el.append($('<div>').addClass('prop op').text('.'));
       appendExpression(expression[expressionType].prop, el);
     }
     parent.append(el);
@@ -57,15 +57,15 @@
       },
 
       'var': function(variable, el) {
-        el.append($('<span>').text('var'));
-        el.append($('<div>').addClass('keyword').text(variable));
+        el.append($('<div>').addClass('keyword').text('var'));
+        el.append($('<div>').addClass('name').text(variable));
       },
 
       'function': function(func, el) {
-        el.append($('<span>').text('function'));
+        el.append($('<div>').addClass('keyword').text('function'));
         el.append($('<div>').addClass('collapse'));
         if (func.name) {
-          el.append($('<div>').addClass('keyword').text(func.name));
+          el.append($('<div>').addClass('name').text(func.name));
         }
         var argsBlock = $('<div>').addClass('args');
         argsBlock.append($('<span>').text('('));
@@ -81,7 +81,7 @@
       },
 
       'ref': function(ref, el) {
-        el.append($('<div>').addClass('keyword').text(ref.name));
+        el.append($('<div>').addClass('name').text(ref.name));
         if ('subs' in ref) {
           for(var sub in ref.subs) {
             var subBlock = $('<div>').addClass('sub');
@@ -93,12 +93,12 @@
       },
 
       'return': function(ret, el) {
-        el.append($('<span>').text('return'));
+        el.append($('<div>').addClass('keyword').text('return'));
         appendExpression(ret, el);
       },
 
       'call': function(call, el) {
-        el.append($('<div>').addClass('keyword').text(call.name));
+        el.append($('<div>').addClass('name').text(call.name));
         renderArgsBlock(call.args, el)
       },
 
@@ -124,7 +124,7 @@
           hash.entries.forEach(function(entry) {
             var entryBlock = $('<div>').addClass('entry');
             entryBlock.append($('<div>').addClass('key').text(entry.key));
-            entryBlock.append($('<span>').text(':'));
+            entryBlock.append($('<span>').addClass('op').text(':'));
             appendExpression(entry.value, entryBlock);
             entriesBlock.append(entryBlock);
           });
@@ -134,8 +134,8 @@
       },
 
       'new': function(instantiation, el) {
-        el.append($('<span>').text('new'));
-        el.append($('<div>').addClass('keyword').text(instantiation.name));
+        el.append($('<div>').addClass('keyword').text('new'));
+        el.append($('<div>').addClass('name').text(instantiation.name));
         renderArgsBlock(instantiation.args, el)
       },
 
@@ -148,14 +148,14 @@
       },
 
       'if': function(ifexpression, el) {
-        el.append($('<span>').text('if'));
+        el.append($('<div>').text('if'));
         appendExpression(ifexpression.condition, el);
         var thenBlock = $('<div>').addClass('then');
         appendExpression(ifexpression.then, thenBlock);
         el.append(thenBlock);
         if (ifexpression.else) {
           var elseContainer = $('<div>');
-          elseContainer.append($('<span>').text('else'));
+          elseContainer.append($('<div>').text('else'));
           var elseBlock = $('<div>').addClass('else');
           appendExpression(ifexpression.else, elseBlock);
           elseContainer.append(elseBlock);

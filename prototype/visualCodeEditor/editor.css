@@ -9,6 +9,11 @@ html {
   vertical-align: top;
   box-shadow: 0px 30px 50px 10px #888888;
   font-size: 1rem;
+
+  -moz-user-select: none; 
+  -webkit-user-select: none; 
+  -ms-user-select:none; 
+  user-select:none;  
 }
 
 @media (max-width: 1000px) {
@@ -21,10 +26,10 @@ html {
 
 .module, .function {
   display: block;
-  padding: 2px 4px;
-  margin: 4px 0;
+  padding: .3rem .3rem;
+  margin: .3rem .2rem;
   background-color: #112b00;
-  border: 2px solid #abc837;
+  border: .3rem solid #abc837;
   color: #b3ff80;
 }
 
@@ -32,81 +37,82 @@ html {
   padding: 4px;
 }
 
-.assignment, .function .expressions, .binary, .ternary, .call, .call > .name, .new, .new > .name {
+.assignment, .function .expressions, .binary, .ternary, .call, .new {
   display: block;
-  padding: 1px;
-  margin: 2px;
+  padding: .2rem;
+  margin: .3rem;
   background-color: #abc837;
   color: #222b00;
 }
 
+.binary, .ternary, .var, .call, .new, .keyword {
+  display: inline-block;
+}
+
+.call {
+  margin: 0;
+}
+
 .assignment, .function > .expressions {
-  padding-left: 4px;
+  padding-left: .4rem;
 }
 
 .assignment > .rvalue, .if > .then, .if > div > .else {
   display: block;
-  margin: 2px 2px 2px 0;
-  padding: 2px;
+  margin: .3rem .3rem .3rem 0;
+  padding: .1rem;
   background-color: #abc837;
-  border: 3px solid #112b00;
+  border: .3rem solid #447821;
   color: #222b00;
 }
 
 .if > .then, .if > div > .else {
   display: inline-block;
-  border: 4px solid #112b00;
-  margin: 2px 4px;
+  border: .4rem solid #112b00;
+  margin: .2rem .4rem;
 }
 
 .assignment > .op {
   float: right;
-  margin: .25em 3px 0 0;
+  margin: .3rem .3rem 0 0;
 }
 
-.assignment, .function > .expressions {
-  margin-top: 4px;
-}
-
-.binary, .ternary, .var, .call, .call > .name, .new, .new > .name {
-  display: inline-block;
+.assignment {
+  margin: .4rem 0;
 }
 
 .op, .entry > span {
   display: inline-block;
   font-weight: bold;
-  padding-left: 4px;
-  padding-right: 4px;
 }
 
 .prop {
-  font-size: 1.5em;
-  margin: 0 2px;
+  margin: 0 .2rem;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .parens {
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: .4rem;
+  padding-right: .4rem;
 }
-
 
 .ref {
   display: inline-block;
 }
 
-.ref > .name, .var > .name, .args > .arg, .function > .name, .call > .name, .new > .name {
+.keyword, .var > .keyword, .args > .arg {
   display: inline-block;
-  padding: 2px 4px;
-  margin: 1px 4px;
+  padding: .2rem .4rem;
+  margin: .1rem .2rem;
   background-color: #ccff00;
   color: #000;
 }
 
 .args, .arg {
   display: inline-block;
-  margin: 0 1px;
-  padding: 2px;
-  min-height: .5em;
+  margin: 0 .1rem;
+  padding: .2rem;
   color: #000;
   background-color: #447821;
 }
@@ -116,20 +122,20 @@ html {
 }
 
 .function > .args {
-  margin-left: 4px;
+  margin-left: .4rem;
 }
 
-.function > .name {
-  margin-left: 4px;
+.function > .keyword {
+  margin-left: .4rem;
 }
 
 .function > .collapse {
-  margin: .5em 2px 0 4px;
+  margin: .8rem .4rem 0 4px;
   float: right;
-  width: .6em;
-  height: .6em;
+  width: .8em;
+  height: .8em;
   background-color: #00a280;
-  border: 1px solid #000;
+  border: .1em solid #000;
   border-radius: 1em;
 }
 
@@ -147,22 +153,21 @@ html {
 
 .literal, .hash .entry > .key {
   display: inline-block;
-  padding: 2px 4px;
-  margin: 1px 2px;
-  min-height: .3em;
+  padding: .2rem .4rem;
+  margin: .1rem .2rem;
   background-color: #5fbcd3;
   color: #00222b;
 }
 
 .parens {
   display: inline-block;
-  border: 2px solid #112b00;
+  border: .2rem solid #112b00;
 }
 
 .hash, .hash .entry {
   display: block;
-  padding: 2px 2px;
-  margin: 2px;
+  padding: .2rem .2rem;
+  margin: .2rem;
   background-color: #55d400;
   color: #000;
 }

@@ -15,11 +15,12 @@ body {
   width: 80%;
   margin: 0 auto;
   vertical-align: top;
+  vertical-align: text-top;
   box-shadow: 0px 30px 50px 10px #888888;
   font-size: 1rem;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   .editor {
     width: 100%;
     margin: 0;
@@ -29,8 +30,8 @@ body {
 
 .module, .function {
   display: block;
-  padding: .3rem .3rem;
-  margin: .3rem .2rem;
+  padding: .2rem .3rem;
+  margin: .3rem .1rem;
   background-color: #112b00;
   border: .3rem solid #d9ff80;
   color: #b3ff80;
@@ -41,9 +42,9 @@ body {
   margin: 0;
 }
 
-.assignment, .function .expressions, .binary, .ternary, .call, .new {
+.assignment, .return, .function .expressions, .binary, .ternary, .call, .new {
   display: block;
-  padding: .2rem;
+  padding: .2rem .2rem .2rem 0;
   margin: .3rem;
   background-color: #d9ff80;
   color: #222b00;
@@ -52,10 +53,12 @@ body {
 .binary, .ternary, .var, .call, .new, .keyword, .name {
   display: inline-block;
   margin-right: .2rem;
+  margin-left: 0;
 }
 
-.call {
-  margin: 0;
+.call, .new {
+  margin: .2rem 0;
+  padding: 0;
 }
 
 .assignment, .function > .expressions {
@@ -65,7 +68,6 @@ body {
 .assignment > .rvalue, .if > .then, .if > div > .else {
   display: block;
   margin: .3rem .3rem .3rem 0;
-  padding: .1rem;
   background-color: #cbe87;
   border: .3rem solid #447821;
   color: #222b00;
@@ -78,6 +80,7 @@ body {
 }
 
 .keyword {
+  margin-left: .1rem;
   font-weight: bold;
 }
 
@@ -87,7 +90,7 @@ body {
 
 .assignment > .op {
   float: right;
-  margin: .3rem .3rem 0 0;
+  margin: .4rem .4rem 0 0;
 }
 
 .assignment {
@@ -100,6 +103,8 @@ body {
 
 .op {
   font-weight: bold;
+  margin-left: .1rem;
+  margin-right: .2rem;
 }
 
 .prop {
@@ -108,7 +113,9 @@ body {
 }
 
 .prop > .op {
-  font-size: 1.2em;
+  font-size: 2em;
+  line-height: 0;
+  margin-right: .2rem;
 }
 
 .parens {
@@ -142,6 +149,10 @@ body {
   font-weight: bold;
 }
 
+.args > div {
+  padding: .2rem .4rem;
+}
+
 .function > .args {
   margin-left: .4rem;
 }
@@ -150,7 +161,7 @@ body {
   margin-left: .4rem;
 }
 
-.function > .collapse {
+.collapse {
   margin: .8rem .4rem 0 4px;
   float: right;
   width: .8em;
@@ -160,8 +171,56 @@ body {
   border-radius: 1em;
 }
 
-.function > .collapse:hover {
+.collapse:hover {
   background-color: #f7ff9d;
+}
+
+.collapse::after {
+  position: relative;
+  width: 10px;
+  color: #00222b;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.collapse.expanded::after {
+  content: '\25BE';
+  left: .05rem;
+  top: -.3rem;
+}
+
+.collapse.collapsed::after {
+  content: '\25B8';
+  left: .1rem;
+  top: -.3rem;
+}
+
+@media (max-width: 1024px) {
+  .collapse.expanded::after {
+    left: .2rem;
+    top: -.9rem;
+  }
+
+  .collapse.collapsed::after {
+    left: .4rem;
+    top: -1rem;
+  }
+}
+
+.collapsible.expanded {
+  max-height: 9999px;
+  opacity: 1;
+  overflow: visible;
+  transition: opacity 0s, max-height 1s;
+}
+
+.collapsible.collapsed {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin: 0 !important;
+  padding: 0 !important;
+  transition: max-height .1s, opacity 0 .1s, margin 0 .1s, padding 0 .1s;
 }
 
 .literal, .hash .entry > .key {

@@ -27,6 +27,7 @@
       el.append(propBlock);
     }
     parent.append(el);
+    return el;
   }
 
   function appendExpressions(expressions, parent) {
@@ -39,6 +40,7 @@
     var expressionBlock = $('<div>').addClass('expressions');
     appendExpressions(expressions, expressionBlock);
     parent.append(expressionBlock);
+    return expressionBlock;
   }
 
   var renderers = (function() {
@@ -65,7 +67,7 @@
 
       'function': function(func, el) {
         el.append($('<div>').addClass('keyword').text('function'));
-        el.append($('<div>').addClass('collapse'));
+        el.append($('<div>').addClass('collapse').addClass('expanded'));
         if (func.name) {
           el.append($('<div>').addClass('name').text(func.name));
         }
@@ -79,7 +81,7 @@
         }
         argsBlock.append($('<span>').text(')'));
         el.append(argsBlock);
-        appendExpressionBlock(func.expressions, el);
+        appendExpressionBlock(func.expressions, el).addClass('collapsible expanded');
       },
 
       'ref': function(ref, el) {
@@ -181,16 +183,11 @@
   loadVisualEditor($('.editor'));
 
   $('.editor').on('click', '.collapse', function() {
-    var expressions = $(this).closest('.function').children('.expressions:first');
-    if (expressions.hasClass('collapsed')) {
-      expressions.removeClass('collapsed');
-      expressions.addClass('expanded');
-      expressions.show(200, 'swing');
-    } else {
-      expressions.removeClass('expanded');
-      expressions.addClass('collapsed');
-      expressions.hide(200, 'swing');
-    }
+    var collapsible = $(this).parent().children('.collapsible:first');
+    collapsible.toggleClass('expanded', collapsible.hasClass('collapsed'));
+    collapsible.toggleClass('collapsed', !collapsible.hasClass('collapsed'));
+    $(this).toggleClass('expanded', $(this).hasClass('collapsed'));
+    $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
   });
 
 })();

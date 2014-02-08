@@ -178,15 +178,17 @@
 
   loadVisualEditor($('.editor'));
 
-  $('.editor').on('click', '.function > .collapse', function() {
+  $('.editor').on('click', '.collapse', function() {
     var expressions = $(this).closest('.function').children('.expressions:first');
     if (expressions.hasClass('collapsed')) {
       expressions.removeClass('collapsed');
       expressions.addClass('expanded');
+      expressions.show(200, 'swing');
     } else {
       expressions.removeClass('expanded');
       expressions.addClass('collapsed');
+      expressions.hide(200, 'swing');
     }
-  });      
+  });
 
 })();

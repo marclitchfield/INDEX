@@ -1,5 +1,13 @@
 html {
   overflow-y: scroll;
+  -moz-user-select: none; 
+  -webkit-user-select: none; 
+  -ms-user-select:none; 
+  user-select:none;    
+}
+
+body {
+  margin: 0;
 }
 
 .editor {
@@ -9,11 +17,6 @@ html {
   vertical-align: top;
   box-shadow: 0px 30px 50px 10px #888888;
   font-size: 1rem;
-
-  -moz-user-select: none; 
-  -webkit-user-select: none; 
-  -ms-user-select:none; 
-  user-select:none;  
 }
 
 @media (max-width: 1000px) {
@@ -29,19 +32,20 @@ html {
   padding: .3rem .3rem;
   margin: .3rem .2rem;
   background-color: #112b00;
-  border: .3rem solid #abc837;
+  border: .3rem solid #bbd847;
   color: #b3ff80;
 }
 
 .module {
   padding: 4px;
+  margin: 0;
 }
 
 .assignment, .function .expressions, .binary, .ternary, .call, .new {
   display: block;
   padding: .2rem;
   margin: .3rem;
-  background-color: #abc837;
+  background-color: #bbd847;
   color: #222b00;
 }
 
@@ -61,7 +65,7 @@ html {
   display: block;
   margin: .3rem .3rem .3rem 0;
   padding: .1rem;
-  background-color: #abc837;
+  background-color: #cbe87;
   border: .3rem solid #447821;
   color: #222b00;
 }
@@ -141,14 +145,6 @@ html {
 
 .function > .collapse:hover {
   background-color: #f7ff9d;
-}
-
-.function > .expressions.expanded {
-  display: block;
-}
-
-.function > .expressions.collapsed {
-  display: none;
 }
 
 .literal, .hash .entry > .key {

@@ -51,6 +51,7 @@ body {
 
 .binary, .ternary, .var, .call, .new, .keyword, .name {
   display: inline-block;
+  margin-right: .2rem;
 }
 
 .call {
@@ -102,11 +103,16 @@ body {
 }
 
 .prop {
+  display: inline-block;
   margin: 0 .2rem;
+}
+
+.prop > .op {
   font-size: 1.2em;
 }
 
 .parens {
+  margin: 0 .2rem;
   padding-left: .4rem;
   padding-right: .4rem;
 }

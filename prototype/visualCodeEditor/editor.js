@@ -21,8 +21,10 @@
     var el = $('<div>').addClass(expressionType);
     renderers[expressionType](expression[expressionType], el);
     if (expression[expressionType].prop !== undefined) {
-      el.append($('<div>').addClass('prop op').text('.'));
-      appendExpression(expression[expressionType].prop, el);
+      var propBlock = $('<div>').addClass('prop');
+      propBlock.append($('<div>').addClass('op').text('.'));
+      appendExpression(expression[expressionType].prop, propBlock);
+      el.append(propBlock);
     }
     parent.append(el);
   }
@@ -148,14 +150,14 @@
       },
 
       'if': function(ifexpression, el) {
-        el.append($('<div>').text('if'));
+        el.append($('<div>').addClass('keyword').text('if'));
         appendExpression(ifexpression.condition, el);
         var thenBlock = $('<div>').addClass('then');
         appendExpression(ifexpression.then, thenBlock);
         el.append(thenBlock);
         if (ifexpression.else) {
           var elseContainer = $('<div>');
-          elseContainer.append($('<div>').text('else'));
+          elseContainer.append($('<div>').addClass('keyword').text('else'));
           var elseBlock = $('<div>').addClass('else');
           appendExpression(ifexpression.else, elseBlock);
           elseContainer.append(elseBlock);

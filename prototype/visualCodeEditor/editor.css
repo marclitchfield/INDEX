@@ -145,11 +145,17 @@ body {
   background-color: #447821;
 }
 
-.args > span {
+.args::before {
+  content: '(';
   font-weight: bold;
 }
 
-.args > div {
+.args::after {
+  content: ')';
+  font-weight: bold;
+}
+
+.args > .arg-expression {
   padding: .2rem .4rem;
 }
 
@@ -248,4 +254,30 @@ body {
 .hash .entry {
   display: block;
   background-color: #008000;
+}
+
+.draggable {
+  cursor: move;
+}
+
+.ui-draggable-dragging {
+  opacity: .8;
+}
+
+.symbol-droppable {
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: .1em;
+  height: 1.2em;
+  width: .3em;
+}
+
+.symbol-droppable-active {
+  background-color: #09f;
+  box-shadow: 0 0 1px 1px #000;
+  transition: width .25s;
+}
+
+.symbol-drop-acceptable {
+  background-color: #fff;
 }

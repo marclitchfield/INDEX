@@ -281,3 +281,7 @@ body {
 .symbol-drop-acceptable {
   background-color: #fff;
 }
+
+.symbol-drop-disabled {
+  background-color: #09f;
+}

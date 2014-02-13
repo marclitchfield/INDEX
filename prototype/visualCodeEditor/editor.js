@@ -55,7 +55,6 @@
     el.find('.draggable').draggable({ 
       helper: 'clone', 
       zIndex: 100,
-      containment: 'window',  
       // Fix for http://bugs.jqueryui.com/ticket/3740
       start: function (event, ui) {
         $(this).data('startingScrollTop', window.pageYOffset);
@@ -68,7 +67,7 @@
 
     el.find('.symbol-droppable, .symbol-droppable-indicator').droppable({
       greedy: true,
-      tolerance: 'touch',
+      tolerance: 'touch-closest-to-mouse',
       hoverClass: 'symbol-drop-acceptable',
       activeClass: 'symbol-droppable-active',
       drop: function(event, ui) {
@@ -226,4 +225,28 @@
     $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
   });
 
+  // duck punch jQueryUI to add a 'touch-closest-to-mouse' tolerance.
+  // when multiple droppables are under the draggable, only the one closest to the mouse position will be active.
+  var defaultIntersect = $.ui.intersect;
+  
+  $.ui.intersect = function(draggable, droppable, toleranceMode) {
+    if (toleranceMode !== 'touch-closest-to-mouse') {
+      return defaultIntersect(draggable, droppable, toleranceMode);
+    }
+    var touching = defaultIntersect(draggable, droppable, 'touch');
+    if (!touching) {
+      return false;
+    }
+    var acceptable = _.filter($.ui.ddmanager.droppables.default, function(d) { 
+      return d.offset !== undefined; 
+    });
+    var closest = _.min(acceptable, function(other) {
+      var otherCenterX = other.offset.left + other.proportions().width / 2;
+      var otherCenterY = other.offset.top + other.proportions().height / 2;
+      var cursorX = event.clientX;
+      var cursorY = event.clientY + window.pageYOffset;
+      return Math.sqrt(Math.pow(otherCenterX - cursorX, 2) + Math.pow(otherCenterY - cursorY, 2));
+    });
+    return droppable === closest;
+  };
 })();

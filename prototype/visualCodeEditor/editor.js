@@ -90,8 +90,10 @@
         $(this).after(clone);
         if ($(event.target).hasClass('horizontal')) {
           clone.addClass('expression');
+          clone.after($('<div>').addClass('symbol-droppable').addClass('horizontal'));
+        } else {
+          clone.after($('<div>').addClass('symbol-droppable'));
         }
-        clone.after($('<div>').addClass('symbol-droppable'));
         bindDraggables(clone.parent());
       }
     });
@@ -128,7 +130,7 @@
         var argsBlock = $('<div>').addClass('args');
         func.args.forEach(function(arg) {
           appendDropTarget(argsBlock);
-          argsBlock.append($('<div>').addClass('arg').addClass('draggable').text(arg));
+          argsBlock.append($('<div>').addClass('name').addClass('draggable').text(arg));
         });
         appendDropTarget(argsBlock);
         el.append(argsBlock);

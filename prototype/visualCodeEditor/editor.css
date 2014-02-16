@@ -14,10 +14,10 @@ body {
   font-family: sans-serif;
   width: 80%;
   margin: 0 auto;
-  vertical-align: top;
-  vertical-align: text-top;
+  vertical-align: middle;
   box-shadow: 0px 30px 50px 10px #888888;
   font-size: 1rem;
+  line-height: 1em;
 }
 
 @media (max-width: 1024px) {
@@ -43,6 +43,10 @@ body {
   margin-bottom: 3rem
 }
 
+.module > .name {
+  margin: .4rem 0;
+}
+
 .module .expressions {
   background-color: #d9ff80;
   padding: .1rem .3rem;
@@ -54,14 +58,12 @@ body {
   color: #222b00;
 }
 
-.binary, .ternary, .var, .call, .new, .keyword, .name {
-  display: inline-block;
-  margin-right: .2rem;
+.keyword, .name {
+  margin-right: .4rem;
 }
 
-.call, .new {
-  margin: .2rem .2rem;
-  padding: 0;
+.binary, .ternary, .var, .call, .new, .keyword, .name {
+  display: inline-block;
 }
 
 .assignment > .rvalue, .if > .then, .if > div > .else {
@@ -102,19 +104,16 @@ body {
 
 .op {
   font-weight: bold;
-  margin-left: .1rem;
-  margin-right: .2rem;
+  margin: .2rem .4rem;
 }
 
 .prop {
   display: inline-block;
-  margin: 0 .2rem;
 }
 
 .prop > .op {
   font-size: 2em;
   line-height: 0;
-  margin-right: .2rem;
 }
 
 .parens {
@@ -127,19 +126,20 @@ body {
   display: inline-block;
 }
 
-.module .expressions .name, .args > .arg {
+.module .expressions .name, .args > .name {
   display: inline-block;
   padding: .2rem .4rem;
   margin: .1rem 0;
   background-color: #f1f6ac;
   box-shadow: 0px 0px 15px 1px #447821;
   color: #000;
+  vertical-align: middle;
 }
 
-.args, .arg {
+.args, .args > .name {
   display: inline-block;
   margin: .2rem 0;
-  padding: .1rem;
+  padding: .2rem;
   color: #000;
   background-color: #447821;
 }
@@ -154,12 +154,16 @@ body {
   font-weight: bold;
 }
 
-.args > .binary.arg-expression, .args > .call.arg-expression, .args > .new.arg-expression {
-  padding: .2rem .1rem;
+.args > .expression {
+  padding: .2rem;
+}
+
+.args {
+  vertical-align: middle;
 }
 
 .collapse {
-  margin: .8rem .4rem 0 4px;
+  margin: .8rem 0 0 .2rem;
   float: right;
   width: .8em;
   height: .8em;
@@ -230,13 +234,14 @@ body {
 .symbol-droppable {
   display: inline-block;
   vertical-align: middle;
-  margin: .1rem;
+  margin: .4em .1rem;
   border-radius: .4rem;
   height: .8rem;
   width: .3rem;
 }
 
 .symbol-droppable.horizontal {
+  margin: .1rem;
   display: block;
   height: .3rem;
   width: .8rem;

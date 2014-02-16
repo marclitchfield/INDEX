@@ -11,15 +11,16 @@
     var el = $('<div>');
     appendExpression(ast, el);
     bindDraggables(el);
+    bindDraggables($('.palette'));
     return el.children();
   }
 
-  function appendExpression(expression, parent, expressionClass) {
+  function appendExpression(expression, parent, expressionClass, dropInfo) {
     var expressionType = _.keys(expression)[0];
     if (!(expressionType in renderers)) {
       throw 'No renderer for expression type: ' + expressionType;
     }
-    var el = $('<div>').addClass(expressionType);
+    var el = $('<div>').addClass(expressionType).addClass('expression');
     if (expressionClass) {
       el.addClass(expressionClass);
     }
@@ -34,21 +35,25 @@
     return el;
   }
 
-  function appendExpressions(expressions, parent, expressionClass) {
+  function appendExpressions(expressions, parent, expressionClass, dropInfo) {
     expressions.forEach(function(expression) {
-      appendExpression(expression, parent, expressionClass);
+      if (dropInfo) { appendDropTarget(parent, dropInfo.dropOrientation); }
+      appendExpression(expression, parent, expressionClass, dropInfo);
     });
+    if (dropInfo) { appendDropTarget(parent, dropInfo.dropOrientation); }
   }
 
-  function appendExpressionBlock(expressions, parent) {
+  function appendExpressionBlock(expressions, parent, dropInfo) {
     var expressionBlock = $('<div>').addClass('expressions');
-    appendExpressions(expressions, expressionBlock);
+    appendExpressions(expressions, expressionBlock, null, dropInfo);
     parent.append(expressionBlock);
     return expressionBlock;
   }
 
-  function appendDropTarget(el) {
-    el.append($('<div>').addClass('symbol-droppable'));
+  function appendDropTarget(el, orientation) {
+    var dropTarget = $('<div>').addClass('symbol-droppable');
+    dropTarget.addClass(orientation || 'vertical');
+    el.append(dropTarget);
   }
 
   function bindDraggables(el) {
@@ -57,11 +62,21 @@
       zIndex: 100,
       // Fix for http://bugs.jqueryui.com/ticket/3740
       start: function (event, ui) {
-        $(this).data('startingScrollTop', window.pageYOffset);
+        if ($(this).closest('.palette').length === 0) {
+          $(this).data('startingScrollTop', window.pageYOffset);
+        }
       },
       drag: function(event, ui){
         var st = parseInt($(this).data('startingScrollTop'));
-        ui.position.top -= st;
+        if (st) {
+          ui.position.top -= st;
+        }
+        // I have performance concerns about this
+        if ($('.symbol-drop-acceptable').length > 0) {
+          $('.ui-draggable-dragging').addClass('symbol-draggable-overdrop');
+        } else {
+          $('.ui-draggable-dragging').removeClass('symbol-draggable-overdrop');
+        }
       },
     });
 
@@ -73,6 +88,9 @@
       drop: function(event, ui) {
         var clone = ui.draggable.clone();
         $(this).after(clone);
+        if ($(event.target).hasClass('horizontal')) {
+          clone.addClass('expression');
+        }
         clone.after($('<div>').addClass('symbol-droppable'));
         bindDraggables(clone.parent());
       }
@@ -83,7 +101,7 @@
     return {
       'module': function(module, el) {
         el.append($('<div>').addClass('name').text(module.name));
-        appendExpressionBlock(module.expressions, el);
+        appendExpressionBlock(module.expressions, el, { dropOrientation: 'horizontal' });
       },
 
       'assignment': function(assignment, el) {
@@ -112,12 +130,9 @@
           appendDropTarget(argsBlock);
           argsBlock.append($('<div>').addClass('arg').addClass('draggable').text(arg));
         });
-        if (func.args.length === 0) {
-          argsBlock.html('&nbsp;');
-        }
         appendDropTarget(argsBlock);
         el.append(argsBlock);
-        appendExpressionBlock(func.expressions, el).addClass('collapsible expanded');
+        appendExpressionBlock(func.expressions, el, { dropOrientation: 'horizontal' }).addClass('collapsible expanded');
       },
 
       'ref': function(ref, el) {
@@ -207,10 +222,7 @@
 
     function renderArgsBlock(args, el) {
       var argsBlock = $('<div>').addClass('args');
-      appendExpressions(args, argsBlock, 'arg-expression');
-      if (args.length === 0) {
-        argsBlock.append('&nbsp;');
-      }
+      appendExpressions(args, argsBlock, 'arg-expression', { dropOrientation: 'vertical' });
       el.append(argsBlock);
     }
   })();
@@ -224,29 +236,4 @@
     $(this).toggleClass('expanded', $(this).hasClass('collapsed'));
     $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
   });
-
-  // duck punch jQueryUI to add a 'touch-closest-to-mouse' tolerance.
-  // when multiple droppables are under the draggable, only the one closest to the mouse position will be active.
-  var defaultIntersect = $.ui.intersect;
-  
-  $.ui.intersect = function(draggable, droppable, toleranceMode) {
-    if (toleranceMode !== 'touch-closest-to-mouse') {
-      return defaultIntersect(draggable, droppable, toleranceMode);
-    }
-    var touching = defaultIntersect(draggable, droppable, 'touch');
-    if (!touching) {
-      return false;
-    }
-    var acceptable = _.filter($.ui.ddmanager.droppables.default, function(d) { 
-      return d.offset !== undefined; 
-    });
-    var closest = _.min(acceptable, function(other) {
-      var otherCenterX = other.offset.left + other.proportions().width / 2;
-      var otherCenterY = other.offset.top + other.proportions().height / 2;
-      var cursorX = event.clientX;
-      var cursorY = event.clientY + window.pageYOffset;
-      return Math.sqrt(Math.pow(otherCenterX - cursorX, 2) + Math.pow(otherCenterY - cursorY, 2));
-    });
-    return droppable === closest;
-  };
 })();

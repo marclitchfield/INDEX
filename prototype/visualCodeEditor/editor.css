@@ -28,24 +28,28 @@ body {
   }
 }
 
+.expression {
+  padding: .1rem 0;
+}
+
 .module, .function {
   display: block;
-  padding: .2rem .3rem;
-  margin: .3rem .1rem;
+  padding: .1rem .4rem .4rem .4rem;
   background-color: #112b00;
-  border: .3rem solid #d9ff80;
   color: #b3ff80;
 }
 
 .module {
-  padding: 4px;
-  margin: 0;
+  margin-bottom: 3rem
 }
 
-.assignment, .return, .function .expressions, .binary, .ternary, .call, .new {
+.module .expressions {
+  background-color: #d9ff80;
+  padding: .1rem .3rem;
+}
+
+.function .expressions, .assignment, .return, .if, .binary, .ternary, .call, .new {
   display: block;
-  padding: .2rem .2rem .2rem 0;
-  margin: .3rem;
   background-color: #d9ff80;
   color: #222b00;
 }
@@ -53,21 +57,17 @@ body {
 .binary, .ternary, .var, .call, .new, .keyword, .name {
   display: inline-block;
   margin-right: .2rem;
-  margin-left: 0;
 }
 
 .call, .new {
-  margin: .2rem 0;
+  margin: .2rem .2rem;
   padding: 0;
-}
-
-.assignment, .function > .expressions {
-  padding-left: .4rem;
 }
 
 .assignment > .rvalue, .if > .then, .if > div > .else {
   display: block;
-  margin: .3rem .3rem .3rem 0;
+  margin-top: .2rem;
+  padding: .3rem;
   background-color: #cbe87;
   border: .3rem solid #447821;
   color: #222b00;
@@ -80,7 +80,6 @@ body {
 }
 
 .keyword {
-  margin-left: .1rem;
   font-weight: bold;
 }
 
@@ -90,11 +89,11 @@ body {
 
 .assignment > .op {
   float: right;
-  margin: .4rem .4rem 0 0;
+  margin-top: .4rem;
 }
 
 .assignment {
-  margin: .4rem 0;
+  margin: 0;
 }
 
 .op, .entry {
@@ -131,7 +130,7 @@ body {
 .module .expressions .name, .args > .arg {
   display: inline-block;
   padding: .2rem .4rem;
-  margin: .1rem .2rem;
+  margin: .1rem 0;
   background-color: #f1f6ac;
   box-shadow: 0px 0px 15px 1px #447821;
   color: #000;
@@ -139,8 +138,8 @@ body {
 
 .args, .arg {
   display: inline-block;
-  margin: 0 .1rem;
-  padding: .2rem;
+  margin: .2rem 0;
+  padding: .1rem;
   color: #000;
   background-color: #447821;
 }
@@ -155,16 +154,8 @@ body {
   font-weight: bold;
 }
 
-.args > .arg-expression {
-  padding: .2rem .4rem;
-}
-
-.function > .args {
-  margin-left: .4rem;
-}
-
-.function > .keyword {
-  margin-left: .4rem;
+.args > .binary.arg-expression, .args > .call.arg-expression, .args > .new.arg-expression {
+  padding: .2rem .1rem;
 }
 
 .collapse {
@@ -179,38 +170,6 @@ body {
 
 .collapse:hover {
   background-color: #f7ff9d;
-}
-
-.collapse::after {
-  position: relative;
-  width: 10px;
-  color: #00222b;
-  text-align: center;
-  font-size: 1.2em;
-}
-
-.collapse.expanded::after {
-  content: '\25BE';
-  left: .05rem;
-  top: -.3rem;
-}
-
-.collapse.collapsed::after {
-  content: '\25B8';
-  left: .1rem;
-  top: -.3rem;
-}
-
-@media (max-width: 1024px) {
-  .collapse.expanded::after {
-    left: .2rem;
-    top: -.9rem;
-  }
-
-  .collapse.collapsed::after {
-    left: .4rem;
-    top: -1rem;
-  }
 }
 
 .collapsible.expanded {
@@ -232,7 +191,7 @@ body {
 .literal, .hash .entry > .key {
   display: inline-block;
   padding: .2rem .4rem;
-  margin: .1rem .2rem;
+  text-align: center;
   background-color: #5fbcd3;
   border: 1px solid black;
   color: #00222b;
@@ -243,18 +202,22 @@ body {
   border: .2rem solid #112b00;
 }
 
-.hash, .hash .entry {
+.hash {
   display: block;
-  padding: .2rem .2rem;
-  margin: .2rem;
+  padding: .2rem .4rem;
   background-color: #55d400;
   color: #000;
 }
 
 .hash .entry {
   display: block;
+  padding: .4rem;
   background-color: #008000;
 }
+
+/*
+ * Drag and Drop
+ */
 
 .draggable {
   cursor: move;
@@ -267,21 +230,139 @@ body {
 .symbol-droppable {
   display: inline-block;
   vertical-align: middle;
-  margin-bottom: .1em;
-  height: 1.2em;
-  width: .3em;
+  margin: .1rem;
+  border-radius: .4rem;
+  height: .8rem;
+  width: .3rem;
+}
+
+.symbol-droppable.horizontal {
+  display: block;
+  height: .3rem;
+  width: .8rem;
 }
 
 .symbol-droppable-active {
-  background-color: #09f;
+  background-color: #0f0;
   box-shadow: 0 0 1px 1px #000;
   transition: width .25s;
 }
 
 .symbol-drop-acceptable {
   background-color: #fff;
+  box-shadow: 0 0 10px 2px #fff;
 }
 
 .symbol-drop-disabled {
   background-color: #09f;
 }
+
+.symbol-draggable-overdrop {
+  box-shadow: 0 0 10px 2px #fff !important;
+}
+
+/*
+ * Palette
+ */
+
+.palette-container {
+  position: fixed;
+  width: 100%;
+  height: 2.5rem;
+  bottom: 0;
+}
+
+.palette {
+  width: 80%;
+  margin: 0 auto;
+  padding: 0 .2rem;
+  height: 2.5rem;
+  background-color: rgba(16, 41, 0, 0.8);
+  border: 1px solid #000;
+}
+
+@media (max-width: 1024px) {
+  .palette-container {
+    width: 100%;
+    margin: 0;
+  }
+
+  .palette {
+    width: 100%;
+    height: 2.5rem;
+    background-color: rgba(16, 41, 0, 0.8);
+    border: 1px solid #000;
+  }
+}
+
+.palette .mode, .palette .draggable {
+  display: inline-block;
+  margin: .2rem .2rem;
+  height: 2rem;
+  width: 2.2rem;
+  font-family: sans-serif;
+  text-align: center;
+  vertical-align: text-top;
+  line-height: 2.1rem;
+  font-size: 1.6em;
+}
+
+.palette .new-parens, .palette .new-brackets, .palette .new-hash, .palette .new-entry {
+  line-height: 1.8rem;
+}
+
+.palette .mode {
+  background-color: #000;
+  color: #fff;
+}
+
+.palette .new-function {
+  background-color: #112b00;
+  color: #b3ff80;
+}
+
+.palette .new-args {
+  background-color: #447821;
+  color: #000;
+}
+
+.palette .new-expression {
+  background-color: #d9ff80;
+  color: #222b00;
+}
+
+.palette .new-variable {
+  background-color: #f1f6ac;
+  color: #000;
+}
+
+.palette .new-literal {
+  background-color: #5fbcd3;
+  color: #00222b;
+}
+
+.palette .new-operator {
+  background-color: #d9ff80;
+  color: #000;
+}
+
+.palette .new-parens {
+  background-color: #d9ff80;
+  color: #000;
+}
+
+.palette .new-brackets {
+  background-color: #447821;
+  color: #000;
+}
+
+.palette .new-hash {
+  background-color: #55d400;
+  color: #000;
+}
+
+.palette .new-entry {
+  background-color: #008000;
+  color: #000;
+}
+

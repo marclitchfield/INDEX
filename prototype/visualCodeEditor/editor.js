@@ -37,10 +37,10 @@
 
   function appendExpressions(expressions, parent, expressionClass, dropInfo) {
     expressions.forEach(function(expression) {
-      if (dropInfo) { appendDropTarget(parent, dropInfo.dropOrientation); }
+      if (dropInfo) { appendDropTarget(parent, dropInfo); }
       appendExpression(expression, parent, expressionClass, dropInfo);
     });
-    if (dropInfo) { appendDropTarget(parent, dropInfo.dropOrientation); }
+    if (dropInfo) { appendDropTarget(parent, dropInfo); }
   }
 
   function appendExpressionBlock(expressions, parent, dropInfo) {
@@ -50,10 +50,41 @@
     return expressionBlock;
   }
 
-  function appendDropTarget(el, orientation) {
+  function appendDropTarget(el, dropInfo) {
     var dropTarget = $('<div>').addClass('symbol-droppable');
-    dropTarget.addClass(orientation || 'vertical');
-    el.append(dropTarget);
+    dropInfo = dropInfo || {};
+    dropInfo.dropOrientation = dropInfo.dropOrientation || 'vertical';
+    dropInfo.insert = dropInfo.insert || 'append';
+    dropTarget.addClass(dropInfo.dropOrientation); 
+    if (dropInfo.replace) { 
+      dropTarget.addClass('replace'); 
+    }
+    el[dropInfo.insert](dropTarget);
+    return dropTarget;
+  }
+
+  function createDropElement(draggable) {
+    var expressionType = draggable.data('expression-type');
+    return expressionType ? appendExpression(draggable.data('expression'), $('<div>')) : draggable.clone();
+  }
+
+  function dropElement(el, dropTarget, dropInfo) {
+    dropTarget.after(el);
+    dropInfo.insert = 'after';
+    if (dropInfo.replace) {
+      // Remove the drop target after this run of the event loop so another drop target does not become
+      // available during this drop operation. If the drop target is removed in this run of the event loop, 
+      // another 'drop' event can fire and the draggable can be dropped onto multiple targets.
+      setTimeout(function() {
+        dropTarget.remove();
+      }, 0);
+    } else {
+      appendDropTarget(el, dropInfo);
+    }
+    if (dropInfo.dropOrientation === 'horizontal') {
+      el.addClass('expression');
+    }
+    bindDraggables(el.parent());
   }
 
   function bindDraggables(el) {
@@ -86,15 +117,11 @@
       hoverClass: 'symbol-drop-acceptable',
       activeClass: 'symbol-droppable-active',
       drop: function(event, ui) {
-        var clone = ui.draggable.clone();
-        $(this).after(clone);
-        if ($(event.target).hasClass('horizontal')) {
-          clone.addClass('expression');
-          clone.after($('<div>').addClass('symbol-droppable').addClass('horizontal'));
-        } else {
-          clone.after($('<div>').addClass('symbol-droppable'));
-        }
-        bindDraggables(clone.parent());
+        var newElement = createDropElement(ui.draggable);
+        dropElement(newElement, $(this), { 
+          dropOrientation: $(event.target).hasClass('horizontal') ? 'horizontal' : 'vertical',
+          replace: $(event.target).hasClass('replace')
+        });
       }
     });
   }
@@ -126,6 +153,8 @@
         el.append($('<div>').addClass('collapse').addClass('expanded'));
         if (func.name) {
           el.append($('<div>').addClass('name').addClass('draggable').text(func.name));
+        } else {
+          appendDropTarget(el, { dropOrientation: 'vertical', replace: true });
         }
         var argsBlock = $('<div>').addClass('args');
         func.args.forEach(function(arg) {
@@ -224,7 +253,9 @@
 
     function renderArgsBlock(args, el) {
       var argsBlock = $('<div>').addClass('args');
-      appendExpressions(args, argsBlock, 'arg-expression', { dropOrientation: 'vertical' });
+      var expressionsBlock = $('<div>').addClass('expressions');
+      appendExpressions(args, expressionsBlock, 'arg-expression', { dropOrientation: 'vertical' });
+      argsBlock.append(expressionsBlock);
       el.append(argsBlock);
     }
   })();

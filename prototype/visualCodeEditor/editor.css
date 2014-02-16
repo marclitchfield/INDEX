@@ -28,10 +28,6 @@ body {
   }
 }
 
-.expression {
-  padding: .1rem 0;
-}
-
 .module, .function {
   display: block;
   padding: .1rem .4rem .4rem .4rem;
@@ -117,7 +113,6 @@ body {
 }
 
 .parens {
-  margin: 0 .2rem;
   padding-left: .4rem;
   padding-right: .4rem;
 }
@@ -140,8 +135,20 @@ body {
   display: inline-block;
   margin: .2rem 0;
   padding: .2rem;
+  vertical-align: middle;
   color: #000;
   background-color: #447821;
+}
+
+.args > .expressions {
+  padding: .1rem;
+  display: inline-block;
+  background-color: #447821;
+  vertical-align: middle;
+}
+
+.args > .expressions > .call, .args > .expressions > .new, .args > .expressions > .binary, .args > .expressions > .ternary {
+  padding: .1rem .2rem;
 }
 
 .args::before {
@@ -152,10 +159,6 @@ body {
 .args::after {
   content: ')';
   font-weight: bold;
-}
-
-.args > .expression {
-  padding: .2rem;
 }
 
 .args {
@@ -195,7 +198,9 @@ body {
 .literal, .hash .entry > .key {
   display: inline-block;
   padding: .2rem .4rem;
+  margin: .1rem 0;
   text-align: center;
+  vertical-align: middle;
   background-color: #5fbcd3;
   border: 1px solid black;
   color: #00222b;
@@ -215,7 +220,7 @@ body {
 
 .hash .entry {
   display: block;
-  padding: .4rem;
+  padding: .2rem;
   background-color: #008000;
 }
 
@@ -234,17 +239,17 @@ body {
 .symbol-droppable {
   display: inline-block;
   vertical-align: middle;
-  margin: .4em .1rem;
+  margin: .1rem;
   border-radius: .4rem;
-  height: .8rem;
-  width: .3rem;
+  height: .8em;
+  width: .3em;
 }
 
 .symbol-droppable.horizontal {
   margin: .1rem;
   display: block;
-  height: .3rem;
-  width: .8rem;
+  height: .3em;
+  width: .8em;
 }
 
 .symbol-droppable-active {

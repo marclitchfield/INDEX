@@ -6,7 +6,9 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "var": "lowercaseWords"
+            "var": {
+              "name": "lowercaseWords"
+            }
           },
           "rvalue": {
             "function": {
@@ -48,7 +50,9 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "var": "wordCounts"
+            "var": {
+              "name": "wordCounts"
+            }
           },
           "rvalue": {
             "function": {
@@ -59,7 +63,9 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": "words"
+                      "var": {
+                        "name": "words"
+                      }
                     },
                     "rvalue": {
                       "ref": {

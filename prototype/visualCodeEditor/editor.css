@@ -137,8 +137,8 @@ body {
 
 .args, .args > .name {
   display: inline-block;
-  margin: .2rem 0;
-  padding: .2rem;
+  margin: .2rem 0 .3rem 0;
+  padding: .1rem .2rem;
   vertical-align: middle;
   color: #000;
   background-color: #447821;
@@ -155,13 +155,15 @@ body {
   padding: .1rem .2rem;
 }
 
-.args::before {
+.args > .expressions::before, .function > .args::before {
   content: '(';
+  font-size: .8em;
   font-weight: bold;
 }
 
-.args::after {
+.args > .expressions::after, .function > .args::after {
   content: ')';
+  font-size: .8em;
   font-weight: bold;
 }
 
@@ -170,8 +172,8 @@ body {
 }
 
 .collapse {
-  margin: .8rem 0 0 .2rem;
   float: right;
+  margin-top: .3rem;
   width: .8em;
   height: .8em;
   background-color: #00a280;
@@ -249,6 +251,15 @@ body {
   width: .3em;
 }
 
+.droppable.outline {
+  display: inline-block;
+  border-radius: 0;
+  height: .8em;
+  width: 1.5em;
+  border: 1px solid #222;
+  border-style: dashed;
+}
+
 .droppable.horizontal {
   margin: .1rem;
   display: block;
@@ -259,7 +270,10 @@ body {
 .droppable-active {
   background-color: #0f0;
   box-shadow: 0 0 1px 1px #000;
-  transition: width .25s;
+}
+
+.droppable-active.outline {
+  box-shadow: none;
 }
 
 .drop-acceptable {
@@ -331,8 +345,9 @@ body {
   color: #b3ff80;
 }
 
-.palette .new-expression {
+.palette .new-keyword {
   background-color: #d9ff80;
+  font-weight: bold;
   color: #222b00;
 }
 

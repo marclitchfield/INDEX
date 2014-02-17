@@ -53,18 +53,17 @@
   }
 
   function appendDropTarget(el, dropInfo) {
-    var dropTarget = $('<div>').addClass('droppable');
-    dropInfo = dropInfo || {};
+    dropInfo = _.clone(dropInfo) || {};
     dropInfo.dropOrientation = dropInfo.dropOrientation || 'vertical';
-    dropInfo.insert = dropInfo.insert || 'append';
+    dropInfo.method = dropInfo.method || 'append';
     dropInfo.targetTypes = dropInfo.targetTypes || [];
-    dropTarget.addClass(dropInfo.dropOrientation); 
+    var dropTarget = $('<div>').addClass('droppable');
+    dropTarget.addClass(dropInfo.dropOrientation);
     dropTarget.data('target-types', dropInfo.targetTypes);
     if (dropInfo.replace) { 
       dropTarget.addClass('replace');
     }
-    el[dropInfo.insert](dropTarget);
-    return dropTarget;
+    el[dropInfo.method](dropTarget);
   }
 
   function bindDraggables(el) {
@@ -109,7 +108,7 @@
       activeClass: 'droppable-active',
       drop: function(event, ui) {
         var newElement = createDropElement(ui.draggable);
-        dropElement(newElement, $(this), { 
+        dropElement(newElement, $(event.target), { 
           dropOrientation: $(event.target).hasClass('horizontal') ? 'horizontal' : 'vertical',
           replace: $(event.target).hasClass('replace')
         });
@@ -126,14 +125,14 @@
 
   function dropElement(el, dropTarget, dropInfo) {
     dropTarget.after(el);
-    dropInfo.insert = 'after';
+    dropInfo.method = 'after';
     if (dropInfo.replace) {
       // Remove the drop target after this run of the event loop so another drop target does not become
       // available during this drop operation. If the drop target is removed in this run of the event loop, 
       // another 'drop' event can fire and the draggable can be dropped onto multiple targets.
       setTimeout(function() { dropTarget.remove(); }, 0);
     } else {
-      dropInfo.targetTypes = el.data('target-types');
+      dropInfo.targetTypes = dropTarget.data('target-types');
       appendDropTarget(el, dropInfo);
     }
     if (dropInfo.dropOrientation === 'horizontal') {
@@ -161,7 +160,11 @@
 
       'var': function(variable, el) {
         el.append($('<div>').addClass('keyword').text('var'));
-        el.append($('<div>').addClass('name').addClass('draggable').text(variable));
+        if (variable.name) {
+          el.append($('<div>').addClass('name').addClass('draggable').text(variable.name));
+        } else {
+          appendDropTarget(el, { replace: true, dropOrientation: 'outline' });
+        }
       },
 
       'function': function(func, el) {

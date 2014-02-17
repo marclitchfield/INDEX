@@ -6,7 +6,9 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "var": "Word"
+            "var": {
+              "name": "Word"
+            }
           },
           "rvalue": {
             "function": {
@@ -17,7 +19,9 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": "lowercaseLetters"
+                      "var": { 
+                        "name": "lowercaseLetters"
+                      }
                     },
                     "rvalue": {
                       "ref": {
@@ -36,7 +40,9 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": "lowercaseSortedLetters"
+                      "var": {
+                        "name": "lowercaseSortedLetters"
+                      }
                     },
                     "rvalue": {
                       "call": {
@@ -149,7 +155,9 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "var": "Anagram"
+            "var": {
+              "name": "Anagram"
+            }
           },
           "rvalue": {
             "function": {
@@ -160,7 +168,9 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": "word"
+                      "var": {
+                        "name": "word"
+                      }
                     },
                     "rvalue": {
                       "new": {

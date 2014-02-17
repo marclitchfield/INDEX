@@ -62,6 +62,10 @@ body {
   display: inline-block;
 }
 
+.assignment > .lvalue {
+  display: inline-block;
+}
+
 .assignment > .rvalue, .if > .then, .if > div > .else {
   display: block;
   margin-top: .2rem;
@@ -86,7 +90,7 @@ body {
 }
 
 .assignment > .op {
-  float: right;
+  display: inline-block;
   margin-top: .4rem;
 }
 
@@ -236,7 +240,7 @@ body {
   opacity: .8;
 }
 
-.symbol-droppable {
+.droppable {
   display: inline-block;
   vertical-align: middle;
   margin: .1rem;
@@ -245,29 +249,25 @@ body {
   width: .3em;
 }
 
-.symbol-droppable.horizontal {
+.droppable.horizontal {
   margin: .1rem;
   display: block;
   height: .3em;
   width: .8em;
 }
 
-.symbol-droppable-active {
+.droppable-active {
   background-color: #0f0;
   box-shadow: 0 0 1px 1px #000;
   transition: width .25s;
 }
 
-.symbol-drop-acceptable {
+.drop-acceptable {
   background-color: #fff;
   box-shadow: 0 0 10px 2px #fff;
 }
 
-.symbol-drop-disabled {
-  background-color: #09f;
-}
-
-.symbol-draggable-overdrop {
+.draggable-overdrop {
   box-shadow: 0 0 10px 2px #fff !important;
 }
 
@@ -309,7 +309,7 @@ body {
   display: inline-block;
   margin: .2rem .2rem;
   height: 2rem;
-  width: 2.2rem;
+  width: 3.6rem;
   font-family: sans-serif;
   text-align: center;
   vertical-align: text-top;
@@ -331,14 +331,14 @@ body {
   color: #b3ff80;
 }
 
-.palette .new-args {
-  background-color: #447821;
-  color: #000;
-}
-
 .palette .new-expression {
   background-color: #d9ff80;
   color: #222b00;
+}
+
+.palette .new-args {
+  background-color: #447821;
+  color: #000;
 }
 
 .palette .new-variable {
@@ -349,6 +349,11 @@ body {
 .palette .new-literal {
   background-color: #5fbcd3;
   color: #00222b;
+}
+
+.palette .new-assignment {
+  background-color: #d9ff80;
+  color: #000;
 }
 
 .palette .new-operator {

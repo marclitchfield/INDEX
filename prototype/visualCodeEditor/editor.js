@@ -15,6 +15,23 @@
     return el.children();
   }
 
+  function appendExpressionBlock(expressions, parent, dropInfo) {
+    var expressionBlock = $('<div>').addClass('expressions');
+    appendExpressions(expressions, expressionBlock, null, dropInfo);
+    parent.append(expressionBlock);
+    return expressionBlock;
+  }
+
+  function appendExpressions(expressions, parent, expressionClass, dropInfo) {
+    var dropInfo = _.clone(dropInfo) || {};
+    dropInfo.targetTypes = _.union(dropInfo.targetTypes || [], ['expression']);
+    expressions.forEach(function(expression) {
+      if (dropInfo) { appendDropTarget(parent, dropInfo); }
+      appendExpression(expression, parent, expressionClass, dropInfo);
+    });
+    if (dropInfo) { appendDropTarget(parent, dropInfo); }
+  }
+
   function appendExpression(expression, parent, expressionClass, dropInfo) {
     var expressionType = _.keys(expression)[0];
     if (!(expressionType in renderers)) {
@@ -28,44 +45,83 @@
     if (expression[expressionType].prop !== undefined) {
       var propBlock = $('<div>').addClass('prop');
       propBlock.append($('<div>').addClass('op').text('.'));
-      appendExpression(expression[expressionType].prop, propBlock);
+      appendExpression(expression[expressionType].prop, propBlock, '', dropInfo);
       el.append(propBlock);
     }
     parent.append(el);
     return el;
   }
 
-  function appendExpressions(expressions, parent, expressionClass, dropInfo) {
-    expressions.forEach(function(expression) {
-      if (dropInfo) { appendDropTarget(parent, dropInfo); }
-      appendExpression(expression, parent, expressionClass, dropInfo);
-    });
-    if (dropInfo) { appendDropTarget(parent, dropInfo); }
-  }
-
-  function appendExpressionBlock(expressions, parent, dropInfo) {
-    var expressionBlock = $('<div>').addClass('expressions');
-    appendExpressions(expressions, expressionBlock, null, dropInfo);
-    parent.append(expressionBlock);
-    return expressionBlock;
-  }
-
   function appendDropTarget(el, dropInfo) {
-    var dropTarget = $('<div>').addClass('symbol-droppable');
+    var dropTarget = $('<div>').addClass('droppable');
     dropInfo = dropInfo || {};
     dropInfo.dropOrientation = dropInfo.dropOrientation || 'vertical';
     dropInfo.insert = dropInfo.insert || 'append';
+    dropInfo.targetTypes = dropInfo.targetTypes || [];
     dropTarget.addClass(dropInfo.dropOrientation); 
+    dropTarget.data('target-types', dropInfo.targetTypes);
     if (dropInfo.replace) { 
-      dropTarget.addClass('replace'); 
+      dropTarget.addClass('replace');
     }
     el[dropInfo.insert](dropTarget);
     return dropTarget;
   }
 
+  function bindDraggables(el) {
+    el.find('.draggable').draggable({
+      helper: 'clone',
+      zIndex: 100,
+      // Fix for http://bugs.jqueryui.com/ticket/3740
+      start: function (event, ui) {
+        if ($(this).closest('.palette').length === 0) {
+          $(this).data('startingScrollTop', window.pageYOffset);
+        }
+        bindDroppables($(event.target).data('target-types'));
+      },
+      drag: function(event, ui){
+        var st = parseInt($(this).data('startingScrollTop'));
+        if (st) {
+          ui.position.top -= st;
+        }
+        // I have performance concerns about this
+        if ($('.drop-acceptable').length > 0) {
+          $('.ui-draggable-dragging').addClass('draggable-overdrop');
+        } else {
+          $('.ui-draggable-dragging').removeClass('draggable-overdrop');
+        }
+      },
+    });
+  }
+
+  function bindDroppables(targetTypes) {
+    $('.ui-droppable').droppable('destroy');
+    var droppables = $('.droppable').filter(function() {
+      if (targetTypes === undefined || targetTypes.length === 0) {
+        return true;
+      }
+      var acceptableTargetTypes = $(this).data('target-types') || [];
+      return _.intersection(targetTypes, acceptableTargetTypes).length > 0;
+    });
+    droppables.droppable({
+      greedy: true,
+      tolerance: 'touch-closest-to-mouse',
+      hoverClass: 'drop-acceptable',
+      activeClass: 'droppable-active',
+      drop: function(event, ui) {
+        var newElement = createDropElement(ui.draggable);
+        dropElement(newElement, $(this), { 
+          dropOrientation: $(event.target).hasClass('horizontal') ? 'horizontal' : 'vertical',
+          replace: $(event.target).hasClass('replace')
+        });
+      }
+    });    
+  }
+
   function createDropElement(draggable) {
     var expressionType = draggable.data('expression-type');
-    return expressionType ? appendExpression(draggable.data('expression'), $('<div>')) : draggable.clone();
+    var expression = {};
+    expression[expressionType] = {};
+    return expressionType ? appendExpression(expression, $('<div>')) : draggable.clone();
   }
 
   function dropElement(el, dropTarget, dropInfo) {
@@ -75,55 +131,15 @@
       // Remove the drop target after this run of the event loop so another drop target does not become
       // available during this drop operation. If the drop target is removed in this run of the event loop, 
       // another 'drop' event can fire and the draggable can be dropped onto multiple targets.
-      setTimeout(function() {
-        dropTarget.remove();
-      }, 0);
+      setTimeout(function() { dropTarget.remove(); }, 0);
     } else {
+      dropInfo.targetTypes = el.data('target-types');
       appendDropTarget(el, dropInfo);
     }
     if (dropInfo.dropOrientation === 'horizontal') {
       el.addClass('expression');
     }
     bindDraggables(el.parent());
-  }
-
-  function bindDraggables(el) {
-    el.find('.draggable').draggable({ 
-      helper: 'clone', 
-      zIndex: 100,
-      // Fix for http://bugs.jqueryui.com/ticket/3740
-      start: function (event, ui) {
-        if ($(this).closest('.palette').length === 0) {
-          $(this).data('startingScrollTop', window.pageYOffset);
-        }
-      },
-      drag: function(event, ui){
-        var st = parseInt($(this).data('startingScrollTop'));
-        if (st) {
-          ui.position.top -= st;
-        }
-        // I have performance concerns about this
-        if ($('.symbol-drop-acceptable').length > 0) {
-          $('.ui-draggable-dragging').addClass('symbol-draggable-overdrop');
-        } else {
-          $('.ui-draggable-dragging').removeClass('symbol-draggable-overdrop');
-        }
-      },
-    });
-
-    el.find('.symbol-droppable, .symbol-droppable-indicator').droppable({
-      greedy: true,
-      tolerance: 'touch-closest-to-mouse',
-      hoverClass: 'symbol-drop-acceptable',
-      activeClass: 'symbol-droppable-active',
-      drop: function(event, ui) {
-        var newElement = createDropElement(ui.draggable);
-        dropElement(newElement, $(this), { 
-          dropOrientation: $(event.target).hasClass('horizontal') ? 'horizontal' : 'vertical',
-          replace: $(event.target).hasClass('replace')
-        });
-      }
-    });
   }
 
   var renderers = (function() {
@@ -134,12 +150,12 @@
       },
 
       'assignment': function(assignment, el) {
-        el.append($('<div>').addClass('op').text(assignment.op));
         var lvalueBlock = $('<div>').addClass('lvalue');
         appendExpression(assignment.lvalue, lvalueBlock, 'lvalue');
+        el.append(lvalueBlock);
+        el.append($('<div>').addClass('op').text(assignment.op));
         var rvalueBlock = $('<div>').addClass('rvalue');
         appendExpression(assignment.rvalue, rvalueBlock, 'rvalue');
-        el.append(lvalueBlock);
         el.append(rvalueBlock);
       },
 
@@ -154,14 +170,16 @@
         if (func.name) {
           el.append($('<div>').addClass('name').addClass('draggable').text(func.name));
         } else {
-          appendDropTarget(el, { dropOrientation: 'vertical', replace: true });
+          appendDropTarget(el, { dropOrientation: 'vertical', replace: true, targetTypes: ['arg'] });
         }
         var argsBlock = $('<div>').addClass('args');
+        func.args = func.args || [];
+        func.expressions = func.expressions || [];
         func.args.forEach(function(arg) {
-          appendDropTarget(argsBlock);
+          appendDropTarget(argsBlock, { targetTypes: ['arg'] });
           argsBlock.append($('<div>').addClass('name').addClass('draggable').text(arg));
         });
-        appendDropTarget(argsBlock);
+        appendDropTarget(argsBlock, { targetTypes: ['arg'] });
         el.append(argsBlock);
         appendExpressionBlock(func.expressions, el, { dropOrientation: 'horizontal' }).addClass('collapsible expanded');
       },

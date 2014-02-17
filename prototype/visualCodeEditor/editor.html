@@ -9,13 +9,14 @@
 
 <div class="palette-container" unselectable='on' onselectstart='return false;'>
   <div class="palette" unselectable='on' onselectstart='return false;'>
-    <div class="mode"></div>
-    <div class="draggable new-function" data-expression-type="function" data-expression='{ "function": { "args": [], "expressions": [] } }'>fn</div>
-    <div class="draggable new-args">(a)</div>
-    <div class="draggable new-expression">ex</div>
-    <div class="draggable new-variable">v</div>
+    <div class="mode">mov</div>
+    <div class="draggable new-function" data-expression-type="function" data-target-types='["expression"]'>func</div>
+    <div class="draggable new-expression">key</div>
+    <div class="draggable new-variable">sym</div>
+    <div class="draggable new-args">(call)</div>
     <div class="draggable new-literal">lit</div>
-    <div class="draggable new-operator">=</div>
+    <div class="draggable new-assignment">=</div>
+    <div class="draggable new-operator">op</div>
     <div class="draggable new-parens">( )</div>
     <div class="draggable new-brackets">[ ]</div>
     <div class="draggable new-hash">{ }</div>

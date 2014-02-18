@@ -271,7 +271,7 @@ body {
 }
 
 .droppable-active {
-  background-color: #0f0;
+  background-color: #0f0 !important;
   box-shadow: 0 0 1px 1px #000;
 }
 
@@ -280,8 +280,8 @@ body {
 }
 
 .drop-acceptable {
-  background-color: #5f5;
-  box-shadow: 0 0 30px 20px #fff;
+  background-color: #5f5 !important;
+  box-shadow: 0 0 30px 20px #fff !important;
 }
 
 .draggable-overdrop {

@@ -32,6 +32,7 @@
   }
 
   function appendExpression(expression, parent, expressionClass, dropInfo) {
+    var dropInfo = dropInfo || {};
     var expressionType = _.keys(expression)[0];
     if (!(expressionType in renderers)) {
       throw 'No renderer for expression type: ' + expressionType;
@@ -40,7 +41,7 @@
     if (expressionClass) {
       el.addClass(expressionClass);
     }
-    renderers[expressionType](expression[expressionType], el);
+    renderers[expressionType](expression[expressionType], el, dropInfo.dropContainer);
     if (expression[expressionType].prop !== undefined) {
       var propBlock = $('<div>').addClass('prop');
       propBlock.append($('<div>').addClass('op').text('.'));
@@ -57,7 +58,6 @@
     dropInfo.method = dropInfo.method || 'append';
     var dropTarget = $('<div>').addClass('droppable');
     dropTarget.addClass(dropInfo.dropOrientation);
-    console.log('appendDropTarget', dropInfo.dropType);
     dropTarget.attr('data-drop-type', dropInfo.dropType);
     if (dropInfo.replace) { 
       dropTarget.addClass('replace');
@@ -101,7 +101,7 @@
         return _(dropTargetTypes).contains($(this).data('drop-type'));
       },
       drop: function(event, ui) {
-        var newElement = createDroppedElement(ui.draggable);
+        var newElement = createDroppedElement(ui.draggable, $(event.target));
         dropElement(newElement, $(event.target), {
           dropOrientation: $(event.target).hasClass('horizontal') ? 'horizontal' : 'vertical',
           replace: $(event.target).hasClass('replace')
@@ -110,12 +110,12 @@
     });
   }
 
-  function createDroppedElement(draggable) {
+  function createDroppedElement(draggable, droppable) {
     var expressionType = draggable.data('expression-type');
     if (expressionType) {
       var expression = {};
       expression[expressionType] = {};
-      return appendExpression(expression, $('<div>'));
+      return appendExpression(expression, $('<div>'), '', { dropContainer: droppable });
     } else {
       var newElement = draggable.clone();
       newElement.data('drop-target-types', draggable.data('drop-target-types'));
@@ -171,7 +171,7 @@
         el.append($('<div>').addClass('keyword').text('var'));
         if (variable.name) {
           var symbolBlock = $('<div>').addClass('symbol draggable').text(variable.name);
-          symbolBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);
+          symbolBlock.data('drop-target-types', symbolDropTargetTypes);
           el.append(symbolBlock);
         } else {
           appendDropTarget(el, { replace: true, dropOrientation: 'outline', dropType: 'symbol-missing' });
@@ -220,12 +220,14 @@
         appendExpression(ret, el, '', { dropType: 'expression' });
       },
 
-      'call': function(call, el, child) {
-        var callBlock = $('<div>').addClass('symbol draggable').text(call.name);
-        callBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);
-        el.append(callBlock);
+      'call': function(call, el, container) {
+        if (!container) {
+          var callBlock = $('<div>').addClass('symbol draggable').text(call.name);
+          callBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);          
+          el.append(callBlock);
+        }
         call.args = call.args || [];
-        renderArgsBlock(call.args, el)
+        renderArgsBlock(call.args, el);
       },
 
       'new': function(instantiation, el) {

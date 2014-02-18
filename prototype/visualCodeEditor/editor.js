@@ -24,7 +24,6 @@
 
   function appendExpressions(expressions, parent, expressionClass, dropInfo) {
     var dropInfo = _.clone(dropInfo) || {};
-    dropInfo.targetTypes = _.union(dropInfo.targetTypes || [], ['expression']);
     expressions.forEach(function(expression) {
       if (dropInfo) { appendDropTarget(parent, dropInfo); }
       appendExpression(expression, parent, expressionClass, dropInfo);
@@ -53,13 +52,13 @@
   }
 
   function appendDropTarget(el, dropInfo) {
-    dropInfo = _.clone(dropInfo) || {};
+    var dropInfo = _.clone(dropInfo) || {};
     dropInfo.dropOrientation = dropInfo.dropOrientation || 'vertical';
     dropInfo.method = dropInfo.method || 'append';
-    dropInfo.targetTypes = dropInfo.targetTypes || [];
     var dropTarget = $('<div>').addClass('droppable');
     dropTarget.addClass(dropInfo.dropOrientation);
-    dropTarget.data('target-types', dropInfo.targetTypes);
+    console.log('appendDropTarget', dropInfo.dropType);
+    dropTarget.attr('data-drop-type', dropInfo.dropType);
     if (dropInfo.replace) { 
       dropTarget.addClass('replace');
     }
@@ -75,7 +74,7 @@
         if ($(this).closest('.palette').length === 0) {
           $(this).data('startingScrollTop', window.pageYOffset);
         }
-        bindDroppables($(event.target).data('target-types'));
+        bindDroppables($(event.target).data('drop-target-types'));
       },
       drag: function(event, ui){
         var st = parseInt($(this).data('startingScrollTop'));
@@ -92,38 +91,40 @@
     });
   }
 
-  function bindDroppables(targetTypes) {
-    $('.ui-droppable').droppable('destroy');
-    var droppables = $('.droppable').filter(function() {
-      if (targetTypes === undefined || targetTypes.length === 0) {
-        return true;
-      }
-      var acceptableTargetTypes = $(this).data('target-types') || [];
-      return _.intersection(targetTypes, acceptableTargetTypes).length > 0;
-    });
-    droppables.droppable({
+  function bindDroppables(dropTargetTypes) {
+    $('[data-drop-type]').droppable({
       greedy: true,
       tolerance: 'touch-closest-to-mouse',
       hoverClass: 'drop-acceptable',
       activeClass: 'droppable-active',
+      accept: function(draggable) {
+        return _(dropTargetTypes).contains($(this).data('drop-type'));
+      },
       drop: function(event, ui) {
-        var newElement = createDropElement(ui.draggable);
-        dropElement(newElement, $(event.target), { 
+        var newElement = createDroppedElement(ui.draggable);
+        dropElement(newElement, $(event.target), {
           dropOrientation: $(event.target).hasClass('horizontal') ? 'horizontal' : 'vertical',
           replace: $(event.target).hasClass('replace')
         });
       }
-    });    
+    });
   }
 
-  function createDropElement(draggable) {
+  function createDroppedElement(draggable) {
     var expressionType = draggable.data('expression-type');
-    var expression = {};
-    expression[expressionType] = {};
-    return expressionType ? appendExpression(expression, $('<div>')) : draggable.clone();
+    if (expressionType) {
+      var expression = {};
+      expression[expressionType] = {};
+      return appendExpression(expression, $('<div>'));
+    } else {
+      var newElement = draggable.clone();
+      newElement.data('drop-target-types', draggable.data('drop-target-types'));
+      return newElement;
+    }
   }
 
   function dropElement(el, dropTarget, dropInfo) {
+    var dropInfo = _.clone(dropInfo);
     dropTarget.after(el);
     dropInfo.method = 'after';
     if (dropInfo.replace) {
@@ -132,7 +133,7 @@
       // another 'drop' event can fire and the draggable can be dropped onto multiple targets.
       setTimeout(function() { dropTarget.remove(); }, 0);
     } else {
-      dropInfo.targetTypes = dropTarget.data('target-types');
+      dropInfo.dropType = dropTarget.data('drop-type');
       appendDropTarget(el, dropInfo);
     }
     if (dropInfo.dropOrientation === 'horizontal') {
@@ -142,53 +143,68 @@
   }
 
   var renderers = (function() {
+    // Drop target types
+    // -----------------
+    // defarg:         an argument to a function definition (formal parameter)
+    // callarg:        an argument to a function call (actual parameter)
+    // func:           a function name
+    // expression:     an expression within a function or module
+    // callable:       an existing callable symbol
+    // symbol-missing: a symbol outline
+    var symbolDropTargetTypes = ['expression', 'func', 'symbol-missing', 'defarg', 'callarg'];
+
     return {
       'module': function(module, el) {
         el.append($('<div>').addClass('name').text(module.name));
-        appendExpressionBlock(module.expressions, el, { dropOrientation: 'horizontal' });
+        appendExpressionBlock(module.expressions, el, { dropOrientation: 'horizontal', dropType: 'expression' });
       },
 
       'assignment': function(assignment, el) {
         var lvalueBlock = $('<div>').addClass('lvalue');
-        appendExpression(assignment.lvalue, lvalueBlock, 'lvalue');
+        appendExpression(assignment.lvalue, lvalueBlock, 'lvalue', { dropType: 'expression' });
         el.append(lvalueBlock);
         el.append($('<div>').addClass('op').text(assignment.op));
-        var rvalueBlock = $('<div>').addClass('rvalue');
-        appendExpression(assignment.rvalue, rvalueBlock, 'rvalue');
-        el.append(rvalueBlock);
+        appendExpression(assignment.rvalue, el, 'rvalue', { dropType: 'expression' });
       },
 
       'var': function(variable, el) {
         el.append($('<div>').addClass('keyword').text('var'));
         if (variable.name) {
-          el.append($('<div>').addClass('name').addClass('draggable').text(variable.name));
+          var symbolBlock = $('<div>').addClass('symbol draggable').text(variable.name);
+          symbolBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);
+          el.append(symbolBlock);
         } else {
-          appendDropTarget(el, { replace: true, dropOrientation: 'outline' });
+          appendDropTarget(el, { replace: true, dropOrientation: 'outline', dropType: 'symbol-missing' });
         }
       },
 
       'function': function(func, el) {
         el.append($('<div>').addClass('keyword').text('function'));
-        el.append($('<div>').addClass('collapse').addClass('expanded'));
+        el.append($('<div>').addClass('collapse expanded'));
         if (func.name) {
-          el.append($('<div>').addClass('name').addClass('draggable').text(func.name));
+          var funcNameBlock = $('<div>').addClass('name draggable').text(func.name);
+          funcNameBlock.data('drop-target-types', symbolDropTargetTypes);
+          el.append(funcNameBlock);
         } else {
-          appendDropTarget(el, { dropOrientation: 'vertical', replace: true, targetTypes: ['arg'] });
+          appendDropTarget(el, { dropOrientation: 'vertical', replace: true, dropType: 'func' });
         }
         var argsBlock = $('<div>').addClass('args');
         func.args = func.args || [];
         func.expressions = func.expressions || [];
         func.args.forEach(function(arg) {
-          appendDropTarget(argsBlock, { targetTypes: ['arg'] });
-          argsBlock.append($('<div>').addClass('name').addClass('draggable').text(arg));
+          appendDropTarget(argsBlock, { dropType: 'defarg' });
+          argsBlock.append($('<div>').addClass('name draggable').text(arg).data('drop-target-types', symbolDropTargetTypes));
         });
-        appendDropTarget(argsBlock, { targetTypes: ['arg'] });
+        appendDropTarget(argsBlock, { dropType: 'defarg' });
         el.append(argsBlock);
-        appendExpressionBlock(func.expressions, el, { dropOrientation: 'horizontal' }).addClass('collapsible expanded');
+        var expressionBlock = appendExpressionBlock(func.expressions, el, { dropOrientation: 'horizontal', dropType: 'expression' });
+        expressionBlock.addClass('collapsible expanded');
       },
 
       'ref': function(ref, el) {
-        el.append($('<div>').addClass('name').addClass('draggable').text(ref.name));
+        var refBlock = $('<div>').addClass('symbol draggable').text(ref.name);
+        refBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);
+        el.append(refBlock);
         if ('subs' in ref) {
           for(var sub in ref.subs) {
             var subBlock = $('<div>').addClass('sub');
@@ -201,26 +217,28 @@
 
       'return': function(ret, el) {
         el.append($('<div>').addClass('keyword').text('return'));
-        appendExpression(ret, el);
+        appendExpression(ret, el, '', { dropType: 'expression' });
       },
 
-      'call': function(call, el) {
-        el.append($('<div>').addClass('name').addClass('draggable').text(call.name));
+      'call': function(call, el, child) {
+        var callBlock = $('<div>').addClass('symbol draggable').text(call.name);
+        callBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);
+        el.append(callBlock);
+        call.args = call.args || [];
         renderArgsBlock(call.args, el)
       },
 
-      'binary': function(binary, el) {
-        appendExpression(binary.left, el, 'left');
-        el.append($('<div>').addClass('op').text(binary.op));
-        appendExpression(binary.right, el, 'right');
-      },
-
-      'parens': function(parens, el) {
-        appendExpression(parens, el);
+      'new': function(instantiation, el) {
+        el.append($('<div>').addClass('keyword').text('new'));
+        var newBlock = $('<div>').addClass('symbol draggable').text(instantiation.name);
+        newBlock.attr('data-drop-type', 'callable').data('drop-target-types', symbolDropTargetTypes);
+        el.append(newBlock);
+        renderArgsBlock(instantiation.args, el)
       },
 
       'literal': function(literal, el) {
         var literalValue = (literal.value === '' ? '&nbsp;' : literal.value).toString().replace(' ', '&nbsp;');
+        el.data('drop-target-types', ['expression', 'callarg']);
         el.append($('<div>').addClass(literal.type).html(literalValue));
         el.addClass('draggable');
       },
@@ -241,10 +259,14 @@
         el.append($('<span>').addClass('op').text('}'));
       },
 
-      'new': function(instantiation, el) {
-        el.append($('<div>').addClass('keyword').text('new'));
-        el.append($('<div>').addClass('name').addClass('draggable').text(instantiation.name));
-        renderArgsBlock(instantiation.args, el)
+      'parens': function(parens, el) {
+        appendExpression(parens, el);
+      },
+
+      'binary': function(binary, el) {
+        appendExpression(binary.left, el, 'left', { dropType: 'expression' });
+        el.append($('<div>').addClass('op').text(binary.op));
+        appendExpression(binary.right, el, 'right', { dropType: 'expression' });
       },
 
       'ternary': function(ternary, el) {
@@ -275,7 +297,7 @@
     function renderArgsBlock(args, el) {
       var argsBlock = $('<div>').addClass('args');
       var expressionsBlock = $('<div>').addClass('expressions');
-      appendExpressions(args, expressionsBlock, 'arg-expression', { dropOrientation: 'vertical' });
+      appendExpressions(args, expressionsBlock, '', { dropOrientation: 'vertical', dropType: 'callarg' });
       argsBlock.append(expressionsBlock);
       el.append(argsBlock);
     }

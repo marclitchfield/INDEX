@@ -32,7 +32,6 @@ body {
   display: block;
   padding: .1rem .4rem .4rem .4rem;
   background-color: #112b00;
-  color: #b3ff80;
 }
 
 .module {
@@ -54,8 +53,18 @@ body {
   color: #222b00;
 }
 
+.module > .name, .function > .keyword {
+  font-weight: normal;
+  color: #b3ff80;
+}
+
 .keyword, .name {
   margin-right: .4rem;
+  color: #222b00;
+}
+
+.keyword {
+  font-weight: bold;
 }
 
 .binary, .ternary, .var, .call, .new, .keyword, .name {
@@ -67,26 +76,19 @@ body {
 }
 
 .assignment > .rvalue, .if > .then, .if > div > .else {
-  display: block;
-  margin-top: .2rem;
-  padding: .3rem;
+  display: inline-block;
   background-color: #cbe87;
-  border: .3rem solid #447821;
   color: #222b00;
+}
+
+.rvalue.function {
+  display: block;
 }
 
 .if > .then, .if > div > .else {
   display: inline-block;
   border: .4rem solid #112b00;
   margin: .2rem .4rem;
-}
-
-.keyword {
-  font-weight: bold;
-}
-
-.function > .keyword {
-  font-weight: normal;
 }
 
 .assignment > .op {
@@ -125,7 +127,7 @@ body {
   display: inline-block;
 }
 
-.module .expressions .name, .args > .name {
+.module .expressions .symbol, .module .expressions .name {
   display: inline-block;
   padding: .2rem .4rem;
   margin: .1rem 0;
@@ -173,7 +175,7 @@ body {
 
 .collapse {
   float: right;
-  margin-top: .3rem;
+  margin: .4rem 0 0 .2rem;
   width: .8em;
   height: .8em;
   background-color: #00a280;
@@ -240,6 +242,7 @@ body {
 
 .ui-draggable-dragging {
   opacity: .8;
+  transition: opacity .25s;
 }
 
 .droppable {
@@ -277,12 +280,14 @@ body {
 }
 
 .drop-acceptable {
-  background-color: #fff;
-  box-shadow: 0 0 10px 2px #fff;
+  background-color: #5f5;
+  box-shadow: 0 0 30px 20px #fff;
 }
 
 .draggable-overdrop {
-  box-shadow: 0 0 10px 2px #fff !important;
+  opacity: .4;
+  box-shadow: 0 0 10px 5px #030 !important;
+  transition: opacity .25s;
 }
 
 /*
@@ -351,12 +356,12 @@ body {
   color: #222b00;
 }
 
-.palette .new-args {
+.palette .new-call {
   background-color: #447821;
   color: #000;
 }
 
-.palette .new-variable {
+.palette .new-symbol {
   background-color: #f1f6ac;
   color: #000;
 }

@@ -68,9 +68,9 @@
                       }
                     },
                     "rvalue": {
-                      "ref": {
+                      "call": {
                         "name": "lowercaseWords",
-                        "sub": [
+                        "args": [
                           {
                             "ref": {
                               "name": "text"
@@ -99,12 +99,14 @@
                                       "op": "=",
                                       "lvalue": {
                                         "ref": {
-                                          "name": "counts"
-                                        },
-                                        "prop": {
-                                          "ref": {
-                                            "name": "word"
-                                          }
+                                          "name": "counts",
+                                          "sub": [
+                                            {
+                                              "ref": {
+                                                "name": "word"
+                                              }
+                                            }
+                                          ]
                                         }
                                       },
                                       "rvalue": {

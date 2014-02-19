@@ -113,6 +113,18 @@ body {
   display: inline-block;
 }
 
+.sub::before {
+  content: '[';
+  font-weight: bold;
+  margin-right: .2rem;
+}
+
+.sub::after {
+  content: ']';
+  font-weight: bold;
+  margin-left: .2rem;
+}
+
 .prop > .op {
   font-size: 2em;
   line-height: 0;
@@ -137,7 +149,7 @@ body {
   vertical-align: middle;
 }
 
-.args, .args > .name {
+.args, .args > .name, .sub {
   display: inline-block;
   margin: .2rem 0 .3rem 0;
   padding: .1rem .2rem;

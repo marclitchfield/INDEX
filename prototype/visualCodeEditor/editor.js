@@ -42,14 +42,31 @@
       el.addClass(expressionClass);
     }
     renderers[expressionType](expression[expressionType], el, dropInfo.dropContainer);
-    if (expression[expressionType].prop !== undefined) {
-      var propBlock = $('<div>').addClass('prop');
-      propBlock.append($('<div>').addClass('op').text('.'));
-      appendExpression(expression[expressionType].prop, propBlock, '', dropInfo);
-      el.append(propBlock);
-    }
+    appendSubs(el, expression[expressionType], dropInfo);
+    appendProp(el, expression[expressionType], dropInfo);
     parent.append(el);
     return el;
+  }
+
+  function appendSubs(el, expression, dropInfo) {
+    if (!expression.sub || expression.sub.length === 0) {
+      return;
+    }
+    expression.sub.forEach(function(sub) {
+      var subBlock = $('<div>').addClass('sub');
+      appendExpression(sub, subBlock, '', dropInfo);
+      el.append(subBlock);
+    });
+  }
+
+  function appendProp(el, expression, dropInfo) {
+    if (!expression.prop) {
+      return;
+    }
+    var propBlock = $('<div>').addClass('prop');
+    propBlock.append($('<div>').addClass('op').text('.'));
+    appendExpression(expression.prop, propBlock, '', dropInfo);
+    el.append(propBlock);
   }
 
   function appendDropTarget(el, dropInfo) {

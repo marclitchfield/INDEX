@@ -116,10 +116,11 @@ body {
 .sub::before {
   content: '[';
   font-weight: bold;
+  margin-left: .5rem;
   margin-right: .2rem;
 }
 
-.sub::after {
+.sub > .ref::after {
   content: ']';
   font-weight: bold;
   margin-left: .2rem;
@@ -141,7 +142,9 @@ body {
 
 .module .expressions .symbol, .module .expressions .name {
   display: inline-block;
-  padding: .2rem .4rem;
+  padding-left: .5rem;
+  padding-top: .2rem;
+  padding-bottom: .2rem;
   margin: .1rem 0;
   background-color: #f1f6ac;
   box-shadow: 0px 0px 15px 1px #447821;
@@ -149,17 +152,34 @@ body {
   vertical-align: middle;
 }
 
-.args, .args > .name, .sub {
+.module .expressions .symbol {
+  padding-right: 0;
+}
+
+.function > .args > .symbol, .function.expression > .symbol, .var.expression > .symbol {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.args, .sub {
   display: inline-block;
   margin: .2rem 0 .3rem 0;
-  padding: .1rem .2rem;
   vertical-align: middle;
   color: #000;
   background-color: #447821;
 }
 
+.function > .args {
+  padding: .1rem .2rem;
+}
+
+.sub {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .args > .expressions {
-  padding: .1rem;
+  padding: .1rem 0 .1rem .5rem;
   display: inline-block;
   background-color: #447821;
   vertical-align: middle;
@@ -171,12 +191,14 @@ body {
 
 .args > .expressions::before, .function > .args::before {
   content: '(';
+  color: #000;
   font-size: .8em;
   font-weight: bold;
 }
 
 .args > .expressions::after, .function > .args::after {
   content: ')';
+  color: #000;
   font-size: .8em;
   font-weight: bold;
 }
@@ -262,15 +284,16 @@ body {
   vertical-align: middle;
   margin: .1rem;
   border-radius: .4rem;
-  height: .8em;
-  width: .3em;
+  height: .8rem;
+  width: .3rem;
+  z-index: 9999;
 }
 
 .droppable.outline {
   display: inline-block;
   border-radius: 0;
-  height: .8em;
-  width: 1.5em;
+  height: .8rem;
+  width: 1.5rem;
   border: 1px solid #222;
   border-style: dashed;
 }
@@ -278,8 +301,8 @@ body {
 .droppable.horizontal {
   margin: .1rem;
   display: block;
-  height: .3em;
-  width: .8em;
+  height: .3rem;
+  width: .8rem;
 }
 
 .droppable-active {
@@ -300,6 +323,23 @@ body {
   opacity: .4;
   box-shadow: 0 0 10px 5px #030 !important;
   transition: opacity .25s;
+}
+
+@media (max-width: 1024px) {
+  .droppable {
+    height: 2.4rem;
+    width: .9rem;
+  }
+
+  .droppable.outline {
+    height: 2.4rem;
+    width: 4.5rem;
+  }
+
+  .droppable.horizontal {
+    height: .9rem;
+    width: 2.4rem;
+  }
 }
 
 /*

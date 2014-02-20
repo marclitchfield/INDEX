@@ -41,23 +41,46 @@
     if (expressionClass) {
       el.addClass(expressionClass);
     }
-    renderers[expressionType](expression[expressionType], el);
-    appendSubs(el, expression[expressionType], dropInfo);
-    appendProp(el, expression[expressionType], dropInfo);
+    var expressionBody = expression[expressionType];
+    renderers[expressionType](expressionBody, el);
+    appendCall(el, expressionBody, dropInfo);
+    appendSub(el, expressionBody, dropInfo);
+    appendProp(el, expressionBody, dropInfo);
     parent.append(el);
     return el;
   }
 
-  function appendSubs(el, expression, dropInfo) {
-    if (!expression.sub || expression.sub.length === 0) {
+  function appendCall(el, expression, dropInfo) {
+    var callBody = expression['call'];
+    if (!callBody) {
       return;
     }
-    expression.sub.forEach(function(sub) {
-      var subBlock = $('<div>').addClass('sub');
-      appendExpression(sub, subBlock, '', dropInfo);
-      appendDropTarget(subBlock, { dropOrientation: 'vertical', dropType: 'callable' })
-      el.append(subBlock);
-    });
+    var callBlock = $('<div>').addClass('call');
+    renderArgsBlock(callBody.args, callBlock);
+    appendDropTarget(callBlock, { dropOrientation: 'vertical', dropType: 'callable' })
+    appendCall(el, callBody, dropInfo);
+    appendSub(el, callBody, dropInfo);
+    appendProp(el, callBody, dropInfo);
+    el.append(callBlock);
+  }
+
+  function renderArgsBlock(args, el) {
+    var argsBlock = $('<div>').addClass('args');
+    var expressionsBlock = $('<div>').addClass('expressions');
+    appendExpressions(args, expressionsBlock, '', { dropOrientation: 'vertical', dropType: 'callarg' });
+    argsBlock.append(expressionsBlock);
+    appendDropTarget(argsBlock, { dropOrientation: 'vertical', replace: true, dropType: 'callable' })
+    el.append(argsBlock);
+  }  
+
+  function appendSub(el, expression, dropInfo) {
+    if (!expression.sub) {
+      return;
+    }
+    var subBlock = $('<div>').addClass('sub');
+    appendExpression(expression.sub, subBlock, '', dropInfo);
+    appendDropTarget(subBlock, { dropOrientation: 'vertical', dropType: 'callable' })
+    el.append(subBlock);
   }
 
   function appendProp(el, expression, dropInfo) {
@@ -247,16 +270,16 @@
         appendExpression(ret, el, '', { dropType: 'expression' });
       },
 
-      'call': function(call, el) {
-        if (call.name) {
-          var symbolBlock = $('<div>').addClass('symbol draggable').text(call.name);
-          symbolBlock.data('drop-target-types', symbolDropTargetTypes);
-          appendDropTarget(symbolBlock, { dropOrientation: 'vertical', dropType: 'callable' });
-          el.append(symbolBlock);
-        }
-        call.args = call.args || [];
-        renderArgsBlock(call.args, el);
-      },
+      // 'call': function(call, el) {
+      //   if (call.name) {
+      //     var symbolBlock = $('<div>').addClass('symbol draggable').text(call.name);
+      //     symbolBlock.data('drop-target-types', symbolDropTargetTypes);
+      //     appendDropTarget(symbolBlock, { dropOrientation: 'vertical', dropType: 'callable' });
+      //     el.append(symbolBlock);
+      //   }
+      //   call.args = call.args || [];
+      //   renderArgsBlock(call.args, el);
+      // },
 
       'new': function(instantiation, el) {
         el.append($('<div>').addClass('keyword').text('new'));
@@ -266,7 +289,6 @@
           appendDropTarget(symbolBlock, { dropOrientation: 'vertical', dropType: 'callable' });
           el.append(symbolBlock);
         }
-        renderArgsBlock(instantiation.args, el)
       },
 
       'literal': function(literal, el) {
@@ -325,15 +347,6 @@
           el.append(elseContainer);
         }
       }
-    }
-
-    function renderArgsBlock(args, el) {
-      var argsBlock = $('<div>').addClass('args');
-      var expressionsBlock = $('<div>').addClass('expressions');
-      appendExpressions(args, expressionsBlock, '', { dropOrientation: 'vertical', dropType: 'callarg' });
-      argsBlock.append(expressionsBlock);
-      appendDropTarget(argsBlock, { dropOrientation: 'vertical', replace: true, dropType: 'callable' })
-      el.append(argsBlock);
     }
   })();
 

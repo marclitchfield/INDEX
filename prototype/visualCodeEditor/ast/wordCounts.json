@@ -20,20 +20,25 @@
                     "ref": {
                       "name": "text",
                       "prop": {
-                        "call": {
+                        "ref": {
                           "name": "toLowerCase",
-                          "args": [],
+                          "call": {
+                            "args": []
+                          },
                           "prop": {
-                            "call": {
+                            "ref": {
                               "name": "match",
-                              "args": [
-                                {
-                                  "literal": {
-                                    "type": "regex",
-                                    "value": "/w+/g"
+                              "call": {
+                                "name": "match",
+                                "args": [
+                                  {
+                                    "literal": {
+                                      "type": "regex",
+                                      "value": "/w+/g"
+                                    }
                                   }
-                                }
-                              ]
+                                ]
+                              }
                             }
                           }
                         }
@@ -68,15 +73,17 @@
                       }
                     },
                     "rvalue": {
-                      "call": {
+                      "ref": {
                         "name": "lowercaseWords",
-                        "args": [
-                          {
-                            "ref": {
-                              "name": "text"
+                        "call": {
+                          "args": [
+                            {
+                              "ref": {
+                                "name": "text"
+                              }
                             }
-                          }
-                        ]
+                          ]                          
+                        }
                       }
                     }
                   }
@@ -86,83 +93,81 @@
                     "ref": {
                       "name": "words",
                       "prop": {
-                        "call": {
+                        "ref": {
                           "name": "reduce",
-                          "args": [
-                            {
-                              "function": {
-                                "name": "wordCounts",
-                                "args": ["counts", "word"],
-                                "expressions": [
-                                  {
-                                    "assignment": {
-                                      "op": "=",
-                                      "lvalue": {
-                                        "ref": {
-                                          "name": "counts",
-                                          "sub": [
-                                            {
+                          "call": {
+                            "args": [
+                              {
+                                "function": {
+                                  "name": "wordCounts",
+                                  "args": ["counts", "word"],
+                                  "expressions": [
+                                    {
+                                      "assignment": {
+                                        "op": "=",
+                                        "lvalue": {
+                                          "ref": {
+                                            "name": "counts",
+                                            "sub": {
                                               "ref": {
                                                 "name": "word"
                                               }
                                             }
-                                          ]
-                                        }
-                                      },
-                                      "rvalue": {
-                                        "binary": {
-                                          "op": "+",
-                                          "left": {
-                                            "parens": {
-                                              "binary": {
-                                                "op": "||",
-                                                "left": {
-                                                  "ref": {
-                                                    "name": "counts",
-                                                    "sub": [
-                                                      {
+                                          }
+                                        },
+                                        "rvalue": {
+                                          "binary": {
+                                            "op": "+",
+                                            "left": {
+                                              "parens": {
+                                                "binary": {
+                                                  "op": "||",
+                                                  "left": {
+                                                    "ref": {
+                                                      "name": "counts",
+                                                      "sub": {
                                                         "ref": {
                                                           "name": "word"
                                                         }
                                                       }
-                                                    ]
-                                                  }
-                                                },
-                                                "right": {
-                                                  "literal": {
-                                                    "type": "number",
-                                                    "value": 0
+                                                    }
+                                                  },
+                                                  "right": {
+                                                    "literal": {
+                                                      "type": "number",
+                                                      "value": 0
+                                                    }
                                                   }
                                                 }
                                               }
-                                            }
-                                          },
-                                          "right": {
-                                            "literal": {
-                                              "type": "number",
-                                              "value": 1
+                                            },
+                                            "right": {
+                                              "literal": {
+                                                "type": "number",
+                                                "value": 1
+                                              }
                                             }
                                           }
                                         }
                                       }
-                                    }
-                                  },
-                                  {
-                                    "return": {
-                                      "ref": {
-                                        "name": "counts"
+                                    },
+                                    {
+                                      "return": {
+                                        "ref": {
+                                          "name": "counts"
+                                        }
                                       }
                                     }
-                                  }
-                                ]
+                                  ]
+                                }
+                              },
+                              {
+                                "hash": {
+                                  "entries": []
+                                }
                               }
-                            },
-                            {
-                              "hash": {
-                                "entries": []
-                              }
-                            }
-                          ]
+                            ]
+                          }
                         }
                       }
                     }

@@ -9,45 +9,49 @@
           "expressions": [
             {
               "return": {
-                "call": {
+                "ref": {
                   "name": "capitalize",
-                  "args": [
-                    {
-                      "call": {
-                        "name": "transform",
-                        "args": [
-                          {
-                            "binary": {
-                              "op": "+",
-                              "left": {
-                                "literal": {
-                                  "type": "string",
-                                  "value": "$X bottle(s) of beer on the wall, $X bottle(s) of beer.\n"
-                                }                            
-                              },
-                              "right": {
+                  "call": {
+                    "args": [
+                      {
+                        "ref": {
+                          "name": "transform",
+                          "call": {
+                            "args": [
+                              {
                                 "binary": {
                                   "op": "+",
                                   "left": {
                                     "literal": {
                                       "type": "string",
-                                      "value": "[Take $some down and pass it around|Go to the store and buy some more],"
-                                    }
+                                      "value": "$X bottle(s) of beer on the wall, $X bottle(s) of beer.\n"
+                                    }                            
                                   },
                                   "right": {
-                                    "literal": {
-                                      "type": "string",
-                                      "value": "[$X-1|99] bottle(-1:s) of beer on the wall.\n"
+                                    "binary": {
+                                      "op": "+",
+                                      "left": {
+                                        "literal": {
+                                          "type": "string",
+                                          "value": "[Take $some down and pass it around|Go to the store and buy some more],"
+                                        }
+                                      },
+                                      "right": {
+                                        "literal": {
+                                          "type": "string",
+                                          "value": "[$X-1|99] bottle(-1:s) of beer on the wall.\n"
+                                        }
+                                      }
                                     }
                                   }
                                 }
                               }
-                            }
+                            ]                            
                           }
-                        ]
+                        }
                       }
-                    }
-                  ]
+                    ]                    
+                  }
                 }
               }
             },
@@ -61,246 +65,262 @@
                       "ref": {
                         "name": "pattern",
                         "prop": {
-                          "call": {
+                          "ref": {
                             "name": "replace",
-                            "args": [
-                              {
-                                "literal": {
-                                  "type": "regex",
-                                  "value": "/\\$X-1/g"
-                                }
-                              },
-                              {
-                                "call": {
-                                  "name": "numberText",
-                                  "args": [
-                                    {
-                                      "binary": {
-                                        "op": "-",
-                                        "left": {
-                                          "ref": {
-                                            "name": "number"
-                                          }
-                                        },
-                                        "right": {
-                                          "literal": {
-                                            "type": "number",
-                                            "value": 1
-                                          }
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
-                            ],
-                            "prop": {
-                              "call": {
-                                "name": "replace",
-                                "args": [
-                                  {
-                                    "literal": {
-                                      "type": "regex",
-                                      "value": "/\\$X/g"
-                                    }
-                                  },
-                                  {
+                            "call": {
+                              "args": [
+                                {
+                                  "literal": {
+                                    "type": "regex",
+                                    "value": "/\\$X-1/g"
+                                  }
+                                },
+                                {
+                                  "ref": {
+                                    "name": "numberText",
                                     "call": {
-                                      "name": "numberText",
                                       "args": [
                                         {
-                                          "literal": {
-                                            "type": "number",
-                                            "value": 1
+                                          "binary": {
+                                            "op": "-",
+                                            "left": {
+                                              "ref": {
+                                                "name": "number"
+                                              }
+                                            },
+                                            "right": {
+                                              "literal": {
+                                                "type": "number",
+                                                "value": 1
+                                              }
+                                            }
                                           }
                                         }
                                       ]
                                     }
                                   }
-                                ],
-                                "prop": {
-                                  "call": {
-                                    "name": "replace",
-                                    "args": [
-                                      {
-                                        "literal": {
-                                          "type": "regex",
-                                          "value": "/\\$some/g"
-                                        }
-                                      },
-                                      {
-                                        "ternary": {
-                                          "if": {
-                                            "binary": {
-                                              "op": "===",
-                                              "left": {
-                                                "ref": {
-                                                  "name": "number"
-                                                }
-                                              },
-                                              "right": {
-                                                "literal": {
-                                                  "type": "number",
-                                                  "value": 1
-                                                }
+                                }
+                              ]
+                            },
+                            "prop": {
+                              "ref": {
+                                "name": "replace",
+                                "call": {
+                                  "args": [
+                                    {
+                                      "literal": {
+                                        "type": "regex",
+                                        "value": "/\\$X/g"
+                                      }
+                                    },
+                                    {
+                                      "ref": {
+                                        "name": "numberText",
+                                        "call": {
+                                          "args": [
+                                            {
+                                              "literal": {
+                                                "type": "number",
+                                                "value": 1
                                               }
                                             }
-                                          },
-                                          "then": {
-                                            "literal": {
-                                              "type": "string",
-                                              "value": "it"
-                                            }
-                                          },
-                                          "else": {
-                                            "literal": {
-                                              "type": "string",
-                                              "value": "one"
-                                            }
-                                          }
+                                          ]                                          
                                         }
                                       }
-                                    ],
-                                    "prop": {
-                                      "call": {
-                                        "name": "replace",
-                                        "args": [
-                                          {
-                                            "literal": {
-                                              "type": "regex",
-                                              "value": "/\\(s\\)/g"
-                                            }
-                                          },
-                                          {
-                                            "ternary": {
-                                              "if": {
-                                                "binary": {
-                                                  "op": "===",
-                                                  "left": {
-                                                    "ref": {
-                                                      "name": "number"
-                                                    }
-                                                  },
-                                                  "right": {
-                                                    "literal": {
-                                                      "type": "number",
-                                                      "value": 1
-                                                    }
+                                    }
+                                  ]                                  
+                                },
+                                "prop": {
+                                  "ref": {
+                                    "name": "replace",
+                                    "call": {
+                                      "args": [
+                                        {
+                                          "literal": {
+                                            "type": "regex",
+                                            "value": "/\\$some/g"
+                                          }
+                                        },
+                                        {
+                                          "ternary": {
+                                            "if": {
+                                              "binary": {
+                                                "op": "===",
+                                                "left": {
+                                                  "ref": {
+                                                    "name": "number"
+                                                  }
+                                                },
+                                                "right": {
+                                                  "literal": {
+                                                    "type": "number",
+                                                    "value": 1
                                                   }
                                                 }
-                                              },
-                                              "then": {
-                                                "literal": {
-                                                  "type": "string",
-                                                  "value": ""
-                                                }
-                                              },
-                                              "else": {
-                                                "literal": {
-                                                  "type": "string",
-                                                  "value": ""
-                                                }
+                                              }
+                                            },
+                                            "then": {
+                                              "literal": {
+                                                "type": "string",
+                                                "value": "it"
+                                              }
+                                            },
+                                            "else": {
+                                              "literal": {
+                                                "type": "string",
+                                                "value": "one"
                                               }
                                             }
                                           }
-                                        ],
-                                        "prop": {
-                                          "call": {
-                                            "name": "replace",
-                                            "args": [
-                                              {
-                                                "literal": {
-                                                  "type": "regex",
-                                                  "value": "/\\(-1:s\\)/g"
-                                                }
-                                              },
-                                              {
-                                                "ternary": {
-                                                  "if": {
-                                                    "binary": {
-                                                      "op": "===",
-                                                      "left": {
-                                                        "binary": {
-                                                          "op": "-",
-                                                          "left": {
-                                                            "ref": {
-                                                              "name": "number"
-                                                            }
-                                                          },
-                                                          "right": {
-                                                            "literal": {
-                                                              "type": "number",
-                                                              "value": 1
-                                                            }
-                                                          }
-                                                        }
-                                                      },
-                                                      "right": {
-                                                        "literal": {
-                                                          "type": "number",
-                                                          "value": 1
-                                                        }
+                                        }
+                                      ]                                      
+                                    },
+                                    "prop": {
+                                      "ref": {
+                                        "name": "replace",
+                                        "call": {
+                                          "args": [
+                                            {
+                                              "literal": {
+                                                "type": "regex",
+                                                "value": "/\\(s\\)/g"
+                                              }
+                                            },
+                                            {
+                                              "ternary": {
+                                                "if": {
+                                                  "binary": {
+                                                    "op": "===",
+                                                    "left": {
+                                                      "ref": {
+                                                        "name": "number"
+                                                      }
+                                                    },
+                                                    "right": {
+                                                      "literal": {
+                                                        "type": "number",
+                                                        "value": 1
                                                       }
                                                     }
-                                                  },
-                                                  "then": {
-                                                    "literal": {
-                                                      "type": "string",
-                                                      "value": ""
-                                                    }
-                                                  },
-                                                  "else": {
-                                                    "literal": {
-                                                      "type": "string",
-                                                      "value": ""
-                                                    }
+                                                  }
+                                                },
+                                                "then": {
+                                                  "literal": {
+                                                    "type": "string",
+                                                    "value": ""
+                                                  }
+                                                },
+                                                "else": {
+                                                  "literal": {
+                                                    "type": "string",
+                                                    "value": ""
                                                   }
                                                 }
                                               }
-                                            ],
-                                            "prop": {
-                                              "call": {
-                                                "name": "replace",
-                                                "args": [
-                                                  {
-                                                    "literal": {
-                                                      "type": "string",
-                                                      "value": "/\\[(.*?)\\|(.*?)\\]/g"
-                                                    }
-                                                  },
-                                                  {
-                                                    "ternary": {
-                                                      "if": {
-                                                        "binary": {
-                                                          "op": ">",
-                                                          "left": {
-                                                            "ref": {
-                                                              "name": "number"
-                                                            }
-                                                          },
-                                                          "right": {
-                                                            "literal": {
-                                                              "type": "number",
-                                                              "value": 0
+                                            }
+                                          ]
+                                        },
+                                        "prop": {
+                                          "ref": {
+                                            "name": "replace",
+                                            "call": {
+                                              "args": [
+                                                {
+                                                  "literal": {
+                                                    "type": "regex",
+                                                    "value": "/\\(-1:s\\)/g"
+                                                  }
+                                                },
+                                                {
+                                                  "ternary": {
+                                                    "if": {
+                                                      "binary": {
+                                                        "op": "===",
+                                                        "left": {
+                                                          "binary": {
+                                                            "op": "-",
+                                                            "left": {
+                                                              "ref": {
+                                                                "name": "number"
+                                                              }
+                                                            },
+                                                            "right": {
+                                                              "literal": {
+                                                                "type": "number",
+                                                                "value": 1
+                                                              }
                                                             }
                                                           }
+                                                        },
+                                                        "right": {
+                                                          "literal": {
+                                                            "type": "number",
+                                                            "value": 1
+                                                          }
                                                         }
-                                                      },
-                                                      "then": {
-                                                        "literal": {
-                                                          "type": "string",
-                                                          "value": "$1"
-                                                        }
-                                                      },
-                                                      "else": {
-                                                        "literal": {
-                                                          "type": "string",
-                                                          "value": "$2"
-                                                        }
+                                                      }
+                                                    },
+                                                    "then": {
+                                                      "literal": {
+                                                        "type": "string",
+                                                        "value": ""
+                                                      }
+                                                    },
+                                                    "else": {
+                                                      "literal": {
+                                                        "type": "string",
+                                                        "value": ""
                                                       }
                                                     }
                                                   }
-                                                ]
+                                                }
+                                              ]
+                                            },
+                                            "prop": {
+                                              "ref": {
+                                                "name": "replace",
+                                                "call": {
+                                                  "args": [
+                                                    {
+                                                      "literal": {
+                                                        "type": "string",
+                                                        "value": "/\\[(.*?)\\|(.*?)\\]/g"
+                                                      }
+                                                    },
+                                                    {
+                                                      "ternary": {
+                                                        "if": {
+                                                          "binary": {
+                                                            "op": ">",
+                                                            "left": {
+                                                              "ref": {
+                                                                "name": "number"
+                                                              }
+                                                            },
+                                                            "right": {
+                                                              "literal": {
+                                                                "type": "number",
+                                                                "value": 0
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                        "then": {
+                                                          "literal": {
+                                                            "type": "string",
+                                                            "value": "$1"
+                                                          }
+                                                        },
+                                                        "else": {
+                                                          "literal": {
+                                                            "type": "string",
+                                                            "value": "$2"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  ]
+                                                }
                                               }
                                             }
                                           }
@@ -332,20 +352,24 @@
                           "ref": {
                             "name": "text",
                             "prop": {
-                              "call": {
+                              "ref": {
                                 "name": "charAt",
-                                "args": [
-                                  {
-                                    "literal": {
-                                      "type": "number",
-                                      "value": 0
+                                "call": {
+                                  "args": [
+                                    {
+                                      "literal": {
+                                        "type": "number",
+                                        "value": 0
+                                      }
                                     }
-                                  }
-                                ],
+                                  ]                                  
+                                },
                                 "prop": {
-                                  "call": {
+                                  "ref": {
                                     "name": "toUpperCase",
-                                    "args": []
+                                    "call": {
+                                      "args": []
+                                    }
                                   }
                                 }
                               }
@@ -356,16 +380,18 @@
                           "ref": {
                             "name": "text",
                             "prop": {
-                              "call": {
+                              "ref": {
                                 "name": "slice",
-                                "args": [
-                                  {
-                                    "literal": {
-                                      "type": "number",
-                                      "value": 1
+                                "call": {
+                                  "args": [
+                                    {
+                                      "literal": {
+                                        "type": "number",
+                                        "value": 1
+                                      }
                                     }
-                                  }
-                                ]
+                                  ]                                  
+                                }
                               }
                             }
                           }
@@ -460,15 +486,17 @@
                     "binary": {
                       "op": "+",
                       "left": {
-                        "call": {
+                        "ref": {
                           "name": "verse",
-                          "args": [
-                            {
-                              "ref": {
-                                "name": "fromNumber"
+                          "call": {
+                            "args": [
+                              {
+                                "ref": {
+                                  "name": "fromNumber"
+                                }
                               }
-                            }
-                          ]
+                            ]                            
+                          }
                         }
                       },
                       "right": {
@@ -481,31 +509,33 @@
                             }
                           },
                           "right": {
-                            "call": {
+                            "ref": {
                               "name": "sing",
-                              "args": [
-                                {
-                                  "binary": {
-                                    "op": "-",
-                                    "left": {
-                                      "ref": {
-                                        "name": "fromNumber"
-                                      }
-                                    },
-                                    "right": {
-                                      "literal": {
-                                        "type": "number",
-                                        "value": 1
+                              "call": {
+                                "args": [
+                                  {
+                                    "binary": {
+                                      "op": "-",
+                                      "left": {
+                                        "ref": {
+                                          "name": "fromNumber"
+                                        }
+                                      },
+                                      "right": {
+                                        "literal": {
+                                          "type": "number",
+                                          "value": 1
+                                        }
                                       }
                                     }
+                                  },
+                                  {
+                                    "ref": {
+                                      "name": "toNumber"
+                                    }
                                   }
-                                },
-                                {
-                                  "ref": {
-                                    "name": "toNumber"
-                                  }
-                                }
-                              ]
+                                ]
+                              }
                             }
                           }
                         }
@@ -517,15 +547,17 @@
             },
             {
               "return": {
-                "call": {
+                "ref": {
                   "name": "verse",
-                  "args": [
-                    {
-                      "ref": {
-                        "name": "fromNumber"
+                  "call": {
+                    "args": [
+                      {
+                        "ref": {
+                          "name": "fromNumber"
+                        }
                       }
-                    }
-                  ]
+                    ]                    
+                  }
                 }
               }
             }

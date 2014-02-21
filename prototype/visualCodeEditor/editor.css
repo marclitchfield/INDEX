@@ -71,6 +71,10 @@ body {
   display: inline-block;
 }
 
+.binary .left, .binary .right {
+  display: inline-block;
+}
+
 .assignment > .lvalue {
   display: inline-block;
 }
@@ -81,7 +85,7 @@ body {
   color: #222b00;
 }
 
-.rvalue.function {
+.rvalue.block {
   display: block;
 }
 
@@ -258,6 +262,16 @@ body {
   padding: .2rem .4rem;
   background-color: #55d400;
   color: #000;
+}
+
+.hash::before {
+  content: '{';
+  font-weight: bold;
+}
+
+.hash::after {
+  content: '}';
+  font-weight: bold;
 }
 
 .hash .entry {

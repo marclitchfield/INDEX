@@ -15,9 +15,9 @@
     return el.children();
   }
 
-  function appendExpressionBlock(expressions, parent, dropInfo) {
+  function appendExpressionBlock(expressions, parent) {
     var expressionBlock = $('<div>').addClass('expressions');
-    appendExpressions(expressions, expressionBlock, null, dropInfo);
+    appendExpressions(expressions, expressionBlock, null, { dropOrientation: 'horizontal', dropType: 'expression' });
     parent.append(expressionBlock);
     return expressionBlock;
   }
@@ -213,15 +213,15 @@
     return {
       'module': function(module, el) {
         el.append($('<div>').addClass('name').text(module.name));
-        appendExpressionBlock(module.expressions, el, { dropOrientation: 'horizontal', dropType: 'expression' });
+        appendExpressionBlock(module.expressions, el);
       },
 
       'assignment': function(assignment, el) {
         var lvalueBlock = $('<div>').addClass('lvalue');
-        appendExpression(assignment.lvalue, lvalueBlock, 'lvalue', { dropType: 'expression' });
+        appendExpression(assignment.lvalue, lvalueBlock, 'lvalue');
         el.append(lvalueBlock);
         el.append($('<div>').addClass('op').text(assignment.op));
-        appendExpression(assignment.rvalue, el, 'rvalue', { dropType: 'expression' });
+        appendExpression(assignment.rvalue, el, 'rvalue');
       },
 
       'var': function(variable, el) {
@@ -245,16 +245,9 @@
         } else {
           appendDropTarget(el, { dropOrientation: 'vertical', replace: true, dropType: 'func' });
         }
-        var argsBlock = $('<div>').addClass('args');
-        func.args = func.args || [];
+        renderFunctionArgs(func.args, el);
         func.expressions = func.expressions || [];
-        func.args.forEach(function(arg) {
-          appendDropTarget(argsBlock, { dropType: 'defarg' });
-          argsBlock.append($('<div>').addClass('symbol draggable').text(arg).data('drop-target-types', symbolDropTargetTypes));
-        });
-        appendDropTarget(argsBlock, { dropType: 'defarg' });
-        el.append(argsBlock);
-        var expressionBlock = appendExpressionBlock(func.expressions, el, { dropOrientation: 'horizontal', dropType: 'expression' });
+        var expressionBlock = appendExpressionBlock(func.expressions, el);
         expressionBlock.addClass('collapsible expanded');
       },
 
@@ -269,17 +262,6 @@
         el.append($('<div>').addClass('keyword').text('return'));
         appendExpression(ret, el, '', { dropType: 'expression' });
       },
-
-      // 'call': function(call, el) {
-      //   if (call.name) {
-      //     var symbolBlock = $('<div>').addClass('symbol draggable').text(call.name);
-      //     symbolBlock.data('drop-target-types', symbolDropTargetTypes);
-      //     appendDropTarget(symbolBlock, { dropOrientation: 'vertical', dropType: 'callable' });
-      //     el.append(symbolBlock);
-      //   }
-      //   call.args = call.args || [];
-      //   renderArgsBlock(call.args, el);
-      // },
 
       'new': function(instantiation, el) {
         el.append($('<div>').addClass('keyword').text('new'));
@@ -348,6 +330,18 @@
         }
       }
     }
+
+    function renderFunctionArgs(args, el) {
+      var argsBlock = $('<div>').addClass('args');
+      var args = args || [];
+      args.forEach(function(arg) {
+        appendDropTarget(argsBlock, { dropType: 'defarg' });
+        argsBlock.append($('<div>').addClass('symbol draggable').text(arg).data('drop-target-types', symbolDropTargetTypes));
+      });
+      appendDropTarget(argsBlock, { dropType: 'defarg' });
+      el.append(argsBlock);
+    }
+
   })();
 
   loadVisualEditor($('.editor'));

@@ -3,13 +3,6 @@
     "name": "wordCounts.js",
     "expressions": [
       {
-        "function": {
-          "name": "",
-          "args": [],
-          "expressions": []
-        }
-      },
-      {
         "assignment": {
           "op": "=",
           "lvalue": {

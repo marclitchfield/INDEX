@@ -65,32 +65,55 @@
     });
   }
 
+  function refreshExpressionBindings(expressionNode) {
+    if (expressionNode) {
+      var expressionData = ko.dataFor(expressionNode);
+      ko.cleanNode(expressionNode);
+      ko.applyBindings(expressionData, expressionNode);
+    }    
+  }
+
   var dropHandlers = (function() {
     return {
       'callarg': function(draggable, droppable) {
         var source = createSource(draggable);
-        var targetArgs = ancestor(ko.contextFor(droppable), 'args').args;
+        var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'args').args;
         var dropPosition = $(droppable).attr('data-drop-position');
         targetArgs.splice(dropPosition, 0, source);
       },
 
       'defarg': function(draggable, droppable) {
         var sourceArg = getName(ko.dataFor(draggable));
-        var targetArgs = ancestor(ko.contextFor(droppable), 'args').args;
+        var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'args').args;
         var dropPosition = $(droppable).attr('data-drop-position');
         targetArgs.splice(dropPosition, 0, sourceArg);
       },    
 
       'expression': function(draggable, droppable) {
         var source = createSource(draggable);
-        var targetExpressions = ancestor(ko.contextFor(droppable), 'expressions').expressions;
+        var targetExpressions = ancestorWithProperty(ko.contextFor(droppable), 'expressions').expressions;
         var dropPosition = $(droppable).attr('data-drop-position');
         targetExpressions.splice(dropPosition, 0, source);
       },
 
       'function-name': function(draggable, droppable) {
-        var targetFunction = ancestor(ko.contextFor(droppable), 'name');
+        var targetFunction = ancestorWithProperty(ko.contextFor(droppable), 'name');
         targetFunction.name(getName(ko.dataFor(draggable))());
+      },
+
+      'symbol-missing': function(draggable, droppable) {
+        var targetVar = ancestorWithProperty(ko.contextFor(droppable), 'name');
+        targetVar.name(getName(ko.dataFor(draggable))());
+      },
+
+      'callable': function(draggable, droppable) {
+        var target = ko.contextFor(droppable).$parent;
+        var existingCall = target['call'];
+        target['call'] = generateExpression('call')['call'];
+        if (existingCall) {
+          target['call']['call'] = existingCall;
+        }
+        refreshExpressionBindings($(droppable).closest('.expression').parent()[0]);
       }
     };
 
@@ -115,17 +138,32 @@
     }    
   })();
 
-  function ancestor(context, type) {
+  function ancestorWithProperty(context, type) {
+    if (!context) {
+      return undefined;
+    }
     if (typeof context.$data === 'object' && type in context.$data) {
       return context.$data;
     }
-    return ancestor(context.$parentContext, type);
+    return ancestorWithProperty(context.$parentContext, type);
   }
 
   function generateExpression(type) {
     var generators = {
       'function': function() {
         return { 'function': { name: '', args: [], expressions: [] } };
+      },
+
+      'var': function() {
+        return { 'var': { name: '' }};
+      },
+
+      'ref': function() {
+        return { 'ref': { name: '' }};
+      },
+
+      'call': function() {
+        return { 'call': { args: [] } };
       }
     };
 

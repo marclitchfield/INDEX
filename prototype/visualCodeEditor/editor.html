@@ -46,8 +46,9 @@
             <span data-bind="text: name"></span>
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
         </div>
+        <!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
     </div>
-    <!-- ko template: { name: 'expression-operator-template', data: ref } --><!-- /ko -->
+    <!-- ko template: { name: 'prop-template', data: ref } --><!-- /ko -->
 </script>
 
 <script type="text/html" id="expression-operator-template">
@@ -56,9 +57,6 @@
     <!-- /ko -->
     <!-- ko if: $data.sub -->
         <!-- ko template: { name: 'sub-template', data: $data.sub } --><!-- /ko -->
-    <!-- /ko -->
-    <!-- ko if: $data.prop -->
-        <!-- ko template: { name: 'prop-template', data: prop } --><!-- /ko -->
     <!-- /ko -->
 </script>
 
@@ -87,10 +85,12 @@
 </script>
 
 <script type="text/html" id="prop-template">
+    <!-- ko if: $data.prop -->
     <div class="prop">
         <div class="op">.</div>
-        <!-- ko template: { name: template } --><!-- /ko -->
+        <!-- ko template: { name: prop.template, data: prop } --><!-- /ko -->
     </div>
+    <!-- /ko -->
 </script>
 
 <script type="text/html" id="literal-template">
@@ -138,8 +138,12 @@
 </script>
 
 <script type="text/html" id="parens-template">
-    <div class="parens expression" data-bind="template: { name: parens.template, data: parens }">
+    <div class="parens expression" data-bind="with: parens">
+        <!-- ko template: { name: template } --><!-- /ko -->
+        <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
     </div>
+    <!-- ko template: { name: 'expression-operator-template', data: parens } --><!-- /ko -->    
+    <!-- ko template: { name: 'prop-template', data: parens } --><!-- /ko -->    
 </script>
 
 <script type="text/html" id="hash-template">

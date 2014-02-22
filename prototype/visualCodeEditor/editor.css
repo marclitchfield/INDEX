@@ -42,12 +42,12 @@ body {
   margin: .4rem 0;
 }
 
-.module .expressions {
+.module > .expressions, .function > .expressions {
   background-color: #d9ff80;
   padding: .1rem .3rem;
 }
 
-.function .expressions, .assignment, .return, .if, .binary, .ternary, .call, .new {
+.function > .expressions, .assignment, .return, .if, .binary, .ternary, .call, .new {
   display: block;
   background-color: #d9ff80;
   color: #222b00;
@@ -185,7 +185,6 @@ body {
 .args > .expressions {
   padding: .1rem 0 .1rem .5rem;
   display: inline-block;
-  background-color: #447821;
   vertical-align: middle;
 }
 
@@ -296,7 +295,6 @@ body {
 .droppable {
   display: inline-block;
   vertical-align: middle;
-  margin: .1rem;
   border-radius: .4rem;
   height: .8rem;
   width: .3rem;

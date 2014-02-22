@@ -10,11 +10,13 @@
 <script type="text/html" id="module-template">
     <div class="module expression">
         <div class="name" data-bind="text: name"></div>
-        <div class="expressions" data-bind="foreach: expressions">
-            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression' }} --><!-- /ko -->
-            <!-- ko template: { name: template } --><!-- /ko -->
+        <div class="expressions">
+            <!-- ko foreach: expressions -->
+                <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: $index }} --><!-- /ko -->
+                <!-- ko template: { name: template } --><!-- /ko -->
+            <!-- /ko -->
+            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: expressions().length }} --><!-- /ko -->
         </div>
-        <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression' }} --><!-- /ko -->
     </div>
 </script>
 
@@ -30,7 +32,7 @@
     <div class="var expression" data-bind="with: $data['var']">
         <div class="keyword">var</div>
         <!-- ko if: name -->
-            <div class="symbol draggable" data-bind="text: name"></div>
+            <div class="symbol draggable" data-bind="text: name" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']"></div>
         <!-- /ko -->
         <!-- ko ifnot: name -->
             <!-- ko template: { name: 'drop-template', data: { mode: 'outline', type: 'symbol-missing' }} --><!-- /ko -->
@@ -40,7 +42,7 @@
 
 <script type="text/html" id="ref-template">
     <div class="ref expression" data-bind="with: ref">
-        <div class="symbol draggable">
+        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
             <span data-bind="text: name"></span>
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
         </div>
@@ -61,7 +63,17 @@
 </script>
 
 <script type="text/html" id="call-template">
-    <div class="call" data-bind="template: { name: 'callargs-template', data: args }">
+    <div class="call">
+        <div class="args">
+            <div class="expressions">
+                <!-- ko foreach: args -->
+                    <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg', position: $index }} --><!-- /ko -->
+                    <!-- ko template: { name: template } --><!-- /ko -->
+                <!-- /ko -->
+                <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg', position: args().length }} --><!-- /ko -->
+            </div>
+            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
+        </div>
     </div>
     <!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
 </script>
@@ -81,25 +93,13 @@
     </div>
 </script>
 
-<script type="text/html" id="callargs-template">
-    <div class="args">
-        <div class="expressions">
-            <!-- ko foreach: $data -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg' }} --><!-- /ko -->
-                <!-- ko template: { name: template } --><!-- /ko -->
-            <!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg' }} --><!-- /ko -->
-        </div>
-    </div>
-</script>
-
 <script type="text/html" id="literal-template">
-    <div class="literal expression" data-bind="with: literal">
+    <div class="literal draggable expression" data-bind="with: literal" data-drop-target-types="['expression','callarg']">
         <!-- ko if: value === '' -->
-        <div data-bind="css: { class: type }">&nbsp;</div>
+            <div data-bind="css: { class: type }">&nbsp;</div>
         <!-- /ko -->
         <!-- ko if: value !== '' -->
-        <div data-bind="css: { class: type }, html: value"></div>
+            <div data-bind="css: { class: type }, html: value"></div>
         <!-- /ko -->
     </div>
 </script>
@@ -110,11 +110,11 @@
         <!-- ko template: { name: condition.template, data: condition } --><!-- /ko -->
         <div class="then" data-bind="template: { name: $data['then'].template, data: $data['then'] }"></div>
         <!-- ko if: $data['else'] -->
-        <div>
-            <div class="keyword">else</div>
-            <div class="else" data-bind="template: { name: $data['else'].template, data: $data['else'] }">
+            <div>
+                <div class="keyword">else</div>
+                <div class="else" data-bind="template: { name: $data['else'].template, data: $data['else'] }">
+                </div>
             </div>
-        </div>
         <!-- /ko -->
     </div>
 </script>
@@ -157,24 +157,24 @@
         <div class="keyword">function</div>
         <div class="collapse expanded"></div>
         <!-- ko if: name -->
-            <div class="symbol draggable" data-bind="text: name"></div>
+            <div class="symbol draggable" data-bind="text: name" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']"></div>
         <!-- /ko -->
         <!-- ko ifnot: name -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'func' }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'function-name' }} --><!-- /ko -->
         <!-- /ko -->
         <div class="args">
             <!-- ko foreach: args -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg' }} --><!-- /ko -->
-                <div class="symbol draggable" data-bind="text: $data"></div>
+                <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg', position: $index }} --><!-- /ko -->
+                <div class="symbol draggable" data-bind="text: $data" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']"></div>
             <!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg' }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg', position: args().length }} --><!-- /ko -->
         </div>
         <div class="collapsible expanded expressions">
             <!-- ko foreach: expressions -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression' }} --><!-- /ko -->
+                <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: $index }} --><!-- /ko -->
                 <!-- ko template: { name: template } --><!-- /ko -->
             <!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression' }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: expressions().length }} --><!-- /ko -->
         </div>
     </div>
 </script>
@@ -189,7 +189,7 @@
 <script type="text/html" id="new-template">
     <div class="new expression" data-bind="with: $data['new']">
         <div class="keyword">new</div>
-        <div class="symbol draggable">
+        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
             <span data-bind="text: name"></span>
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
         </div>
@@ -198,7 +198,7 @@
 </script>
 
 <script type="text/html" id="drop-template">
-    <div class="droppable" data-bind="css: mode, attr: { 'data-drop-type': type }"></div>
+    <div class="droppable" data-bind="css: mode, attr: { 'data-drop-type': type, 'data-drop-position': $data.position }"></div>
 </script>
 
 <div class="palette-container" unselectable='on' onselectstart='return false;'>

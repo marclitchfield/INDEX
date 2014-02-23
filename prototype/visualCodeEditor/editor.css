@@ -251,6 +251,10 @@ body {
   transition: max-height .1s, opacity 0 .1s, margin 0 .1s, padding 0 .1s;
 }
 
+.collapsible.collapsed > .expressions {
+  display: none;
+}
+
 .literal, .hash .entry > .key {
   display: inline-block;
   padding: .2rem .4rem;

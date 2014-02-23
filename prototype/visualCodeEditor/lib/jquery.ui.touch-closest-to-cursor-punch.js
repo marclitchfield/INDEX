@@ -17,7 +17,7 @@
       return false;
     }
     var acceptable = _.filter($.ui.ddmanager.droppables.default, function(d) { 
-      return d.accept.call(d.element[0], draggable.element[0]) && defaultIntersect(draggable, d, 'touch');
+      return d.accept.call(d.element[0], draggable.element[0]) && defaultIntersect(draggable, d, 'touch') && VISIBILITY.isVisible(d.element[0]);
     });
     var closest = _.min(acceptable, function(other) {
       var otherCenterX = other.offset.left + other.proportions().width / 2;

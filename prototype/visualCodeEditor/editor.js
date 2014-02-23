@@ -172,4 +172,12 @@
     return ko.mapping.fromJS(expression);
   }
 
+  $('.editor').on('click', '.collapse', function() {
+    var collapsible = $(this).parent().children('.collapsible:first');
+    collapsible.toggleClass('expanded', collapsible.hasClass('collapsed'));
+    collapsible.toggleClass('collapsed', !collapsible.hasClass('collapsed'));
+    $(this).toggleClass('expanded', $(this).hasClass('collapsed'));
+    $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
+  });
+
 })();

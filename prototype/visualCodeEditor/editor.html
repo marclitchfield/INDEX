@@ -11,11 +11,11 @@
     <div class="module expression">
         <div class="name" data-bind="text: name"></div>
         <div class="expressions">
-            <!-- ko foreach: expressions -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: $index }} --><!-- /ko -->
-                <!-- ko template: { name: template } --><!-- /ko -->
-            <!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: expressions().length }} --><!-- /ko -->
+        <!-- ko foreach: expressions -->
+            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: $index }} --><!-- /ko -->
+            <!-- ko template: { name: template } --><!-- /ko -->
+        <!-- /ko -->
+        <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: expressions().length }} --><!-- /ko -->
         </div>
     </div>
 </script>
@@ -45,24 +45,18 @@
         <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
             <span data-bind="text: name"></span>
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
-        </div>
-        <!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
-    </div>
-    <!-- ko template: { name: 'prop-template', data: ref } --><!-- /ko -->
+        </div><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
+    </div><!-- ko template: { name: 'prop-template', data: ref } --><!-- /ko -->
 </script>
 
-<script type="text/html" id="expression-operator-template">
-    <!-- ko if: $data['call'] -->
-        <!-- ko template: { name: 'call-template', data: $data['call'] } --><!-- /ko -->
-    <!-- /ko -->
-    <!-- ko if: $data.sub -->
-        <!-- ko template: { name: 'sub-template', data: $data.sub } --><!-- /ko -->
-    <!-- /ko -->
+<script type="text/html" id="expression-operator-template"><!-- 
+    ko if: $data['call'] --><!-- ko template: { name: 'call-template', data: $data['call'] } --><!-- /ko --><!-- /ko --><!-- 
+    ko if: $data.sub --><!-- ko template: { name: 'sub-template', data: $data.sub } --><!-- /ko --><!-- /ko -->
 </script>
 
-<script type="text/html" id="call-template">
-    <div class="call">
+<script type="text/html" id="call-template"><div class="call">
         <div class="args">
+            <div class="spacer"></div>
             <div class="expressions">
                 <!-- ko foreach: args -->
                     <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg', position: $index }} --><!-- /ko -->
@@ -72,16 +66,14 @@
             </div>
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
         </div>
-    </div>
-    <!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
+    </div><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
 </script>
 
-<script type="text/html" id="sub-template">
-    <div class="sub">
+<script type="text/html" id="sub-template"><div class="sub">
+    <div class="spacer"></div>
         <!-- ko template: { name: template } --><!-- /ko -->
         <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
-    </div>
-    <!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
+    </div><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
 </script>
 
 <script type="text/html" id="prop-template">
@@ -141,8 +133,7 @@
     <div class="parens expression" data-bind="with: parens">
         <!-- ko template: { name: template } --><!-- /ko -->
         <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
-    </div>
-    <!-- ko template: { name: 'expression-operator-template', data: parens } --><!-- /ko -->    
+    </div><!-- ko template: { name: 'expression-operator-template', data: parens } --><!-- /ko -->    
     <!-- ko template: { name: 'prop-template', data: parens } --><!-- /ko -->    
 </script>
 
@@ -201,8 +192,7 @@
     </div>
 </script>
 
-<script type="text/html" id="drop-template">
-    <div class="droppable" data-bind="css: mode, attr: { 'data-drop-type': type, 'data-drop-position': $data.position }"></div>
+<script type="text/html" id="drop-template"><div class="droppable" data-bind="css: mode, attr: { 'data-drop-type': type, 'data-drop-position': $data.position }"></div>
 </script>
 
 <div class="palette-container" unselectable='on' onselectstart='return false;'>

@@ -3,19 +3,26 @@
   var astFile = document.location.search.replace('?', '') || 'anagram.json';
 
   $.getJSON('ast/' + astFile).success(function(ast) {
-    applyTemplateFunctions(ast);
-    var viewModel = ko.mapping.fromJS(ast);
+    var viewModel = makeObservable(ast);
     ko.applyBindings(viewModel);
     bindDraggables();
   });
 
-  function applyTemplateFunctions(expression) {
+  function makeObservable(expression) {
     var keys = _.keys(expression);
     if (keys.length === 1) {
       expression.template = keys[0] + '-template';
     }
     keys.forEach(function(k) {
-      applyTemplateFunctions(expression[k]);
+      makeObservable(expression[k]);
+      if (Array.isArray(expression[k])) {
+        expression[k] = ko.observableArray(expression[k]);
+      } else {
+        expression[k] = ko.observable(expression[k]);
+      }
+      if (!('prop' in expression)) { expression.prop = ko.observable(); }
+      if (!('call' in expression)) { expression.call = ko.observable(); }
+      if (!('sub' in expression)) { expression.sub = ko.observable(); }
     });
     return expression;
   }
@@ -91,32 +98,33 @@
 
       'function-name': function(draggable, droppable) {
         var targetFunction = ancestorWithProperty(ko.contextFor(droppable), 'name');
-        targetFunction.name(getName(ko.dataFor(draggable))());
+        targetFunction.name(getName(ko.dataFor(draggable)));
       },
 
       'symbol-missing': function(draggable, droppable) {
         var targetVar = ancestorWithProperty(ko.contextFor(droppable), 'name');
-        targetVar.name(getName(ko.dataFor(draggable))());
+        targetVar.name(getName(ko.dataFor(draggable)));
       },
 
       'callable': function(draggable, droppable) {
         var target = ko.contextFor(droppable).$parent;
-        var existingCall = target['call'];
-        target['call'] = generateExpression('call')['call'];
-        if (existingCall) {
-          target['call']['call'] = existingCall;
-        }
-        // This is expensive, but refreshing only a sub-element will duplicate elements.
-        // Look into a better workaround.
-        refreshExpressionBindings($('.editor')[0]);
+        insertNewExpression(target, 'call');
       }
     };
 
+    function insertNewExpression(target, property) {
+      var existing = makeObservable(ko.toJS(target[property]));
+      target[property](generateExpression(property)[property]);
+      if (existing) {
+        target[property]()()[property](existing);
+      }
+    }
+
     function getName(data) {
       if (typeof data === 'object') {
-        return data.name;
+        return data.name();
       }
-      return ko.observable(data);
+      return data;
     }
 
     function createSource(draggable) {
@@ -129,7 +137,7 @@
       if (typeof data === 'object' && 'literal' in data) {
         return data;
       }
-      return { ref: { name: getName(data) }, template: 'ref-template' };
+      return makeObservable({ ref: { name: getName(data) } });
     }    
   })();
 
@@ -162,9 +170,7 @@
       }
     };
 
-    var expression = generators[type]();
-    applyTemplateFunctions(expression)
-    return ko.mapping.fromJS(expression);
+    return makeObservable(generators[type]());
   }
 
   function refreshExpressionBindings(expressionNode) {

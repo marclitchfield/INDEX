@@ -196,7 +196,7 @@ body {
   display: inline-block;
   vertical-align: middle;
   width: 0;
-  height: 1.8rem;
+  height: 1.9rem;
 }
 
 .args > .expressions > .call, .args > .expressions > .new, .args > .expressions > .binary, .args > .expressions > .ternary {
@@ -309,6 +309,7 @@ body {
   border-radius: .4rem;
   height: .8rem;
   width: .3rem;
+  z-index: 10;
 }
 
 .droppable.outline {

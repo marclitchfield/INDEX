@@ -22,9 +22,9 @@
 
 <script type="text/html" id="assignment-template">
     <div class="assignment expression" data-bind="with: assignment">
-        <div class="lvalue" data-bind="template: { name: lvalue.template, data: lvalue }"></div>
+        <div class="lvalue" data-bind="template: { name: lvalue().template, data: lvalue }"></div>
         <div class="op" data-bind="text: op"></div>
-        <div class="rvalue" data-bind="template: { name: rvalue.template, data: rvalue }, style: { display: rvalue.template() === 'function-template' ? 'block' : 'inline-block' }"></div>
+        <div class="rvalue" data-bind="template: { name: rvalue().template, data: rvalue }, style: { display: rvalue().template === 'function-template' ? 'block' : 'inline-block' }"></div>
     </div>
 </script>
 
@@ -80,7 +80,7 @@
     <!-- ko if: $data.prop -->
     <div class="prop">
         <div class="op">.</div>
-        <!-- ko template: { name: prop.template, data: prop } --><!-- /ko -->
+        <!-- ko template: { name: prop().template, data: prop } --><!-- /ko -->
     </div>
     <!-- /ko -->
 </script>
@@ -99,12 +99,12 @@
 <script type="text/html" id="if-template">
     <div class="if expression" data-bind="with: $data['if']">
         <div class="keyword">if</div>
-        <!-- ko template: { name: condition.template, data: condition } --><!-- /ko -->
-        <div class="then" data-bind="template: { name: $data['then'].template, data: $data['then'] }"></div>
+        <!-- ko template: { name: condition().template, data: condition } --><!-- /ko -->
+        <div class="then" data-bind="template: { name: $data['then']().template, data: $data['then'] }"></div>
         <!-- ko if: $data['else'] -->
             <div>
                 <div class="keyword">else</div>
-                <div class="else" data-bind="template: { name: $data['else'].template, data: $data['else'] }">
+                <div class="else" data-bind="template: { name: $data['else']().template, data: $data['else'] }">
                 </div>
             </div>
         <!-- /ko -->
@@ -113,19 +113,19 @@
 
 <script type="text/html" id="binary-template">
     <div class="binary expression" data-bind="with: binary">
-        <div class="left" data-bind="template: { name: left.template, data: left }"></div>
+        <div class="left" data-bind="template: { name: left().template, data: left }"></div>
         <div class="op" data-bind="text: op"></div>
-        <div class="right" data-bind="template: { name: right.template, data: right }"></div>
+        <div class="right" data-bind="template: { name: right().template, data: right }"></div>
     </div>
 </script>
 
 <script type="text/html" id="ternary-template">
     <div class="ternary expression" data-bind="with: ternary">
-        <!-- ko template: { name: $data['if'].template, data: $data['if'] } --><!-- /ko -->
+        <!-- ko template: { name: $data['if']().template, data: $data['if'] } --><!-- /ko -->
         <span class="then op">?</span>
-        <!-- ko template: { name: $data['then'].template, data: $data['then'] } --><!-- /ko -->
+        <!-- ko template: { name: $data['then']().template, data: $data['then'] } --><!-- /ko -->
         <span class="else op">:</span>
-        <!-- ko template: { name: $data['else'].template, data: $data['else'] } --><!-- /ko -->
+        <!-- ko template: { name: $data['else']().template, data: $data['else'] } --><!-- /ko -->
     </div>
 </script>
 
@@ -138,11 +138,11 @@
 </script>
 
 <script type="text/html" id="hash-template">
-    <div class="hash expression" data-bind="foreach: hash.entries">
+    <div class="hash expression" data-bind="foreach: hash().entries">
         <div class="entry">
             <div class="key" data-bind="text: key"></div>
             <span class="op">:</span>
-            <!-- ko template: { name: value.template, data: value } --><!-- /ko -->
+            <!-- ko template: { name: value().template, data: value } --><!-- /ko -->
         </div>
     </div>
 </script>
@@ -218,7 +218,6 @@
 <script src="lib/jquery.ui.touch-closest-to-cursor-punch.js"></script>
 <script src="lib/lodash.min.js"></script>
 <script src="lib/knockout-3.0.0.debug.js"></script>
-<script src="lib/knockout.mapping-latest.js"></script>
 <script src="editor.js"></script>
 </body>
 </html>

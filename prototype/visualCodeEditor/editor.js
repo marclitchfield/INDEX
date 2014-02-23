@@ -65,13 +65,6 @@
     });
   }
 
-  function refreshExpressionBindings(expressionNode) {
-    if (expressionNode) {
-      var expressionData = ko.dataFor(expressionNode);
-      ko.cleanNode(expressionNode);
-      ko.applyBindings(expressionData, expressionNode);
-    }    
-  }
 
   var dropHandlers = (function() {
     return {
@@ -113,7 +106,9 @@
         if (existingCall) {
           target['call']['call'] = existingCall;
         }
-        refreshExpressionBindings($(droppable).closest('.expression').parent()[0]);
+        // This is expensive, but refreshing only a sub-element will duplicate elements.
+        // Look into a better workaround.
+        refreshExpressionBindings($('.editor')[0]);
       }
     };
 
@@ -170,6 +165,14 @@
     var expression = generators[type]();
     applyTemplateFunctions(expression)
     return ko.mapping.fromJS(expression);
+  }
+
+  function refreshExpressionBindings(expressionNode) {
+    if (expressionNode) {
+      var expressionData = ko.dataFor(expressionNode);
+      ko.cleanNode(expressionNode);
+      ko.applyBindings(expressionData, expressionNode);
+    }    
   }
 
   $('.editor').on('click', '.collapse', function() {

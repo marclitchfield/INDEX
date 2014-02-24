@@ -5,7 +5,11 @@
       {
         "function": {
           "name": "verse",
-          "args": ["number"],
+          "args": [
+            {
+              "name": "number"
+            }
+          ],
           "expressions": [
             {
               "return": {
@@ -58,7 +62,11 @@
             {
               "function": {
                 "name": "transform",
-                "args": ["pattern"],
+                "args": [
+                  {
+                    "name": "pattern"
+                  }
+                ],
                 "expressions": [
                   {
                     "return": {
@@ -342,7 +350,11 @@
             {
               "function": {
                 "name": "capitalize",
-                "args": ["text"],
+                "args": [
+                  {
+                    "name": "text"
+                  }
+                ],
                 "expressions": [
                   {
                     "return": {
@@ -405,7 +417,11 @@
             {
               "function": {
                 "name": "numberText",
-                "args": ["number"],
+                "args": [
+                  {
+                    "name": "number"
+                  }
+                ],
                 "expressions": [
                   {
                     "return": {
@@ -449,7 +465,14 @@
       {
         "function": {
           "name": "sing",
-          "args": ["fromNumber", "toNumber"],
+          "args": [
+            {
+              "name": "fromNumber"
+            },
+            {
+              "name": "toNumber"
+            }
+          ],
           "expressions": [
             {
               "if": {

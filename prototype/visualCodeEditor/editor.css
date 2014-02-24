@@ -199,6 +199,10 @@ body {
   height: 1.9rem;
 }
 
+.symbol > .spacer {
+  height: .9rem;
+}
+
 .args > .expressions > .call, .args > .expressions > .new, .args > .expressions > .binary, .args > .expressions > .ternary {
   padding: .1rem .2rem;
 }
@@ -292,6 +296,21 @@ body {
   display: block;
   padding: .2rem;
   background-color: #008000;
+}
+
+.symbol {
+  position: relative;
+}
+
+.editing {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  z-index: 20;
+  font-family: sans-serif;
+  font-size: 1em;
+  text-align: center;
 }
 
 /*

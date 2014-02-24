@@ -13,7 +13,11 @@
           "rvalue": {
             "function": {
               "name": "",
-              "args": ["letters"],
+              "args": [
+                {
+                  "name": "letters"
+                }
+              ],
               "expressions": [
                 {
                   "assignment": {
@@ -65,7 +69,11 @@
                 {
                   "function": {
                     "name": "sortedLetters",
-                    "args": ["letters"],
+                    "args": [
+                      {
+                        "name": "letters"
+                      }
+                    ],
                     "expressions": [
                       {
                         "return": {
@@ -123,7 +131,11 @@
                           "key": "isDifferentThan",
                           "value": {
                             "function": {
-                              "args": ["otherWord"],
+                              "args": [
+                                {
+                                  "name": "otherWord"
+                                }
+                              ],
                               "expressions": [
                                 {
                                   "return": {
@@ -174,7 +186,11 @@
           "rvalue": {
             "function": {
               "name": "",
-              "args": ["letters"],
+              "args": [
+                {
+                  "name": "letters"
+                }
+              ],
               "expressions": [
                 {
                   "assignment": {
@@ -203,7 +219,11 @@
                 {
                   "function": {
                     "name": "isAnagramOf",
-                    "args": ["testWord"],
+                    "args": [
+                      {
+                        "name": "testWord"
+                      }
+                    ],
                     "expressions": [
                       {
                         "return": {
@@ -262,7 +282,11 @@
                           "value": {
                             "function": {
                               "name": "",
-                              "args": ["testWords"],
+                              "args": [
+                                {
+                                  "name": "testWords"
+                                }
+                              ],
                               "expressions": [
                                 {
                                   "return": {

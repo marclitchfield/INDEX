@@ -7,13 +7,19 @@
           "op": "=",
           "lvalue": {
             "var": {
-              "name": "lowercaseWords"
+              "ref": {
+                "name": "lowercaseWords"
+              }
             }
           },
           "rvalue": {
             "function": {
               "name": "",
-              "args": ["text"],
+              "args": [
+                {
+                  "name": "text"
+                }
+              ],
               "expressions": [
                 {
                   "return": {
@@ -56,20 +62,28 @@
           "op": "=",
           "lvalue": {
             "var": {
-              "name": "wordCounts"
+              "ref": {
+                "name": "wordCounts"
+              }
             }
           },
           "rvalue": {
             "function": {
               "name": "",
-              "args": ["text"],
+              "args": [
+                {
+                  "name": "text"
+                }
+              ],
               "expressions": [
                 {
                   "assignment": {
                     "op": "=",
                     "lvalue": {
                       "var": {
-                        "name": "words"
+                        "ref": {
+                          "name": "words"
+                        }
                       }
                     },
                     "rvalue": {
@@ -100,7 +114,14 @@
                               {
                                 "function": {
                                   "name": "wordCounts",
-                                  "args": ["counts", "word"],
+                                  "args": [
+                                    {
+                                      "name": "counts"
+                                    },
+                                    {
+                                      "name": "word"
+                                    }
+                                  ],
                                   "expressions": [
                                     {
                                       "assignment": {

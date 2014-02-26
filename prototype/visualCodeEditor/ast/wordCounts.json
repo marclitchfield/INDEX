@@ -14,10 +14,8 @@
           },
           "rvalue": {
             "function": {
-              "name": {
-                "ref": {
-                  "name": ""
-                }
+              "ref": {
+                "name": ""
               },
               "args": [
                 {

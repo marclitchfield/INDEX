@@ -7,12 +7,16 @@
           "op": "=",
           "lvalue": {
             "var": {
-              "name": "Word"
+              "ref": {
+                "name": "Word"
+              }
             }
           },
           "rvalue": {
             "function": {
-              "name": "",
+              "ref": {
+                "name": ""
+              },
               "args": [
                 {
                   "name": "letters"
@@ -24,7 +28,9 @@
                     "op": "=",
                     "lvalue": {
                       "var": { 
-                        "name": "lowercaseLetters"
+                        "ref": {
+                          "name": "lowercaseLetters"
+                        }
                       }
                     },
                     "rvalue": {
@@ -47,7 +53,9 @@
                     "op": "=",
                     "lvalue": {
                       "var": {
-                        "name": "lowercaseSortedLetters"
+                        "ref": {
+                          "name": "lowercaseSortedLetters"
+                        }
                       }
                     },
                     "rvalue": {
@@ -68,7 +76,9 @@
                 },
                 {
                   "function": {
-                    "name": "sortedLetters",
+                    "ref": {
+                      "name": "sortedLetters"
+                    },
                     "args": [
                       {
                         "name": "letters"
@@ -131,6 +141,9 @@
                           "key": "isDifferentThan",
                           "value": {
                             "function": {
+                              "ref": {
+                                "name": ""
+                              },
                               "args": [
                                 {
                                   "name": "otherWord"
@@ -180,12 +193,16 @@
           "op": "=",
           "lvalue": {
             "var": {
-              "name": "Anagram"
+              "ref": {
+                "name": "Anagram"
+              }
             }
           },
           "rvalue": {
             "function": {
-              "name": "",
+              "ref": {
+                "name": ""
+              },
               "args": [
                 {
                   "name": "letters"
@@ -197,7 +214,9 @@
                     "op": "=",
                     "lvalue": {
                       "var": {
-                        "name": "word"
+                        "ref": {
+                          "name": "word"
+                        }
                       }
                     },
                     "rvalue": {
@@ -218,7 +237,9 @@
                 },
                 {
                   "function": {
-                    "name": "isAnagramOf",
+                    "ref": {
+                      "name": "isAnagramOf"
+                    },
                     "args": [
                       {
                         "name": "testWord"
@@ -281,7 +302,9 @@
                           "key": "match",
                           "value": {
                             "function": {
-                              "name": "",
+                              "ref": {
+                                "name": ""
+                              },
                               "args": [
                                 {
                                   "name": "testWords"

@@ -1,5 +1,6 @@
 (function() {
 
+  var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
   var astFile = document.location.search.replace('?', '') || 'anagram.json';
 
   $.getJSON('ast/' + astFile).success(function(ast) {
@@ -35,16 +36,19 @@
       zIndex: 100,
       // Fix for http://bugs.jqueryui.com/ticket/3740
       start: function (event, ui) {
-        if ($(this).closest('.palette').length === 0) {
-          $(this).data('startingScrollTop', window.pageYOffset);
+        if (!iOS) {
+          if ($(this).closest('.palette').length === 0) {
+            $(this).data('startingScrollTop', window.pageYOffset);
+          }          
         }
-        bindDroppables($(event.target).data('drop-target-types'));
       },
       drag: function(event, ui){
         $('.editing').blur();
-        var st = parseInt($(this).data('startingScrollTop'));
-        if (st) {
-          ui.position.top -= st;
+        if (!iOS) {
+          var st = parseInt($(this).data('startingScrollTop'));
+          if (st) {
+            ui.position.top -= st;
+          }          
         }
         // I have performance concerns about this
         if ($('.drop-acceptable').length > 0) {
@@ -54,15 +58,14 @@
         }
       },
     });
-  }
 
-  function bindDroppables(dropTargetTypes) {
     $('[data-drop-type]').droppable({
       greedy: true,
       tolerance: 'touch-closest-to-mouse',
       hoverClass: 'drop-acceptable',
       activeClass: 'droppable-active',
       accept: function(draggable) {
+        var dropTargetTypes = $(draggable).data('drop-target-types');
         return _(dropTargetTypes).contains($(this).data('drop-type'));
       },
       drop: function(event, ui) {
@@ -87,6 +90,9 @@
     }
     if (data.hasOwnProperty('var')) {
       return data['var']().ref();
+    }
+    if (data.hasOwnProperty('function')) {
+      return data['function']().ref();
     }
     return data;
   }  
@@ -121,19 +127,10 @@
       },
 
       'function-name': function(draggable, droppable) {
-        var targetFunction = ancestorWithProperty(ko.contextFor(droppable), 'name');
         var source = createSource(draggable);
-        targetFunction.name(getText(source));
-        if (dereference(source).editing()) { makeEditable(dereference(source)); }
-      },
-
-      'symbol-missing': function(draggable, droppable) {
-        var targetVar = ancestorWithProperty(ko.contextFor(droppable), 'var')['var']();
-        var source = createSource(draggable);
-        targetVar.ref().name(getText(source));
-        if (dereference(source).editing()) {
-          makeEditable(dereference(source));
-        }
+        var targetFunction = ancestorWithProperty(ko.contextFor(droppable), 'function')['function']();
+        targetFunction.ref().name(getText(source));
+        if (dereference(source).editing()) { makeEditable(targetFunction.ref()); }
       },
 
       'callable': function(draggable, droppable) {
@@ -188,7 +185,7 @@
   function generateExpression(type) {
     var generators = {
       'function': function() {
-        return { 'function': { name: '', args: [], expressions: [] } };
+        return { 'function': { 'ref': { name: '', editing: true }, args: [], expressions: [] } };
       },
       'var': function() {
         return { 'var': { 'ref': { name: '', editing: true } } };
@@ -215,12 +212,13 @@
     textBox.focus();
   }
 
-  $('.editor').on('dblclick', '.symbol', function() {
+  $('.editor').on('doubletap', '.symbol', function() {
     makeEditable(dereference(ko.dataFor($(this)[0])));
-  });
+  })
 
   $('.editor').on('focusout', '.editing', function() {
     ko.dataFor($(this)[0]).editing(false);
+    bindDraggables();
   });
 
   $(document).keydown(function(e) {

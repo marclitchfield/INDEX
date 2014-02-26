@@ -14,7 +14,11 @@
           },
           "rvalue": {
             "function": {
-              "name": "",
+              "name": {
+                "ref": {
+                  "name": ""
+                }
+              },
               "args": [
                 {
                   "name": "text"
@@ -69,7 +73,9 @@
           },
           "rvalue": {
             "function": {
-              "name": "",
+              "ref": {
+                "name": ""
+              },
               "args": [
                 {
                   "name": "text"
@@ -113,7 +119,9 @@
                             "args": [
                               {
                                 "function": {
-                                  "name": "wordCounts",
+                                  "ref": {
+                                    "name": "wordCounts"
+                                  },
                                   "args": [
                                     {
                                       "name": "counts"

@@ -2,6 +2,7 @@
 <html>
 <head>
   <link href="editor.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 </head>
 <body>
 
@@ -31,7 +32,7 @@
 <script type="text/html" id="var-template">
     <div class="var expression" data-bind="with: $data['var']">
         <div class="keyword">var</div>
-        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
+        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
             <!-- ko template: { name: 'symbol-template', data: ref } --><!-- /ko -->
         </div>
     </div>
@@ -39,7 +40,7 @@
 
 <script type="text/html" id="ref-template">
     <div class="ref expression" data-bind="with: ref">
-        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
+        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
             <!-- ko template: { name: 'symbol-template' } --><!-- /ko -->
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
         </div><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
@@ -53,7 +54,6 @@
 
 <script type="text/html" id="call-template"><div class="call">
         <div class="args">
-            <div class="spacer"></div>
             <div class="expressions">
                 <!-- ko foreach: args -->
                     <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg', position: $index }} --><!-- /ko -->
@@ -148,18 +148,18 @@
     <div class="function expression" data-bind="with: $data['function']">
         <div class="keyword">function</div>
         <div class="collapse expanded"></div>
-        <!-- ko if: name -->
-            <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
-                <!-- ko template: { name: 'symbol-template' } --><!-- /ko -->
+        <!-- ko if: ref().name() || ref().editing() -->
+            <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
+                <!-- ko template: { name: 'symbol-template', data: ref } --><!-- /ko -->
             </div>
         <!-- /ko -->
-        <!-- ko ifnot: name -->
+        <!-- ko if: !ref().name() -->
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'function-name' }} --><!-- /ko -->
         <!-- /ko -->
         <div class="args">
             <!-- ko foreach: args -->
                 <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg', position: $index }} --><!-- /ko -->
-                <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
+                <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
                     <!-- ko template: { name: 'symbol-template' } --><!-- /ko -->
                 </div>
             <!-- /ko -->
@@ -185,9 +185,8 @@
 <script type="text/html" id="new-template">
     <div class="new expression" data-bind="with: $data['new']">
         <div class="keyword">new</div>
-        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'symbol-missing', 'defarg', 'callarg']">
+        <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
             <div class="spacer"></div>
-            <!-- ko template: { name: 'editable-template' } --><!-- /ko -->
             <span data-bind="text: name"></span>
             <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
         </div>
@@ -201,26 +200,19 @@
 <script type="text/html" id="symbol-template">
     <div class="spacer"></div>
     <!-- ko if: $data.editing -->
-        <input type="text" data-bind="value: name" class="editing"></input>
+        <input type="text" data-bind="value: name" class="editing" autocorrect="off" autocapitalize="off"></input>
     <!-- /ko -->
     <span data-bind="text: name"></span>
 </script>
 
-<div class="palette-container" unselectable='on' onselectstart='return false;'>
-  <div class="palette" unselectable='on' onselectstart='return false;'>
-    <div class="mode">mov</div>
-    <div class="draggable new-function" data-expression-type="function" data-drop-target-types='["expression", "callarg"]'>func</div>
-    <div class="draggable new-keyword" data-expression-type="var" data-drop-target-types='["expression"]'>var</div>
-    <div class="draggable new-symbol" data-expression-type="ref" data-drop-target-types='["expression", "function-name", "symbol-missing", "defarg", "callarg"]'>sym</div>
-    <div class="draggable new-call" data-expression-type="call" data-drop-target-types='["callable"]' data-drop-reparent>(call)</div>
-    <div class="draggable new-literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
-    <div class="draggable new-assignment">=</div>
-    <div class="draggable new-operator">op</div>
-    <div class="draggable new-parens">( )</div>
-    <div class="draggable new-brackets">[ ]</div>
-    <div class="draggable new-hash">{ }</div>
-    <div class="draggable new-entry">:</div>
-  </div>
+<div class="palette" unselectable='on' onselectstart='return false;'>
+<div class="mode">cp</div>
+<div class="draggable new-function" data-expression-type="function" data-drop-target-types='["expression", "callarg"]'>func</div>
+<div class="draggable new-keyword" data-expression-type="var" data-drop-target-types='["expression"]'>var</div>
+<div class="draggable new-symbol" data-expression-type="ref" data-drop-target-types='["expression", "function-name", "defarg", "callarg"]'>sym</div>
+<div class="draggable new-call" data-expression-type="call" data-drop-target-types='["callable"]' data-drop-reparent>( )</div>
+<div class="draggable new-literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
+<div class="draggable new-operator">op</div>
 </div>
 
 <script src="lib/visibility.js"></script>
@@ -228,6 +220,7 @@
 <script src="lib/jquery-ui-1.10.4.custom.min.js"></script>
 <script src="lib/jquery.ui.touch-punch.min.js"></script>
 <script src="lib/jquery.ui.touch-closest-to-cursor-punch.js"></script>
+<script src="lib/jquery.mobile-events.min.js"></script>
 <script src="lib/lodash.min.js"></script>
 <script src="lib/knockout-3.0.0.debug.js"></script>
 <script src="editor.js"></script>

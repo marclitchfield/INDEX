@@ -164,7 +164,7 @@
       }
       var data = ko.dataFor(draggable);
       if (typeof data === 'object' && data.hasOwnProperty('literal')) {
-        return data;
+        return makeObservable(ko.toJS(data));
       }
       return makeObservable({ ref: { name: dereference(data).name() } });
     }
@@ -195,6 +195,9 @@
       },
       'call': function() {
         return { 'call': { args: [] } };
+      },
+      'literal': function() {
+        return { 'literal': { type: 'string', value: '', editing: true }}
       }
     };
 
@@ -212,9 +215,9 @@
     textBox.focus();
   }
 
-  $('.editor').on('doubletap', '.symbol', function() {
+  $('.editor').on('doubletap', '.symbol, .literal', function(event, data) {
     makeEditable(dereference(ko.dataFor($(this)[0])));
-  })
+  });
 
   $('.editor').on('focusout', '.editing', function() {
     ko.dataFor($(this)[0]).editing(false);

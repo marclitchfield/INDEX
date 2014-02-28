@@ -188,10 +188,6 @@ body {
   display: inline-block;
   vertical-align: middle;
   width: 0;
-  height: 1.9rem;
-}
-
-.symbol > .spacer {
   height: .9rem;
 }
 
@@ -252,6 +248,7 @@ body {
 }
 
 .literal, .hash .entry > .key {
+  position: relative;
   display: inline-block;
   padding: .2rem .4rem;
   margin: .1rem 0;
@@ -260,6 +257,10 @@ body {
   background-color: #5fbcd3;
   border: 1px solid black;
   color: #00222b;
+}
+
+.literal > div {
+  display: inline-block;
 }
 
 .parens {

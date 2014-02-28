@@ -84,11 +84,14 @@
 
 <script type="text/html" id="literal-template">
     <div class="literal draggable expression" data-bind="with: literal" data-drop-target-types="['expression','callarg']">
+        <!-- ko if: $data.editing -->
+            <input type="text" data-bind="value: value" class="editing" autocorrect="off" autocapitalize="off"></input>
+        <!-- /ko -->
         <!-- ko if: value === '' -->
-            <div data-bind="css: { class: type }">&nbsp;</div>
+            <div data-bind="css: { class: type }">&nbsp;</div><div class="spacer"></div>
         <!-- /ko -->
         <!-- ko if: value !== '' -->
-            <div data-bind="css: { class: type }, html: value"></div>
+            <div data-bind="css: { class: type }, html: value"></div><div class="spacer"></div>
         <!-- /ko -->
     </div>
 </script>

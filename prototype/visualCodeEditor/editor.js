@@ -1,11 +1,10 @@
-(function() {
-
+(function editor() {
   var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
   var astFile = document.location.search.replace('?', '') || 'anagram.json';
 
   $.getJSON('ast/' + astFile).success(function(ast) {
     var viewModel = makeObservable(ast);
-    ko.applyBindings(viewModel);
+    ko.applyBindings(viewModel, $('.editor')[0]);
     bindDraggables();
   });
 
@@ -237,5 +236,19 @@
     $(this).toggleClass('expanded', $(this).hasClass('collapsed'));
     $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
   });
-
 })();
+
+
+// (function palette() {
+//   var paletteMenu = {
+//     keyword: {
+//      selectedIndex: ko.observable(0),
+//      items:  
+//     }
+//   }  
+
+//   $('.palette > div').click(function() {
+
+//   });
+// })();
+

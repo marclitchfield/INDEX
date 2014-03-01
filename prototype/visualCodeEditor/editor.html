@@ -209,14 +209,20 @@
 </script>
 
 <div class="palette" unselectable='on' onselectstart='return false;'>
-<div class="mode">cp</div>
+<div class="mode" data-palette-menu="mode">cp</div>
 <div class="draggable new-function" data-expression-type="function" data-drop-target-types='["expression", "callarg"]'>func</div>
-<div class="draggable new-keyword" data-expression-type="var" data-drop-target-types='["expression"]'>var</div>
+<div class="draggable new-keyword" data-palette-menu="keyword" data-expression-type="var" data-drop-target-types='["expression"]'>var</div>
 <div class="draggable new-symbol" data-expression-type="ref" data-drop-target-types='["expression", "function-name", "defarg", "callarg"]'>sym</div>
 <div class="draggable new-call" data-expression-type="call" data-drop-target-types='["callable"]' data-drop-reparent>( )</div>
-<div class="draggable new-literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
-<div class="draggable new-operator">op</div>
+<div class="draggable new-literal" data-palette-menu="literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
+<div class="draggable new-operator" data-palette-menu="operator">op</div>
 </div>
+
+<script type="text/html" id="palette-menu">
+    <div class="palette-menu" data-bind="foreach: item">
+        <div data-bind="text: text"></div>
+    </div>
+</script>
 
 <script src="lib/visibility.js"></script>
 <script src="lib/jquery-2.1.0.min.js"></script>

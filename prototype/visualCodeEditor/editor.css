@@ -162,7 +162,7 @@ body {
 
 .function > .args > .symbol, .function.expression > .symbol, .var.expression > .symbol {
   padding-left: .5rem;
-  padding-right: .5rem;
+  padding-right: .8rem;
 }
 
 .args, .sub {
@@ -197,7 +197,7 @@ body {
 }
 
 .args > .expressions {
-  padding: .1rem 0 .1rem .5rem;
+  padding: .1rem .3rem;
   display: inline-block;
   vertical-align: middle;
 }

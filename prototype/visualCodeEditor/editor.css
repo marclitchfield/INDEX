@@ -8,6 +8,7 @@ html {
 
 body {
   margin: 0;
+  font-size: 0;
 }
 
 .editor {
@@ -26,11 +27,12 @@ body {
 
 .expression {
   background-color: #adde6e;
+  vertical-align: middle;
 }
 
 .module, .function {
   display: block;
-  padding: .1rem .4rem .4rem .4rem;
+  padding: .1rem .4rem .4rem .4rem !important;
   background-color: #112b00;
 }
 
@@ -45,11 +47,21 @@ body {
 .module > .expressions, .function > .expressions {
   background-color: #d9ff80;
   padding: .1rem .3rem;
+  vertical-align: middle;
+}
+
+.module > .expressions > .expression {
+  padding: 0 .2rem;
 }
 
 .function > .expressions, .assignment, .return, .if, .binary, .ternary, .call, .new {
   display: block;
   color: #222b00;
+  vertical-align: middle;
+}
+
+.function > .expressions > .expression {
+  padding: .2rem;
 }
 
 .module > .name, .function > .keyword {
@@ -59,6 +71,7 @@ body {
 
 .keyword, .name {
   margin-right: .4rem;
+  margin-bottom: .4rem;
   color: #222b00;
 }
 
@@ -82,6 +95,10 @@ body {
   display: inline-block;
   padding: .3rem 0;
   color: #222b00;
+}
+
+.if > .then, .if > div > .else {
+  padding: .3rem .2rem;
 }
 
 .rvalue.block {
@@ -112,11 +129,11 @@ body {
   margin: .2rem .4rem;
 }
 
-.prop {
+.prop.op {
+  margin: 0;
+  padding: 0 .2rem;
+  background-color: #000;
   display: inline-block;
-}
-
-.prop > .op {
   font-size: 2em;
   line-height: 0;
 }
@@ -284,6 +301,7 @@ div .sub {
   padding: .2rem .4rem;
   background-color: #55d400;
   color: #000;
+  vertical-align: middle;
 }
 
 .hash::before {
@@ -388,32 +406,33 @@ div .sub {
   bottom: 0;
   width: 100%;
   margin: 0;
-  padding: 0 .2rem;
-  height: 2.5rem;
+  padding: 0 .4rem;
+  height: 2rem;
   background-color: rgba(16, 41, 0, 0.8);
   border: 1px solid #000;
   z-index: 5;
+  font-size: .6rem;
 }
 
-.palette .mode, .palette .draggable {
+.palette .mode, .palette .draggable, .palette .delete {
   display: inline-block;
   margin: .2rem .2rem;
-  height: 2rem;
-  width: 3.5rem;
+  height: 1.5rem;
+  width: 2.2rem;
   font-family: sans-serif;
   text-align: center;
-  vertical-align: text-top;
-  line-height: 2.1rem;
+  vertical-align: middle;
+  line-height: 1.5rem;
   font-size: 1.6em;
 }
 
-.palette .new-parens, .palette .new-brackets, .palette .new-hash, .palette .new-entry {
+.palette .new-parens, .palette .new-brackets, .palette .new-hash, .palette .new-entry, .palette .delete {
   line-height: 1.8rem;
 }
 
 .palette .mode {
-  background-color: #000;
-  color: #fff;
+  background-color: #fff;
+  color: #000;
 }
 
 .palette .new-function {
@@ -470,4 +489,12 @@ div .sub {
 .palette .new-entry {
   background-color: #008000;
   color: #000;
+}
+
+.palette .delete {
+  float: right;
+  margin-right: 1.2rem;
+  background-color: #000;
+  font-weight: bold;
+  color: #fff;
 }

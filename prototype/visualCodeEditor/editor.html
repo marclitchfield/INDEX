@@ -73,10 +73,8 @@
 
 <script type="text/html" id="prop-template">
     <!-- ko if: $data.prop -->
-    <div class="prop">
-        <div class="op">.</div>
-        <!-- ko template: { name: prop().template, data: prop } --><!-- /ko -->
-    </div>
+    <div class="prop op">.</div>
+    <!-- ko template: { name: prop().template, data: prop } --><!-- /ko -->
     <!-- /ko -->
 </script>
 
@@ -213,6 +211,7 @@
 <div class="draggable new-call" data-expression-type="call" data-drop-target-types='["callable"]' data-drop-reparent>( )</div>
 <div class="draggable new-literal" data-palette-menu="literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
 <div class="draggable new-operator" data-palette-menu="operator">op</div>
+<div class="delete">del</div>
 </div>
 
 <script type="text/html" id="palette-menu">

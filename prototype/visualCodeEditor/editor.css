@@ -257,7 +257,7 @@ div .sub {
   display: none;
 }
 
-.literal, .hash .entry > .key {
+.literal {
   position: relative;
   display: inline-block;
   padding: .2rem .4rem;
@@ -300,6 +300,11 @@ div .sub {
   display: block;
   padding: .2rem;
   background-color: #008000;
+  margin: .2rem 0;
+}
+
+.hash .entry .key {
+  display: inline-block;
 }
 
 .editing {

@@ -138,7 +138,9 @@
 <script type="text/html" id="hash-template">
     <div class="hash expression" data-bind="foreach: hash().entries">
         <div class="entry">
-            <div class="key" data-bind="text: key"></div>
+            <div class="key">
+                <!-- ko template: { name: 'literal-template', data: key } --><!-- /ko -->
+            </div>
             <span class="op">:</span>
             <!-- ko template: { name: value().template, data: value } --><!-- /ko -->
         </div>

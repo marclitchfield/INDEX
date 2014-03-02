@@ -138,7 +138,12 @@
                     "hash": {
                       "entries": [
                         {
-                          "key": "isDifferentThan",
+                          "key": {
+                            "literal": {
+                              "type": "string",
+                              "value": "isDifferentThan"
+                            }
+                          },
                           "value": {
                             "function": {
                               "ref": {
@@ -299,7 +304,12 @@
                     "hash": {
                       "entries": [
                         {
-                          "key": "match",
+                          "key": {
+                            "literal": {
+                              "type": "string",
+                              "value": "match"
+                            }
+                          },
                           "value": {
                             "function": {
                               "ref": {

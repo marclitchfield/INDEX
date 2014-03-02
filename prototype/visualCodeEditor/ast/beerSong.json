@@ -614,7 +614,12 @@
             "hash": {
               "entries": [
                 {
-                  "key": "verse",
+                  "key": { 
+                    "literal": {
+                      "type": "string",
+                      "value": "verse"                      
+                    }
+                  },
                   "value": {
                     "ref": {
                       "name": "verse"
@@ -622,7 +627,12 @@
                   }
                 },
                 {
-                  "key": "sing",
+                  "key": {
+                    "literal": {
+                      "type": "string",
+                      "value": "sing"
+                    }
+                  },
                   "value": {
                     "ref": {
                       "name": "sing"

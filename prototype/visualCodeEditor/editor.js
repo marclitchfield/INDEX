@@ -6,7 +6,45 @@
     var viewModel = makeObservable(ast);
     ko.applyBindings(viewModel, $('.editor')[0]);
     bindDraggables();
+    repositionDroppables();
   });
+
+  function repositionDroppables() {
+    $('.droppable.vertical').each(function() {
+      var left = $(this).data('drop-mode') === 'before' ? leftOfPrevious($(this)) : rightOfPrevious($(this));
+      $(this).css({ left: left, top: topOfPrevious($(this)) });
+    });
+
+    function topOfPrevious(element) {
+      var previous = previousNonDroppable(element);
+      if (previous.length === 0) { return verticalCenterWithinParent(element); }
+      return previous.offset().top + (previous.outerHeight()/2 - element.outerHeight()/2) + 'px';
+    }
+
+    function leftOfPrevious(element) {
+      var previous = previousNonDroppable(element);
+      if (previous.length === 0) { return horizontalCenterWithinParent(element); }
+      return previous.offset().left - element.outerWidth() + 'px';
+    }
+
+    function rightOfPrevious(element) {
+      var previous = previousNonDroppable(element);
+      if (previous.length === 0) { return horizontalCenterWithinParent(element); }
+      return previous.offset().left + previous.outerWidth() + 'px';
+    }
+
+    function previousNonDroppable(element) {
+      return element.prevAll(':not(.droppable)').first();
+    }
+
+    function verticalCenterWithinParent(element) {
+      return element.parent().offset().top + (element.parent().outerHeight()/2 - element.outerHeight()/2) + 'px'
+    }
+
+    function horizontalCenterWithinParent(element) {
+      return element.parent().offset().left + (element.parent().outerWidth()/2 - element.outerWidth()/2) + 'px'
+    }
+  }
 
   function makeObservable(expression) {
     var keys = _.keys(expression);
@@ -75,6 +113,7 @@
           var dropType = $(event.target).data('drop-type');
           handleDrop(dropType, ui.draggable[0], event.target);
           bindDraggables();
+          repositionDroppables();
         }, 0);
       }
     });
@@ -236,6 +275,19 @@
     $(this).toggleClass('expanded', $(this).hasClass('collapsed'));
     $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
   });
+
+  (function() {
+    var resizeAction;
+    $(window).resize(function() {
+      clearTimeout(resizeAction);
+      resizeAction = setTimeout(resized, 100);
+    });
+
+    var resized = function() {
+      repositionDroppables();  
+    }
+  })();
+
 })();
 
 

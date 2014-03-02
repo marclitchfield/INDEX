@@ -13,10 +13,10 @@
         <div class="name" data-bind="text: name"></div>
         <div class="expressions">
         <!-- ko foreach: expressions -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: $index }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: $index }} --><!-- /ko -->
             <!-- ko template: { name: template } --><!-- /ko -->
         <!-- /ko -->
-        <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: expressions().length }} --><!-- /ko -->
+        <!-- ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: expressions().length }} --><!-- /ko -->
         </div>
     </div>
 </script>
@@ -42,8 +42,7 @@
     <div class="ref expression" data-bind="with: ref">
         <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
             <!-- ko template: { name: 'symbol-template' } --><!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
-        </div><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
+        </div><!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callable' }} --><!-- /ko --><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
     </div><!-- ko template: { name: 'prop-template', data: ref } --><!-- /ko -->
 </script>
 
@@ -56,20 +55,19 @@
         <div class="args">
             <div class="expressions">
                 <!-- ko foreach: args -->
-                    <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg', position: $index }} --><!-- /ko -->
                     <!-- ko template: { name: template } --><!-- /ko -->
+                    <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'before', type: 'callarg', position: $index }} --><!-- /ko -->
                 <!-- /ko -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callarg', position: args().length }} --><!-- /ko -->
+                <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callarg', position: args().length }} --><!-- /ko -->
             </div>
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callable' }} --><!-- /ko -->
         </div>
     </div><!-- ko template: { name: 'expression-operator-template' } -->
 <!-- /ko --></script>
 
-<script type="text/html" id="sub-template"><div class="sub">
-    <div class="spacer"></div>
+<script type="text/html" id="sub-template"><div class="sub"><div class="spacer"></div>
         <!-- ko template: { name: template } --><!-- /ko -->
-        <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
+        <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callable' }} --><!-- /ko -->
     </div><!-- ko template: { name: 'expression-operator-template' } -->
 <!-- /ko --></script>
 
@@ -132,7 +130,7 @@
 <script type="text/html" id="parens-template">
     <div class="parens expression" data-bind="with: parens">
         <!-- ko template: { name: template } --><!-- /ko -->
-        <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
+        <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callable' }} --><!-- /ko -->
     </div><!-- ko template: { name: 'expression-operator-template', data: parens } --><!-- /ko -->    
     <!-- ko template: { name: 'prop-template', data: parens } --><!-- /ko -->    
 </script>
@@ -157,23 +155,23 @@
             </div>
         <!-- /ko -->
         <!-- ko if: !ref().name() -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'function-name' }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'function-name' }} --><!-- /ko -->
         <!-- /ko -->
         <div class="args">
             <!-- ko foreach: args -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg', position: $index }} --><!-- /ko -->
                 <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
                     <!-- ko template: { name: 'symbol-template' } --><!-- /ko -->
                 </div>
+                <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'before', type: 'defarg', position: $index }} --><!-- /ko -->
             <!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'defarg', position: args().length }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'defarg', position: args().length }} --><!-- /ko -->
         </div>
         <div class="collapsible expanded expressions">
             <!-- ko foreach: expressions -->
-                <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: $index }} --><!-- /ko -->
+                <!-- ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: $index }} --><!-- /ko -->
                 <!-- ko template: { name: template } --><!-- /ko -->
             <!-- /ko -->
-            <!-- ko template: { name: 'drop-template', data: { mode: 'horizontal', type: 'expression', position: expressions().length }} --><!-- /ko -->
+            <!-- ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: expressions().length }} --><!-- /ko -->
         </div>
     </div>
 </script>
@@ -189,24 +187,21 @@
     <div class="new expression" data-bind="with: $data['new']">
         <div class="keyword">new</div>
         <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
-            <div class="spacer"></div>
-            <span data-bind="text: name"></span>
-            <!-- ko template: { name: 'drop-template', data: { mode: 'vertical', type: 'callable' }} --><!-- /ko -->
-        </div>
-        <!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
+            <span data-bind="text: name"></span><div class="spacer"></div>
+        </div><!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callable' }} --><!-- /ko --><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
     </div>
 </script>
 
-<script type="text/html" id="drop-template"><div class="droppable" data-bind="css: mode, attr: { 'data-drop-type': type, 'data-drop-position': $data.position }"></div>
-</script>
-
 <script type="text/html" id="symbol-template">
-    <div class="spacer"></div>
     <!-- ko if: $data.editing -->
         <input type="text" data-bind="value: name" class="editing" autocorrect="off" autocapitalize="off"></input>
     <!-- /ko -->
-    <span data-bind="text: name"></span>
+    <span data-bind="text: name"></span><div class="spacer"></div>
 </script>
+
+<script type="text/html" id="drop-horizontal-template"><div class="droppable horizontal" data-bind="attr: { 'data-drop-type': type, 'data-drop-position': $data.position }"></div></script>
+
+<script type="text/html" id="drop-vertical-template"><div class="droppable vertical" data-bind="attr: { 'data-drop-type': type, 'data-drop-position': $data.position, 'data-drop-mode': $data.mode }"></div></script>
 
 <div class="palette" unselectable='on' onselectstart='return false;'>
 <div class="mode" data-palette-menu="mode">cp</div>

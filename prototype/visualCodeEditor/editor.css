@@ -80,7 +80,7 @@ body {
 
 .assignment > .rvalue, .if > .then, .if > div > .else {
   display: inline-block;
-  padding: .3rem;
+  padding: .3rem 0;
   color: #222b00;
 }
 
@@ -116,28 +116,9 @@ body {
   display: inline-block;
 }
 
-.sub::before {
-  content: '[';
-  vertical-align: middle;
-  font-weight: bold;
-  margin-left: .5rem;
-  margin-right: .2rem;
-}
-
-.sub > .ref::after {
-  content: ']';
-  vertical-align: middle;
-  font-weight: bold;
-  margin-left: .2rem;
-}
-
 .prop > .op {
   font-size: 2em;
   line-height: 0;
-}
-
-.parens {
-  padding: .4rem 0 .4rem .6rem;
 }
 
 .ref {
@@ -146,27 +127,25 @@ body {
 
 .module .expressions .symbol, .module .expressions .name {
   display: inline-block;
-  padding-left: .5rem;
-  padding-top: .2rem;
-  padding-bottom: .2rem;
-  margin: .1rem 0;  
+  padding: .2rem .5rem;
   background-color: #f1f6ac;
   box-shadow: 0px 0px 15px 1px #112b00;
   color: #000;
   vertical-align: middle;
 }
 
-.module .expressions .symbol {
-  padding-right: .1rem;
-}
-
 .function > .args > .symbol, .function.expression > .symbol, .var.expression > .symbol {
   padding-left: .5rem;
-  padding-right: .8rem;
+  padding-right: .5rem;
+}
+
+.symbol {
+  position: relative;
 }
 
 .args, .sub {
   display: inline-block;
+  min-height: 1.2rem;
   margin: .1rem 0;
   padding: .1rem;
   vertical-align: middle;
@@ -182,22 +161,37 @@ body {
   background: none;
 }
 
+div .sub {
+  padding: .2rem 0;
+  border: none;
+  border-radius: 0;
+}
+
 .sub > .expression {
   background-color: #447821;
 }
 
+.sub::before {
+  content: '[';
+  font-weight: bold;
+  margin-left: .2rem;
+  margin-right: .2rem;
+}
+
+.sub > .ref::after {
+  content: ']';
+  font-weight: bold;
+  margin-left: .2rem;
+  margin-right: .2rem;
+}
+
 .function > .args {
-  padding: .1rem;
+  padding: .1rem .5rem;
   box-shadow: none;
 }
 
-.sub {
-  padding-left: 0;
-  padding-right: 0;
-}
-
 .args > .expressions {
-  padding: .1rem .3rem;
+  padding: .1rem .6rem;
   display: inline-block;
   vertical-align: middle;
 }
@@ -282,6 +276,7 @@ body {
 .parens {
   display: inline-block;
   border: .2rem solid #112b00;
+  padding: .4rem;
 }
 
 .hash {
@@ -305,10 +300,6 @@ body {
   display: block;
   padding: .2rem;
   background-color: #008000;
-}
-
-.symbol {
-  position: relative;
 }
 
 .editing {
@@ -337,6 +328,7 @@ body {
 }
 
 .droppable {
+  position: absolute;
   display: inline-block;
   vertical-align: middle;
   border-radius: .4rem;
@@ -355,6 +347,7 @@ body {
 }
 
 .droppable.horizontal {
+  position: static;
   margin: .1rem;
   display: block;
   height: .3rem;

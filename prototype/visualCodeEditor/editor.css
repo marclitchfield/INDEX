@@ -144,7 +144,7 @@ body {
 
 .module .expressions .symbol, .module .expressions .name {
   display: inline-block;
-  padding: .2rem .5rem;
+  padding: .2rem .3rem;
   background-color: #f1f6ac;
   box-shadow: 0px 0px 15px 1px #112b00;
   color: #000;
@@ -152,8 +152,13 @@ body {
 }
 
 .function > .args > .symbol, .function.expression > .symbol, .var.expression > .symbol {
-  padding-left: .5rem;
-  padding-right: .5rem;
+  padding-left: .3rem;
+  padding-right: .3rem;
+}
+
+.function > .args > .symbol {
+  margin-top: .2rem;
+  margin-bottom: .2rem;
 }
 
 .symbol {

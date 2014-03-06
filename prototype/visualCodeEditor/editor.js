@@ -9,43 +9,6 @@
     repositionDroppables();
   });
 
-  function repositionDroppables() {
-    $('.droppable.vertical').each(function() {
-      var left = $(this).data('drop-mode') === 'before' ? leftOfPrevious($(this)) : rightOfPrevious($(this));
-      $(this).css({ left: left, top: topOfPrevious($(this)) });
-    });
-
-    function topOfPrevious(element) {
-      var previous = previousNonDroppable(element);
-      if (previous.length === 0) { return verticalCenterWithinParent(element); }
-      return previous.offset().top + (previous.outerHeight()/2 - element.outerHeight()/2) + 'px';
-    }
-
-    function leftOfPrevious(element) {
-      var previous = previousNonDroppable(element);
-      if (previous.length === 0) { return horizontalCenterWithinParent(element); }
-      return previous.offset().left - element.outerWidth() + 'px';
-    }
-
-    function rightOfPrevious(element) {
-      var previous = previousNonDroppable(element);
-      if (previous.length === 0) { return horizontalCenterWithinParent(element); }
-      return previous.offset().left + previous.outerWidth() + 'px';
-    }
-
-    function previousNonDroppable(element) {
-      return element.prevAll(':not(.droppable)').first();
-    }
-
-    function verticalCenterWithinParent(element) {
-      return element.parent().offset().top + (element.parent().outerHeight()/2 - element.outerHeight()/2) + 'px'
-    }
-
-    function horizontalCenterWithinParent(element) {
-      return element.parent().offset().left + (element.parent().outerWidth()/2 - element.outerWidth()/2) + 'px'
-    }
-  }
-
   function makeObservable(expression) {
     var keys = _.keys(expression);
     if (keys.length === 1) {
@@ -260,6 +223,7 @@
   $('.editor').on('focusout', '.editing', function() {
     ko.dataFor($(this)[0]).editing(false);
     bindDraggables();
+    repositionDroppables();
   });
 
   $(document).keydown(function(e) {
@@ -288,19 +252,97 @@
     }
   })();
 
+  function repositionDroppables() {
+    $('.droppable.vertical').each(function() {
+      var left = $(this).data('drop-mode') === 'before' ? leftOfPrevious($(this)) : rightOfPrevious($(this));
+      $(this).css({ left: left, top: topOfPrevious($(this)) });
+    });
+
+    function topOfPrevious(element) {
+      var previous = previousNonDroppable(element);
+      if (previous.length === 0) { return verticalCenterWithinParent(element); }
+      return previous.offset().top + (previous.outerHeight()/2 - element.outerHeight()/2) + 'px';
+    }
+
+    function leftOfPrevious(element) {
+      var previous = previousNonDroppable(element);
+      if (previous.length === 0) { return horizontalCenterWithinParent(element); }
+      return previous.offset().left - element.outerWidth() + 'px';
+    }
+
+    function rightOfPrevious(element) {
+      var previous = previousNonDroppable(element);
+      if (previous.length === 0) { return horizontalCenterWithinParent(element); }
+      return previous.offset().left + previous.outerWidth() + 'px';
+    }
+
+    function previousNonDroppable(element) {
+      return element.prevAll(':not(.droppable)').first();
+    }
+
+    function verticalCenterWithinParent(element) {
+      return element.parent().offset().top + (element.parent().outerHeight()/2 - element.outerHeight()/2) + 'px'
+    }
+
+    function horizontalCenterWithinParent(element) {
+      return element.parent().offset().left + (element.parent().outerWidth()/2 - element.outerWidth()/2) + 'px'
+    }
+  }
+
 })();
 
+(function palette() {
+  var paletteMenu = {
+    mode: {
+      selectedIndex: ko.observable(0),
+      items: {
+        'cpI': 'copy and insert',
+        'cpR': 'copy and replace',
+        'mvI': 'move and insert',
+        'mvR': 'move and replace'
+      }
+    },
+    keywords: {
+      'do':         { dropTargetTypes: ['expression'] },
+      'while':      { dropTargetTypes: ['expression'] },
+      'for':        { dropTargetTypes: ['expression'] },
+      'break':      { dropTargetTypes: ['expression'], dropWithin: 'loop-body' },
+      'continue':   { dropTargetTypes: ['expression'], dropWithin: 'loop-body' },
+      'if':         { dropTargetTypes: ['expression'] },
+      'else':       { dropTargetTypes: ['if-postfix'] },
+      'switch':     { dropTargetTypes: ['expression'] },
+      'case':       { dropTargetTypes: ['switch-case'] },
+      'default':    { dropTargetTypes: ['switch-case'] },
+      'try':        { dropTargetTypes: ['expression'] },
+      'catch':      { dropTargetTypes: ['try-postfix', 'catch-postfix'] },
+      'finally':    { dropTargetTypes: ['catch-postfix'] },
+      'throw':      { dropTargetTypes: ['expression'] },
+      'var':        { dropTargetTypes: ['expression'] },
+      'this':       { dropTargetTypes: ['expression', 'callarg', 'symbol'] },
+      'delete':     { dropTargetTypes: ['expression'] },
+      'in':         { dropTargetTypes: ['binary-operator'] },
+      'instanceof': { dropTargetTypes: ['binary-operator'] },
+      'typeof':     { dropTargetTypes: ['expression', 'callarg', 'symbol'] },
+      'with':       { dropTargetTypes: ['expression'] },
+      'void':       { dropTargetTypes: ['expression', 'callarg', 'symbol'] },
+      'return':     { dropTargetTypes: ['expression'] },
+      'debugger':   { dropTargetTypes: ['expression'] }
+    },
+    operators: {
+      'assignment':    [['=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '^=', '|=']],
+      'unary-prefix':  [['-', '~', '!', '++', '--']],
+      'unary-postfix': [['.', '()', '[]', '++', '--']],
+      'binary':        [['==', '!=', '===', '!==', '>', '>=', '<', '<='],
+                        ['+', '-', '*', '/', '%', , ','],
+                        ['&&', '||'],
+                        ['&', '|', '^', '<<', '>>', '>>>']
+                       ],
+      'special':       [['? :', '{hash}', '(paren)']]
+    }
+  }  
 
-// (function palette() {
-//   var paletteMenu = {
-//     keyword: {
-//      selectedIndex: ko.observable(0),
-//      items:  
-//     }
-//   }  
+  $('.palette > div').click(function() {
 
-//   $('.palette > div').click(function() {
-
-//   });
-// })();
+  });
+})();
 

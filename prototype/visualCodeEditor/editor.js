@@ -292,52 +292,105 @@
 })();
 
 (function palette() {
-  var paletteMenu = {
-    mode: {
-      selectedIndex: ko.observable(0),
-      items: {
-        'cpI': 'copy and insert',
-        'cpR': 'copy and replace',
-        'mvI': 'move and insert',
-        'mvR': 'move and replace'
+  var paletteBehaviors = {
+    action: {
+      toggle: {
+        selectedIndex: ko.observable(0),
+        items: ['copy', 'move']
       }
     },
-    keywords: {
-      'do':         { dropTargetTypes: ['expression'] },
-      'while':      { dropTargetTypes: ['expression'] },
-      'for':        { dropTargetTypes: ['expression'] },
-      'break':      { dropTargetTypes: ['expression'], dropWithin: 'loop-body' },
-      'continue':   { dropTargetTypes: ['expression'], dropWithin: 'loop-body' },
-      'if':         { dropTargetTypes: ['expression'] },
-      'else':       { dropTargetTypes: ['if-postfix'] },
-      'switch':     { dropTargetTypes: ['expression'] },
-      'case':       { dropTargetTypes: ['switch-case'] },
-      'default':    { dropTargetTypes: ['switch-case'] },
-      'try':        { dropTargetTypes: ['expression'] },
-      'catch':      { dropTargetTypes: ['try-postfix', 'catch-postfix'] },
-      'finally':    { dropTargetTypes: ['catch-postfix'] },
-      'throw':      { dropTargetTypes: ['expression'] },
-      'var':        { dropTargetTypes: ['expression'] },
-      'this':       { dropTargetTypes: ['expression', 'callarg', 'symbol'] },
-      'delete':     { dropTargetTypes: ['expression'] },
-      'in':         { dropTargetTypes: ['binary-operator'] },
-      'instanceof': { dropTargetTypes: ['binary-operator'] },
-      'typeof':     { dropTargetTypes: ['expression', 'callarg', 'symbol'] },
-      'with':       { dropTargetTypes: ['expression'] },
-      'void':       { dropTargetTypes: ['expression', 'callarg', 'symbol'] },
-      'return':     { dropTargetTypes: ['expression'] },
-      'debugger':   { dropTargetTypes: ['expression'] }
+    modification: {
+      toggle: {
+        selectedIndex: ko.observable(0),
+        items: ['ins', 'repl']
+      }
     },
-    operators: {
-      'assignment':    [['=', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '>>>=', '&=', '^=', '|=']],
-      'unary-prefix':  [['-', '~', '!', '++', '--']],
-      'unary-postfix': [['.', '()', '[]', '++', '--']],
-      'binary':        [['==', '!=', '===', '!==', '>', '>=', '<', '<='],
-                        ['+', '-', '*', '/', '%', , ','],
-                        ['&&', '||'],
-                        ['&', '|', '^', '<<', '>>', '>>>']
-                       ],
-      'special':       [['? :', '{hash}', '(paren)']]
+    keyword: {
+      menu: [
+        { 'do':         { dropTargetTypes: ['expression'] } },
+        { 'while':      { dropTargetTypes: ['expression'] } },
+        { 'for':        { dropTargetTypes: ['expression'] } },
+        { 'break':      { dropTargetTypes: ['expression'], dropWithin: 'loop-body' } },
+        { 'continue':   { dropTargetTypes: ['expression'], dropWithin: 'loop-body' } },
+        { 'if':         { dropTargetTypes: ['expression', 'else-postfix'] } },
+        { 'else':       { dropTargetTypes: ['if-postfix'] } },
+        { 'switch':     { dropTargetTypes: ['expression'] } },
+        { 'case':       { dropTargetTypes: ['switch-case'] } },
+        { 'default':    { dropTargetTypes: ['switch-case'] } },
+        { 'try':        { dropTargetTypes: ['expression'] } },
+        { 'catch':      { dropTargetTypes: ['try-catch'] } },
+        { 'finally':    { dropTargetTypes: ['try-finally'] } },
+        { 'throw':      { dropTargetTypes: ['expression'] } },
+        { 'var':        { dropTargetTypes: ['expression'] } },
+        { 'this':       { dropTargetTypes: ['expression', 'callarg', 'value'] } },
+        { 'delete':     { dropTargetTypes: ['expression'] } },
+        { 'in':         { dropTargetTypes: ['binary-operator'] } },
+        { 'instanceof': { dropTargetTypes: ['binary-operator'] } },
+        { 'typeof':     { dropTargetTypes: ['expression', 'callarg', 'value'] } },
+        { 'with':       { dropTargetTypes: ['expression'] } },
+        { 'void':       { dropTargetTypes: ['expression', 'callarg', 'value'] } },
+        { 'return':     { dropTargetTypes: ['expression'] } },
+        { 'debugger':   { dropTargetTypes: ['expression'] } }
+      ]
+    },
+    literal: {
+      menu: [
+        { 'string':    { dropTargetTypes: ['literal'] } },
+        { 'number':    { dropTargetTypes: ['literal'] } },
+        { 'bool':      { dropTargetTypes: ['literal'] } },
+        { 'null':      { dropTargetTypes: ['literal'] } },
+        { 'undefined': { dropTargetTypes: ['literal'] } },
+        { 'regex':     { dropTargetTypes: ['literal'] } }
+      ]
+    },
+    operator: {
+      menu: [
+        { '=':    { dropTargetTypes: ['assignment'] } },
+        { '+=':   { dropTargetTypes: ['assignment'] } },
+        { '-=':   { dropTargetTypes: ['assignment'] } },
+        { '*=':   { dropTargetTypes: ['assignment'] } },
+        { '/=':   { dropTargetTypes: ['assignment'] } },
+        { '%=':   { dropTargetTypes: ['assignment'] } },
+        { '<<=':  { dropTargetTypes: ['assignment'] } },
+        { '>>=':  { dropTargetTypes: ['assignment'] } },
+        { '>>>=': { dropTargetTypes: ['assignment'] } },
+        { '&=':   { dropTargetTypes: ['assignment'] } },
+        { '^=':   { dropTargetTypes: ['assignment'] } },
+        { '|=':   { dropTargetTypes: ['assignment'] } },
+        { '-':    { dropTargetTypes: ['unary-prefix'] } },
+        { '~':    { dropTargetTypes: ['unary-prefix'] } },
+        { '!':    { dropTargetTypes: ['unary-prefix'] } },
+        { '++':   { dropTargetTypes: ['unary-prefix', 'unary-postfix'] } },
+        { '--':   { dropTargetTypes: ['unary-prefix', 'unary-postfix'] } },
+        { '()':   { dropTargetTypes: ['unary-postfix'] } },
+        { '[]':   { dropTargetTypes: ['unary-postfix'] } },
+        { '.':    { dropTargetTypes: ['binary-operator'] } },
+        { '==':   { dropTargetTypes: ['binary-operator'] } },
+        { '!=':   { dropTargetTypes: ['binary-operator'] } },
+        { '===':  { dropTargetTypes: ['binary-operator'] } },
+        { '!==':  { dropTargetTypes: ['binary-operator'] } },
+        { '>':    { dropTargetTypes: ['binary-operator'] } },
+        { '>=':   { dropTargetTypes: ['binary-operator'] } },
+        { '<':    { dropTargetTypes: ['binary-operator'] } },
+        { '<=':   { dropTargetTypes: ['binary-operator'] } },
+        { '+':    { dropTargetTypes: ['binary-operator'] } },
+        { '-':    { dropTargetTypes: ['binary-operator'] } },
+        { '*':    { dropTargetTypes: ['binary-operator'] } },
+        { '/':    { dropTargetTypes: ['binary-operator'] } },
+        { '%':    { dropTargetTypes: ['binary-operator'] } },
+        { ',':    { dropTargetTypes: ['binary-operator'] } },
+        { '&&':   { dropTargetTypes: ['binary-operator'] } },
+        { '||':   { dropTargetTypes: ['binary-operator'] } },
+        { '&':    { dropTargetTypes: ['binary-operator'] } },
+        { '|':    { dropTargetTypes: ['binary-operator'] } },
+        { '^':    { dropTargetTypes: ['binary-operator'] } },
+        { '<<':   { dropTargetTypes: ['binary-operator'] } },
+        { '>>':   { dropTargetTypes: ['binary-operator'] } },
+        { '>>>':  { dropTargetTypes: ['binary-operator'] } },
+        { '? :':  { dropTargetTypes: ['value'] } },
+        { '{hash}':  { dropTargetTypes: ['value'] } },
+        { '(paren)': { dropTargetTypes: ['expression', 'value', 'unary-prefix', 'unary-postfix'], regionSelect: true } }
+      ]
     }
   }  
 

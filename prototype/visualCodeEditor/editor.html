@@ -204,12 +204,13 @@
 <script type="text/html" id="drop-vertical-template"><div class="droppable vertical" data-bind="attr: { 'data-drop-type': type, 'data-drop-position': $data.position, 'data-drop-mode': $data.mode }"></div></script>
 
 <div class="palette" unselectable='on' onselectstart='return false;'>
-<div class="mode" data-palette-menu="mode">cp</div>
-<div class="draggable new-keyword" data-palette-menu="keyword" data-drop-target-types='["expression"]'>key</div>
+<div class="mode" data-palette-behavior="mode">copy</div>
+<div class="action" data-palette-behavior="action">ins</div>
+<div class="draggable new-keyword" data-palette-behavior="keyword" data-drop-target-types='["expression", "callarg", "if-postfix", "else-postfix", "switch-case", "try-catch", "try-finally", "binary-operator" ]'>key</div>
 <div class="draggable new-function" data-expression-type="function" data-drop-target-types='["expression", "callarg"]'>func</div>
 <div class="draggable new-symbol" data-expression-type="ref" data-drop-target-types='["expression", "function-name", "defarg", "callarg"]'>sym</div>
-<div class="draggable new-literal" data-palette-menu="literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
-<div class="draggable new-operator" data-palette-menu="operator">op</div>
+<div class="draggable new-literal" data-palette-behavior="literal" data-expression-type="literal" data-drop-target-types='["expression", "callarg"]'>lit</div>
+<div class="draggable new-operator" data-palette-behavior="operator">op</div>
 <div class="draggable new-call" data-expression-type="call" data-drop-target-types='["callable"]'>( )</div>
 <div class="delete">del</div>
 </div>

@@ -1,0 +1,480 @@
+html {
+  overflow-y: scroll;
+  -moz-user-select: none; 
+  -webkit-user-select: none; 
+  -ms-user-select: none; 
+  user-select: none;    
+}
+
+body {
+  margin: 0;
+  font-size: 0;
+}
+
+.editor {
+  font-family: sans-serif;
+  width: 100%;
+  margin: 0;
+  vertical-align: middle;
+  font-size: 1rem;
+  line-height: 1em;
+
+  div {
+    border-radius: .2rem;
+  }
+}
+
+.expression {
+  background-color: @expression-background-color;
+  vertical-align: middle;
+}
+
+.module {
+  display: block;
+  padding: .1rem .4rem .4rem .4rem !important;
+  background-color: @module-background-color;
+  margin-bottom: 3rem;
+
+  & > .name {
+    margin: .4rem 0;
+    font-weight: normal;
+    color: @module-name-color;
+  }
+
+  & > .expressions {
+    background-color: @expressions-background-color;
+    padding: .1rem .3rem;
+    vertical-align: middle;
+
+    & > .expression {
+      padding: 0 .2rem;
+    }
+  }
+}
+
+.function {
+  display: block;
+  padding: .1rem .4rem .4rem .4rem !important;
+  background-color: @function-background-color;
+
+  & > .expressions {
+    display: block;
+    color: @expression-color;
+    background-color: @expressions-background-color;
+    padding: .1rem .3rem;
+    vertical-align: middle;
+
+    & > .expression {
+      padding: .2rem;
+    }
+  }
+
+  & > .keyword {
+    font-weight: normal;
+    color: @function-keyword-color;
+  }
+}
+
+.assignment, .return, .if, .binary, .ternary, .call, .new {
+  display: block;
+  color: @expression-color;
+  vertical-align: middle;
+}
+
+.keyword {
+  font-weight: bold;
+  margin-right: .4rem;
+  margin-bottom: .4rem;
+  color: @expression-color;
+}
+
+.binary, .ternary, .var, .call, .new, .keyword, .name {
+  display: inline-block;
+}
+
+.binary .left, .binary .right {
+  display: inline-block;
+}
+
+.if > .then, .if > div > .else {
+  display: inline-block;
+  margin: .2rem .4rem;
+  padding: .3rem .2rem;
+  color: @expression-color;
+  border: .4rem solid @conditional-border-color;
+}
+
+.assignment {
+  margin: 0;
+
+  & > .lvalue {
+    display: inline-block;
+  }
+
+  & > .rvalue {
+    display: inline-block;
+    padding: .3rem 0;
+    color: @expression-color;
+
+    &.block {
+      display: block;
+    }
+  }
+
+  & > .op {
+    display: inline-block;
+    margin-top: .4rem;
+  }
+}
+
+.op {
+  display: inline-block;
+  font-weight: bold;
+  margin: .2rem .4rem;
+}
+
+.prop.op {
+  margin: 0;
+  padding: 0 .2rem;
+  background-color: @symbol-color;
+  display: inline-block;
+  font-size: 2em;
+  line-height: 0;
+}
+
+.ref {
+  display: inline-block;
+}
+
+.module .expressions .symbol, .module .expressions .name {
+  display: inline-block;
+  padding: .2rem .3rem;
+  background-color: @symbol-background-color;
+  box-shadow: 0px 0px 15px 1px @symbol-box-shadow;
+  color: @symbol-color;
+  vertical-align: middle;
+}
+
+.function > .args > .symbol, .function.expression > .symbol, .var.expression > .symbol {
+  padding-left: .3rem;
+  padding-right: .3rem;
+}
+
+.function > .args > .symbol {
+  margin-top: .2rem;
+  margin-bottom: .2rem;
+}
+
+.symbol {
+  position: relative;
+}
+
+.args, .sub {
+  display: inline-block;
+  min-height: 1.2rem;
+  margin: .2rem 0;
+  padding: .1rem;
+  vertical-align: middle;
+  color: @symbol-color;
+  background-color: @args-background-color;
+  border-radius: .4rem;
+  border-left: .13rem solid black;
+  border-right: .13rem solid black;
+  box-shadow: 0px 0px 3px 1px @args-box-shadow;
+}
+
+.args > .expressions > .ref.expression {
+  background: none;
+}
+
+div .sub {
+  padding: .2rem 0;
+  border: none;
+  border-radius: 0;
+
+  & > .expression {
+    background-color: @args-background-color;
+  }
+
+  &::before {
+    content: '[';
+    font-weight: bold;
+    margin-left: .2rem;
+    margin-right: .2rem;
+  }
+
+  & > .ref::after {
+    content: ']';
+    font-weight: bold;
+    margin-left: .2rem;
+    margin-right: .2rem;
+  }
+}
+
+
+.spacer {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0;
+  height: .9rem;
+}
+
+.args {
+  vertical-align: middle;
+
+  .function > & {
+    padding: .1rem .5rem;
+    box-shadow: none;
+  }
+
+  & > .expressions {
+    padding: .1rem .6rem;
+    display: inline-block;
+    vertical-align: middle;
+
+    & > .call, & > .new, & > .binary, & > .ternary {
+      padding: .1rem .2rem;
+    }
+  }
+}
+
+.collapse {
+  float: right;
+  margin: .4rem 0 0 .2rem;
+  width: .8em;
+  height: .8em;
+  background-color: @collapse-background-color;
+  border: .1em solid @collapse-border-color;
+  border-radius: 1em;
+
+  &:hover {
+    background-color: @collapse-hover-background-color;
+  }
+}
+
+.collapsible {
+  &.expanded {
+    max-height: 9999px;
+    opacity: 1;
+    overflow: visible;
+    transition: opacity 0s, max-height 1s;
+  }
+
+  &.collapsed {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    transition: max-height .1s, opacity 0 .1s, margin 0 .1s, padding 0 .1s;
+  }
+
+  &.collapsed > .expressions {
+    display: none;
+  }
+}
+
+.literal {
+  position: relative;
+  display: inline-block;
+  padding: .2rem .4rem;
+  margin: .1rem 0;
+  text-align: center;
+  vertical-align: middle;
+  background-color: @literal-background-color;
+  border: 1px solid black;
+  color: @literal-color;
+
+  & > div {
+    display: inline-block;
+  }
+}
+
+.parens {
+  display: inline-block;
+  border: .2rem solid @parens-border-color;
+  padding: .4rem;
+}
+
+.hash {
+  display: block;
+  padding: .2rem .4rem;
+  background-color: @hash-background-color;
+  color: @symbol-color;
+  vertical-align: middle;
+
+  &::before {
+    content: '{';
+    font-weight: bold;
+  }
+
+  &::after {
+    content: '}';
+    font-weight: bold;
+  }
+
+  .entry {
+    display: block;
+    padding: .2rem;
+    background-color: @hash-entry-background-color;
+    margin: .2rem 0;
+  }
+
+  .entry .key {
+    display: inline-block;
+  }
+}
+
+.editing {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  z-index: 20;
+  min-width: 3em;
+  font-family: sans-serif;
+  font-size: 1em;
+  text-align: center;
+}
+
+/*
+ * Drag and Drop
+ */
+
+.draggable {
+  cursor: move;
+}
+
+.ui-draggable-dragging {
+  opacity: .8;
+  transition: opacity .25s;
+}
+
+.droppable {
+  position: absolute;
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: .1rem !important;
+  height: 1.8rem;
+  width: .4rem;
+  z-index: 10;
+
+  &.outline {
+    display: inline-block;
+    border-radius: 0;
+    height: .8rem;
+    width: 1.8rem;
+    border: 1px solid @droppable-outline-border-color;
+    border-style: dashed;
+  }
+
+  &.horizontal {
+    position: static;
+    margin: .1rem;
+    display: block;
+    height: .4rem;
+    width: 1.5rem;
+  }
+}
+
+.droppable-active {
+  background-color: @droppable-active-background-color !important;
+  box-shadow: 0 0 1px 1px @droppable-active-box-shadow;
+
+  &.outline {
+    box-shadow: none;
+  }
+}
+
+.drop-acceptable {
+  background-color: @drop-acceptable-background-color !important;
+  box-shadow: 0 0 30px 20px @drop-acceptable-box-shadow !important;
+}
+
+.draggable-overdrop {
+  opacity: .4;
+  box-shadow: 0 0 10px 5px @draggable-overdrop-box-shadow !important;
+  transition: opacity .25s;
+}
+
+/*
+ * Palette
+ */
+
+.palette {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0 .4rem;
+  height: 2rem;
+  background-color: rgba(16, 41, 0, 0.8);
+  border: 1px solid #000;
+  z-index: 5;
+  font-size: .6rem;
+
+  .mode, .action, .draggable, .delete {
+    display: inline-block;
+    margin: .2rem .2rem;
+    height: 1.5rem;
+    width: 2.2rem;
+    font-family: sans-serif;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.5rem;
+    font-size: 1.6em;
+  }
+
+  .new-parens, .new-brackets, .new-hash, .new-entry, .delete {
+    line-height: 1.8rem;
+  }
+
+  .mode {
+    background-color: #fff;
+    color: #000;
+  }
+
+  .action {
+    background-color: #000;
+    color: #fff;
+  }
+
+  .new-function {
+    background-color: @function-background-color;
+    color: @function-keyword-color;
+  }
+
+  .new-keyword {
+    background-color: @expressions-background-color;
+    font-weight: bold;
+    color: @expression-color;
+  }
+
+  .new-call {
+    background-color: @args-background-color;
+    color: @symbol-color;
+  }
+
+  .new-symbol {
+    background-color: @symbol-background-color;
+    color: @symbol-color;
+  }
+
+  .new-literal {
+    background-color: @literal-background-color;
+    color: @literal-color;
+  }
+
+  .new-operator {
+    background-color: @expressions-background-color;
+    color: @symbol-color;
+  }
+
+  .delete {
+    float: right;
+    margin-right: 1.2rem;
+    background-color: #000;
+    font-weight: bold;
+    color: #fff;
+  }
+}

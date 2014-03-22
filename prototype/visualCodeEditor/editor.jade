@@ -167,11 +167,11 @@ html
       //  /ko
       ///ko
       .collapse.expanded
-        // ko if: ref().name() || ref().editing()
-        .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")
-          // ko template: { name: 'symbol-template', data: ref }
-          ///ko
+      // ko if: ref().name() || ref().editing()
+      .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")
+        // ko template: { name: 'symbol-template', data: ref }
         ///ko
+      ///ko
       .args
         // ko foreach: args
         .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")

@@ -36,15 +36,17 @@
         <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
             <!-- ko template: { name: 'symbol-template', data: ref } --><!-- /ko -->
         </div>
-    </div>
+    </div><!-- ko-template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'assignable' }} --><!-- /ko -->
 </script>
 
 <script type="text/html" id="ref-template">
+    <div class="assignable">
     <div class="ref expression" data-bind="with: ref">
         <div class="symbol draggable" data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']">
             <!-- ko template: { name: 'symbol-template' } --><!-- /ko -->
         </div><!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callable' }} --><!-- /ko --><!-- ko template: { name: 'expression-operator-template' } --><!-- /ko -->
-    </div><!-- ko template: { name: 'prop-template', data: ref } --><!-- /ko -->
+    </div><!-- ko template: { name: 'prop-template', data: ref } --><!-- /ko --></div>
+    <!-- ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'assignable' }} --><!-- /ko -->
 </script>
 
 <script type="text/html" id="expression-operator-template"><!-- 
@@ -230,6 +232,9 @@
 <script src="lib/jquery.mobile-events.min.js"></script>
 <script src="lib/lodash.min.js"></script>
 <script src="lib/knockout-3.0.0.debug.js"></script>
-<script src="editor.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/expressions.js"></script>
+<script src="js/dragdrop.js"></script>
+<script src="js/palette.js"></script>
 </body>
 </html>

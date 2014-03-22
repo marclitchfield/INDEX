@@ -6,6 +6,10 @@
     repositionDroppables();
   });
 
+  $(document).on('layoutchanged', function() {
+    repositionDroppables();
+  });
+
   function bindDraggables() {
     $('.draggable').draggable({
       helper: 'clone',
@@ -58,6 +62,8 @@
   }
 
   function repositionDroppables() {
+    console.log('repositionDroppables');
+
     $('.droppable.vertical').each(function() {
       var left = $(this).data('drop-mode') === 'before' ? leftOfPrevious($(this)) : rightOfPrevious($(this));
       $(this).css({ left: left, top: topOfPrevious($(this)) });

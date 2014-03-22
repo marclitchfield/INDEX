@@ -37,7 +37,12 @@
     collapsible.toggleClass('collapsed', !collapsible.hasClass('collapsed'));
     $(this).toggleClass('expanded', $(this).hasClass('collapsed'));
     $(this).toggleClass('collapsed', !$(this).hasClass('collapsed'));
+    collapsible.bind('transitionend', function() {
+      $.event.trigger('layoutchanged');
+      $(this).unbind('transitionend');
+    });
   });
+
 
   (function() {
     var resizeAction;
@@ -47,7 +52,7 @@
     });
 
     var resized = function() {
-      repositionDroppables();  
+      $.event.trigger('layoutchanged');  
     }
   })();
 

@@ -21,7 +21,7 @@
             $(this).data('startingScrollTop', window.pageYOffset);
           }          
         }
-        $.event.trigger('dragstart', $(this));
+        $.event.trigger('dragstarted', $(this));
       },
       drag: function(event, ui){
         $('.editing').blur();

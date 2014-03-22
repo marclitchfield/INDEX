@@ -1,14 +1,14 @@
 (function palette() {
 
-  $(document).on('dragstart', function(event, draggable) {
-    var paletteBehavior = $(this).data('palette-behavior');
+  $(document).on('dragstarted', function(event, draggable) {
+    var paletteBehavior = $(draggable).data('palette-behavior');
     if (paletteBehavior) {
       var behavior = paletteBehaviors[paletteBehavior];
       if (behavior.hasOwnProperty('menu')) {
         var dropTargetTypes = _.uniq(_.flatten(_.map(behavior.menu, function(item) {
           return item[_.keys(item)[0]].dropTargetTypes;
         })));
-        $(this).data('drop-target-types', dropTargetTypes);
+        $(draggable).data('drop-target-types', dropTargetTypes);
       }
     }
   });

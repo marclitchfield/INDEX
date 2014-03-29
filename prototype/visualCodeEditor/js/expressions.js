@@ -137,24 +137,70 @@
     return makeObservable(generators[type]());
   }
 
-  function makeObservable(expression) {
-    var keys = _.keys(expression);
-    if (keys.length === 1) {
-      expression.template = keys[0] + '-template';
+  function makeObservable(expression, context) {
+    if (!expression) {
+      return;
     }
+    var keys = _.keys(expression);
     keys.forEach(function(k) {
-      makeObservable(expression[k]);
-      if (Array.isArray(expression[k])) {
-        expression[k] = ko.observableArray(expression[k]);
-      } else {
-        expression[k] = ko.observable(expression[k]);
+      if (expression[k] !== undefined) {
+        makeObservable(expression[k], getContext(k));
+        if (Array.isArray(expression[k])) {
+          expression[k] = ko.observableArray(expression[k]);
+        } else {
+          expression[k] = ko.observable(expression[k]);
+        }
+        // TODO: only apply these properties to elements that need them
+        if (!expression.hasOwnProperty('prop')) { expression.prop = ko.observable(); }
+        if (!expression.hasOwnProperty('call')) { expression.call = ko.observable(); }
+        if (!expression.hasOwnProperty('sub')) { expression.sub = ko.observable(); }
+        if (!expression.hasOwnProperty('editing')) { expression.editing = ko.observable(false); }
       }
-      // TODO: only apply these properties to elements that need them
-      if (!expression.hasOwnProperty('prop')) { expression.prop = ko.observable(); }
-      if (!expression.hasOwnProperty('call')) { expression.call = ko.observable(); }
-      if (!expression.hasOwnProperty('sub')) { expression.sub = ko.observable(); }
-      if (!expression.hasOwnProperty('editing')) { expression.editing = ko.observable(false); }
     });
+
+    if (keys.length === 1) {
+      expression.template = function() {
+        return keys[0] + '-template';
+      }
+    }
+
+    expression.isAssignable = function() {
+      if (keys.length === 1 && typeof(expression[keys[0]]) === 'function' && typeof(expression[keys[0]]()) === 'object') {
+        return expression[keys[0]]().isAssignable();
+      }
+      if (expression['call'] && expression['call']()) {
+        return false;
+      }
+      if (expression.prop && expression.prop() && expression.prop().hasOwnProperty('isAssignable')) {
+        return expression.prop().isAssignable();
+      }
+      if (expression.sub && expression.sub() && expression.sub().hasOwnProperty('isAssignable')) {
+        return expression.sub().isAssignable();
+      }
+      if (context && context.lvalue) {
+        return false;
+      }
+      return true;
+    };
+
+    expression.addExpression = function(subExpression) {
+      var expressionKey = _.keys(expression)[0];
+      var key = _.keys(subExpression)[0];
+      var body = subExpression[key];
+      var observable = makeObservable(subExpression, getContext(subExpression));
+      var targetExpression = expression[expressionKey]().ref || expression[expressionKey];
+      targetExpression()[key](observable[key]());
+      return observable;
+    };
+
+    function getContext(key) {
+      var localContext = _.clone(context || {});
+      if (key === 'lvalue') {
+        localContext.lvalue = true;
+      }
+      return localContext;
+    }
+
     return expression;
   }
 

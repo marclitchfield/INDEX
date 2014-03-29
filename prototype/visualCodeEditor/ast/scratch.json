@@ -1,0 +1,15 @@
+{
+  "module": {
+    "name": "scratch.js",
+    "expressions": [
+      {
+        "ref": {
+          "name": "hascall",
+          "call": {
+            "args": []
+          }
+        }
+      }
+    ]
+  }
+}

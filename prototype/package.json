@@ -1,9 +1,16 @@
 {
   "name": "visualCodeEditor",
   "version": "0.0.0",
+  "scripts": {
+    "test": "jasmine-node --color visualCodeEditor/test --verbose"
+  },
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-jade": "~0.11.0"
+    "grunt-contrib-jade": "~0.11.0",
+    "karma": "~0.12.1",
+    "karma-jasmine": "~0.1.5",
+    "karma-phantomjs-launcher": "~0.1.2",
+    "karma-spec-reporter": "0.0.12"
   }
 }

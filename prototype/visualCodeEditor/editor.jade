@@ -24,7 +24,7 @@ html
     .assignment.expression(data-bind="with: assignment")
       .lvalue(data-bind="template: { name: lvalue().template, data: lvalue }")
       .op(data-bind="text: op")
-      .rvalue(data-bind="template: { name: rvalue().template, data: rvalue }, style: { display: rvalue().template === 'function-template' ? 'block' : 'inline-block' }")
+      .rvalue(data-bind="template: { name: rvalue().template, data: rvalue }, style: { display: rvalue().template() === 'function-template' ? 'block' : 'inline-block' }")
 
   script#var-template(type="text/html")
     .var.expression(data-bind="with: $data['var']")
@@ -32,7 +32,7 @@ html
       .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")
         // ko template: { name: 'symbol-template', data: ref }
         ///ko
-    // ko-template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'assignable' }}
+    // ko-template: { name: 'drop-assignable-template', data: { mode: 'after', ref: $data['var'].ref }}
     ///ko
 
   script#ref-template(type="text/html")
@@ -47,9 +47,7 @@ html
         ///ko
       // ko template: { name: 'prop-template', data: ref }
       ///ko
-    // ko ifnot: $data.ref.hasOwnProperty('call')
-    //   ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'assignable' }}
-    //  /ko
+    // ko template: { name: 'drop-assignable-template', data: { mode: 'after', ref: ref }}
     ///ko
 
   script#expression-operator-template(type="text/html")
@@ -222,6 +220,10 @@ html
   script#drop-vertical-template(type="text/html")
     .droppable.vertical(data-bind="attr: { 'data-drop-type': type, 'data-drop-position': $data.position, 'data-drop-mode': $data.mode }")
 
+  script#drop-assignable-template(type="text/html")
+    // ko if: $data.ref().isAssignable()
+    .droppable.vertical(data-bind="attr: { 'data-drop-type': 'assignable', 'data-drop-mode': $data.mode }")
+    ///ko
 
   .palette(unselectable='on', onselectstart='return false;')  
     .mode(data-palette-behavior="mode")= 'copy'

@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     },
     watch: {
       scripts: {
-        files: ['visualCodeEditor/*.jade'],
+        files: ['visualCodeEditor/**/*.jade'],
         tasks: ['jade'],
         options: {
           spawn: false,

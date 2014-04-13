@@ -12,6 +12,9 @@ module.exports = function(config) {
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
 
+    preprocessors: {
+        'templates/*.jade': ['jade', 'html2js']
+    },
 
     // list of files / patterns to load in the browser
     files: [
@@ -19,22 +22,15 @@ module.exports = function(config) {
       'lib/knockout-3.0.0.js',
       'lib/lodash.min.js',
       'js/expressions.js',
+      'js/palette.js',
+      'templates/*.jade',
       'test/**/*.spec.js'
     ],
-
 
     // list of files to exclude
     exclude: [
       
     ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-    
-    },
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress'

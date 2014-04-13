@@ -28,7 +28,12 @@
   $(document).keydown(function(e) {
     if (e.keyCode === 27 || e.keyCode === 13) {
       $('.editing').blur();
+      $('.palette-menu').hide();
     }
+  });
+
+  $(document).on('click', function() {
+    $('.palette-menu').hide();
   });
 
   $('.editor').on('click', '.collapse', function() {

@@ -22,6 +22,7 @@
           }          
         }
         $.event.trigger('dragstarted', $(this));
+        $('.palette-menu').hide();
       },
       drag: function(event, ui){
         $('.editing').blur();

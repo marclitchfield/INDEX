@@ -7,10 +7,14 @@
   });
 
   $(document).on('itemdropped', function(event, draggable, droppable) {
-    var dropType = $(droppable).data('drop-type');
-    var source = dropHandlers[dropType](draggable, droppable);
-    if (source && source.editing()) { 
-      $.event.trigger('editing', source);
+    if ($(draggable).data('palette-behavior')) {
+      $.event.trigger('expandpalette', [$('.palette-menu')[0], draggable, droppable]);
+    } else {
+      var dropType = $(droppable).data('drop-type');
+      var source = dropHandlers[dropType](draggable, droppable);
+      if (source && source.editing()) { 
+        $.event.trigger('editing', source);
+      }
     }
   });
 
@@ -144,12 +148,15 @@
     var keys = _.keys(expression);
     keys.forEach(function(k) {
       if (expression[k] !== undefined) {
-        makeObservable(expression[k], getContext(k));
+        var context = getContext(k);
+        makeObservable(expression[k], context);
+        
         if (Array.isArray(expression[k])) {
           expression[k] = ko.observableArray(expression[k]);
         } else {
           expression[k] = ko.observable(expression[k]);
         }
+
         // TODO: only apply these properties to elements that need them
         if (!expression.hasOwnProperty('prop')) { expression.prop = ko.observable(); }
         if (!expression.hasOwnProperty('call')) { expression.call = ko.observable(); }
@@ -183,12 +190,29 @@
       return true;
     };
 
+    expression.isTerminal = function() {
+      if (keys.length === 1 && typeof(expression[keys[0]]) === 'function' && typeof(expression[keys[0]]()) === 'object') {
+        return expression[keys[0]]().isTerminal();
+      }
+      if (expression['call'] && expression['call']()) {
+        return false;
+      }
+      if (expression.prop && expression.prop()) {
+        return false;
+      }
+      if (expression.sub && expression.sub()) {
+        return false;
+      }
+      return true;
+    };
+
     expression.addExpression = function(subExpression) {
       var expressionKey = _.keys(expression)[0];
       var key = _.keys(subExpression)[0];
       var body = subExpression[key];
       var observable = makeObservable(subExpression, getContext(subExpression));
       var targetExpression = expression[expressionKey]().ref || expression[expressionKey];
+      //console.log(JSON.stringify(ko.toJS(targetExpression), undefined, 2));
       targetExpression()[key](observable[key]());
       return observable;
     };

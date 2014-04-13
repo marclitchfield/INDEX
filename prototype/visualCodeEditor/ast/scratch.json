@@ -4,7 +4,12 @@
     "expressions": [
       {
         "ref": {
-          "name": "hascall",
+          "name": "assignable"
+        }
+      },
+      {
+        "ref": {
+          "name": "nonassignable",
           "call": {
             "args": []
           }

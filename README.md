@@ -19,6 +19,7 @@ Install dependencies
 ````
 npm install
 npm install grunt-cli -g
+npm install karma -g
 ````
 
 Start watch process to compile jade (TODO: and less) to html

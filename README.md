@@ -16,16 +16,19 @@ Visual code editor for programming on touch-based devices. This is very much a w
 ###Development setup:
 
 Install dependencies
-```
+````
 npm install
 npm install grunt-cli -g
-```
+````
 
 Start watch process to compile jade (TODO: and less) to html
-```grunt watch```
+
+````grunt watch````
 
 Start a test session in a new session
-```karma start```
+
+````karma start````
 
 Host the project in a web server. A simple way is to run python's built in SimpleHTTPServer in the ```editor``` directory.
-```python -m SimpleHTTPServer```
+
+````python -m SimpleHTTPServer````

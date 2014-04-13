@@ -14,8 +14,13 @@ Visual code editor for programming on touch-based devices. This is very much a w
 * js-git integration
 
 ###Development setup:
-``npm install``
-``grunt watch``
-``karma start``
+
+```npm install```
+
+```grunt watch```
+
+```karma start```
+
 In editor directory:
-``python -m SimpleHTTPServer``
+
+```python -m SimpleHTTPServer```

@@ -6,6 +6,12 @@ Visual code editor for programming on touch-based devices. This is very much a w
 ###Current status:
 * Focusing on javascript initially. Can currently build the UI from a synthetic syntax tree, drag existing expressions to make new expressions (copy and insert mode), rename symbols, and create new symbols and functions. 
 
+Demo:
+http://marclitchfield.github.io/VisualProgramming/editor/editor.html?anagram.json
+http://marclitchfield.github.io/VisualProgramming/editor/editor.html?wordCounts.json
+http://marclitchfield.github.io/VisualProgramming/editor/editor.html?beerSong.json
+
+
 ###Next steps:
 * Building expressions from the palette
 * Parse javascript into the syntax tree (will need to add support for more expression types)

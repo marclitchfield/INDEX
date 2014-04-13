@@ -8,10 +8,13 @@ Visual code editor for programming on touch-based devices. This is very much a w
 
 ###Next steps:
 * Building expressions from the palette
-* Parse javascript into the syntax tree (will need to add more expression types)
+* Parse javascript into the syntax tree (will need to add support for more expression types)
 * Editing modes: move and insert, move and replace, copy and insert, copy and replace, delete
-* Performance tuning for large javascript files
+* Performance tuning for large javascript files (may swap out Knockout for Angular)
 * js-git integration
+* Switch to text-based code editor (with syntax highlighting)
+* Support for more languages
+* Code formatting options
 
 ###Development setup:
 

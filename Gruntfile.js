@@ -8,13 +8,13 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'visualCodeEditor/editor.html': 'visualCodeEditor/editor.jade'
+          'editor/editor.html': 'editor/editor.jade'
         }
       }
     },
     watch: {
       scripts: {
-        files: ['visualCodeEditor/**/*.jade'],
+        files: ['editor/**/*.jade'],
         tasks: ['jade'],
         options: {
           spawn: false,

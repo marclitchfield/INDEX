@@ -1,5 +1,5 @@
 (function dragdrop() {
-  var iOS = ( navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false );
+  var needsDragDropFix = !navigator.userAgent.match(/(iPad|iPhone|iPod|Chrome)/ig);
 
   $(document).on('domchanged', function() {
     bindDraggables();
@@ -16,7 +16,7 @@
       zIndex: 100,
       // Fix for http://bugs.jqueryui.com/ticket/3740
       start: function (event, ui) {
-        if (!iOS) {
+        if (needsDragDropFix) {
           if ($(this).closest('.palette').length === 0) {
             $(this).data('startingScrollTop', window.pageYOffset);
           }          
@@ -26,7 +26,7 @@
       },
       drag: function(event, ui){
         $('.editing').blur();
-        if (!iOS) {
+        if (needsDragDropFix) {
           var st = parseInt($(this).data('startingScrollTop'));
           if (st) {
             ui.position.top -= st;

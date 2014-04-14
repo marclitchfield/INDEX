@@ -8,6 +8,9 @@ html
     include templates/expressions
     include templates/palette
 
+    select.themepick(data-bind="foreach: themes")
+      option.theme(data-bind="text: $data")
+
     .editor(data-bind="template: { name: 'module-template', data: module }", unselectable="on", onselectstart="return false;")
 
     .palette(unselectable='on', onselectstart='return false;')  

@@ -17,9 +17,11 @@ Focusing on javascript initially. Can currently build the UI from a synthetic sy
 ####Next steps:
 * Building expressions from the palette
 * Parse javascript into the syntax tree (will need to add support for more expression types)
-* Editing modes: move and insert, move and replace, copy and insert, copy and replace, delete
+* Editing modes: move and insert, move and replace, copy and insert, copy and replace
+* Delete expressions
 * Performance tuning for large javascript files (may swap out Knockout for Angular)
 * js-git integration
+* Undo/Redo stack
 * Switch to text-based code editor (with syntax highlighting)
 * Support for more languages
 * Code formatting options

@@ -23,6 +23,8 @@ Focusing on javascript initially. Can currently build the UI from a synthetic sy
 * Switch to text-based code editor (with syntax highlighting)
 * Support for more languages
 * Code formatting options
+* Switch themes at runtime
+* Precompile less to css
 
 ####Development setup:
 
@@ -33,7 +35,7 @@ npm install grunt-cli -g
 npm install karma-cli -g
 ````
 
-Start watch process to compile jade (TODO: and less) to html
+Start watch process to compile jade (TODO: and less)
 
 ````grunt watch````
 

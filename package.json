@@ -2,7 +2,7 @@
   "name": "visualCodeEditor",
   "version": "0.0.0",
   "scripts": {
-    "test": "jasmine-node --color visualCodeEditor/test --verbose"
+    "test": "karma start --singleRun"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

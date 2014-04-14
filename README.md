@@ -1,4 +1,5 @@
-Visual Programming[![Build Status](https://travis-ci.org/marclitchfield/VisualProgramming.png?branch=master)](https://travis-ci.org/marclitchfield/VisualProgramming)
+Visual Programming
+[![Build Status](https://travis-ci.org/marclitchfield/VisualProgramming.png?branch=master)](https://travis-ci.org/marclitchfield/VisualProgramming)
 ==================
 
 Visual code editor for programming on touch-based devices. This is very much a work in progress.

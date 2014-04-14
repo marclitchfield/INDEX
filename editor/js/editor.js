@@ -65,13 +65,10 @@
   $('.themepick').change(function() {
     var theme = $(this).val();
     var reload = '?reload=' + new Date().getTime();
-    $('link[rel="stylesheet/less"]').attr('disabled', true);
-    $('link[rel="stylesheet/less"]').each(function() {
-      this.href = 'themes/' + theme + '.less' + reload;
+    $('link[rel="stylesheet"]').each(function() {
+      this.href = 'css/themes/' + theme + '.css' + reload;
     });
-    //$('link[title=mystyle]').prop('disabled',true);
-    //$('script[src*="lib/less-"]').attr('src', 'lib/less-1.7.0.min.js' + reload);
-    $.getScript('lib/less-1.7.0.min.js');
+    $.getScript('lib/less-1.7.0.min.js' + reload);
   });
 })();
 

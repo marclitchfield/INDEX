@@ -5,7 +5,7 @@ Visual code editor for programming on touch-based devices. This is very much a w
 
 ####Current status:
 
-Focusing on javascript initially. Can currently build the UI from a synthetic syntax tree, drag existing expressions to make new expressions (copy and insert mode), rename symbols, and create new symbols and functions. 
+Focusing on javascript initially. Can currently build the UI from a synthetic syntax tree, drag existing expressions to make new expressions (copy and insert mode), rename symbols, and create new symbols and functions. Color theme can be changed with selector at top right, but this will probably move to an options screen eventually.
 
 ####Demo:
 
@@ -25,8 +25,6 @@ Focusing on javascript initially. Can currently build the UI from a synthetic sy
 * Switch to text-based code editor (with syntax highlighting)
 * Support for more languages
 * Code formatting options
-* Switch themes at runtime
-* Precompile less to css
 
 ####Development setup:
 
@@ -37,7 +35,7 @@ npm install grunt-cli -g
 npm install karma-cli -g
 ````
 
-Start watch process to compile jade (TODO: and less)
+Start watch process to compile jade and less.
 
 ````grunt watch````
 

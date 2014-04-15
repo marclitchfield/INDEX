@@ -57,9 +57,14 @@
       return dereference(source);
     },
 
-    'callable': function(draggable, droppable) {
+    'ref-postfix': function(draggable, droppable) {
       var target = ko.contextFor(droppable).$parent;
-      insertNewExpression(target, 'call');
+      // TODO: Handle drop on ref-postfix
+    },
+
+    'sub-postfix': function(draggable, droppable) {
+      var target = ko.contextFor(droppable).$parent;
+      // TODO: Handle drop on sub-postfix
     }
   };
 

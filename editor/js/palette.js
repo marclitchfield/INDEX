@@ -33,7 +33,7 @@
       var menuDefinition = item[_.keys(item)[0]];
       return matchesDropTargetTypes(menuDefinition) && satisfiesConstraints(menuDefinition);
     }).map(function(item) { 
-      return _.keys(item)[0];
+      return { choice: _.keys(item)[0], dropType: item.expressionType };
     });
 
     ko.cleanNode(menuElement);
@@ -41,6 +41,13 @@
     var position = $(droppable).offset();
     $(menuElement).css({ top: position.top, left: position.left });
     $(menuElement).show();
+    $(menuElement).data('drop-target', droppable);
+  });
+
+  $(document).on('click', '.palette-menu .item', function(event) {
+    var draggable = $(this)[0];
+    var droppable = $(this).closest('.palette-menu').data('drop-target');
+    $.event.trigger('itemdropped', [draggable, droppable]);
   });
 
   var paletteBehaviors = {

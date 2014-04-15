@@ -32,8 +32,10 @@
     }
   });
 
-  $(document).on('click', function() {
-    $('.palette-menu').hide();
+  $(document).on('click', function(event) {
+    //if (!$(event.target).hasClass('item')) {
+      $('.palette-menu').hide();
+    //}
   });
 
   $('.editor').on('click', '.collapse', function() {

@@ -29,7 +29,13 @@ describe('palette', function() {
     }
   });
 
-  describe('on palettemenu', function() {
+  describe('on expandpalette', function() {
+    it('should set drop-target data', function() {
+      givenRef("ref");
+      var target = whenPaletteExpandedOn("ref");
+      expect($(paletteMenu).data('drop-target')).toBe(target);
+    });
+
     describe('operator dropped', function() {
       it('on a terminal assignable ref target should include assignment operators', function() {
         givenRef("ref");
@@ -102,96 +108,100 @@ describe('palette', function() {
         whenPaletteExpandedOn('sub1');
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
+    });
 
-      var ref;
-      var draggable;
-      var paletteMenu;
-      var paletteMenuItems;
-      var assignmentOperators = ['=','+=','-=','*=','/=','%=','<<=','>>=','>>>=','&=','^=','|='];
+    var ref;
+    var draggable;
+    var paletteMenu;
+    var paletteMenuItems;
+    var assignmentOperators = ['=','+=','-=','*=','/=','%=','<<=','>>=','>>>=','&=','^=','|='];
 
-      function givenDraggable() {
-        draggable = $('<div/>')
-        draggable.withPaletteBehavior = withPaletteBehavior;
-        return draggable;
-      }
+    function givenDraggable() {
+      draggable = $('<div/>')
+      draggable.withPaletteBehavior = withPaletteBehavior;
+      return draggable;
+    }
 
-      function withPaletteBehavior(behavior) {
-        this.data('palette-behavior', behavior);
-        return this;
-      }
+    function withPaletteBehavior(behavior) {
+      this.data('palette-behavior', behavior);
+      return this;
+    }
 
-      function givenRef(name) { 
-        ref = { ref: { name: name } };
-        var element = $('#fixture').append($('<div/>').attr('data-bind', '{ template: { name: template } }'));
-        $(document).trigger('loadexpressions', [ref, element[0]]);
-        expression = ko.toJS(ko.dataFor(element[0]));
-        return fluent(ref);
-      }
+    function givenRef(name) { 
+      ref = { ref: { name: name } };
+      var element = $('#fixture').append($('<div/>').attr('data-bind', '{ template: { name: template } }'));
+      $(document).trigger('loadexpressions', [ref, element[0]]);
+      expression = ko.toJS(ko.dataFor(element[0]));
+      return fluent(ref);
+    }
 
-      function withProp(name) {
-        var expression = { prop: { ref: { name: name } } };
-        var prop = ko.toJS(this.addExpression(expression));
-        return fluent(prop);
-      }
+    function withProp(name) {
+      var expression = { prop: { ref: { name: name } } };
+      var prop = ko.toJS(this.addExpression(expression));
+      return fluent(prop);
+    }
 
-      function withSub(name) {
-        var expression = { sub: { ref: { name: name } } };
-        var sub = ko.toJS(this.addExpression(expression));
-        return fluent(sub);
-      }
+    function withSub(name) {
+      var expression = { sub: { ref: { name: name } } };
+      var sub = ko.toJS(this.addExpression(expression));
+      return fluent(sub);
+    }
 
-      function withCall() {
-        var expression = { call: { args: [] } };
-        var called = ko.toJS(this.addExpression(expression));
-        return fluent(called);
-      }
+    function withCall() {
+      var expression = { call: { args: [] } };
+      var called = ko.toJS(this.addExpression(expression));
+      return fluent(called);
+    }
 
-      function fluent(expression) {
-        expression.withProp = withProp;
-        expression.withSub = withSub;
-        expression.withCall = withCall;
-        return expression;
-      }
+    function fluent(expression) {
+      expression.withProp = withProp;
+      expression.withSub = withSub;
+      expression.withCall = withCall;
+      return expression;
+    }
 
-      function whenPaletteExpandedOn(name) {
-        var menuElement = $('.palette-menu')[0];
-        var indicator = $('.symbol :contains("' + name + '")').closest('.symbol').next('.droppable')[0];
-        $(document).trigger('expandpalette', [menuElement, draggable, indicator]);
-        paletteMenuItems = ko.toJS(ko.dataFor(menuElement)).menu;
-      }
+    function whenPaletteExpandedOn(name) {
+      var menuElement = $('.palette-menu')[0];
+      var targetElement = $('.symbol :contains("' + name + '")').closest('.symbol');
+      var indicator = targetElement.next('.droppable')[0];
+      $(document).trigger('expandpalette', [menuElement, draggable, indicator]);
+      paletteMenuItems = _.map(ko.toJS(ko.dataFor(menuElement)).menu, function(item) {
+        return item.choice;
+      });
+      return indicator;
+    }
 
-      beforeEach(function() {
-        paletteMenuItems = undefined;
+    beforeEach(function() {
+      paletteMenuItems = undefined;
 
-        $('#fixture').remove();
-        $('body').append($('<div/>').attr('id', 'fixture'));
-        $('#fixture').append($('<div/>').html(window.__html__['templates/expressions.html']));
-        $('#fixture').append($('<div/>').html(window.__html__['templates/palette.html']));
-        paletteMenu = $('<div/>').addClass('palette-menu').attr('data-bind', 'template: { name: "palette-menu" }');
-        $('#fixture').append(paletteMenu);
+      $('#fixture').remove();
+      $('body').append($('<div/>').attr('id', 'fixture'));
+      $('#fixture').append($('<div/>').html(window.__html__['templates/expressions.html']));
+      $('#fixture').append($('<div/>').html(window.__html__['templates/palette.html']));
+      paletteMenu = $('<div/>').addClass('palette-menu').attr('data-bind', 'template: { name: "palette-menu" }');
+      $('#fixture').append(paletteMenu);
 
-        givenDraggable().withPaletteBehavior('operator');
+      givenDraggable().withPaletteBehavior('operator');
 
-        jasmine.addMatchers({
-          toIncludeAll: function() {
-            return {
-              compare: function(actual, expected) {
-                return {
-                  pass: _.intersection(expected, actual).length === expected.length
-                };
-              }
-            };
-          },
-          toIncludeNo: function() {
-            return {
-              compare: function(actual, expected) {
-                return {
-                  pass: _.intersection(expected, actual).length === 0
-                }
+      jasmine.addMatchers({
+        toIncludeAll: function() {
+          return {
+            compare: function(actual, expected) {
+              return {
+                pass: _.intersection(expected, actual).length === expected.length
+              };
+            }
+          };
+        },
+        toIncludeNo: function() {
+          return {
+            compare: function(actual, expected) {
+              return {
+                pass: _.intersection(expected, actual).length === 0
               }
             }
           }
-        });
+        }
       });
     });
   });

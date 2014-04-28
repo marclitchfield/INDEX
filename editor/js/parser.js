@@ -1,7 +1,6 @@
 var parser = (function() {
 
   function translateExpression(expression) {
-    console.log(JSON.stringify(expression, undefined, 2));
     if (!expressionTranslators.hasOwnProperty(expression.type)) {
       throw new Error('No expression translator defined for ' + expression.type);
     }

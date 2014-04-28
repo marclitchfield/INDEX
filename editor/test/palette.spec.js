@@ -15,7 +15,7 @@ describe('palette', function() {
     it('operator should set dropTargetTypes', function() {
       givenPaletteItemWithBehavior('operator');
       whenDragStarted();
-      expect(paletteItem.data('drop-target-types')).toEqual(['ref-postfix', 'sub-postfix', 'binary-operator']);
+      expect(paletteItem.data('drop-target-types')).toEqual(['ref-postfix', 'sub-postfix', 'call-postfix', 'binary-operator']);
     });
 
     var paletteItem;
@@ -31,138 +31,139 @@ describe('palette', function() {
 
   describe('on expandpalette', function() {
     it('should set drop-target data', function() {
-      givenRef("ref");
-      var target = whenPaletteExpandedOn("ref");
+      given(a);
+      var target = whenPaletteExpandedOn(a);
       expect($(paletteMenu).data('drop-target')).toBe(target);
     });
 
     describe('operator dropped', function() {
       it('on a terminal assignable ref target should include assignment operators', function() {
-        givenRef("ref");
-        whenPaletteExpandedOn("ref");
+        given(a);
+        whenPaletteExpandedOn(a);
         expect(paletteMenuItems).toIncludeAll(assignmentOperators);
       })
 
       it('on a terminal non-assignable ref target should not include assignment operators', function() {
-        givenRef("ref").withCall();
-        whenPaletteExpandedOn("ref");
+        given(call(a));
+        whenPaletteExpandedOn(a);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
       it('on a non-terminal assignable ref target should not include assignment operators', function() {
-        givenRef("ref").withProp("prop");
-        whenPaletteExpandedOn("ref");
+        given(prop(a, b));
+        whenPaletteExpandedOn(a);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
       it('on a non-terminal non-assignable ref target should not include assignment operators', function() {
-        givenRef("ref").withProp("prop").withCall();
-        whenPaletteExpandedOn("ref");
+        given(prop(a, call(b)));
+        whenPaletteExpandedOn(a);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
       it('on a terminal assignable prop target should include assignment operators', function() {
-        givenRef("ref").withProp('prop1').withProp('prop2');
-        whenPaletteExpandedOn('prop2');
+        given(prop(prop(a, b), c));
+        whenPaletteExpandedOn(c);
         expect(paletteMenuItems).toIncludeAll(assignmentOperators);
       });
 
       it('on a terminal non-assignable prop target should not include assignment operators', function() {
-        givenRef("ref").withProp("prop1").withProp("prop2").withCall();
-        whenPaletteExpandedOn("prop2");
+        given(prop(prop(a, b), call(c)));
+        whenPaletteExpandedOn(c);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
       it('on a non-terminal assignable prop target should not include assignment operators', function() {
-        givenRef("ref").withProp("prop1").withProp("prop2");
-        whenPaletteExpandedOn("prop");
+        given(prop(prop(a, b), c));
+        whenPaletteExpandedOn(b);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
       it('on a non-terminal non-assignable prop target should not include assignment operators', function() {
-        givenRef("ref").withProp("prop1").withCall().withProp("prop2");
-        whenPaletteExpandedOn("prop");
+        given(prop(prop(a, call(b)), c))
+        whenPaletteExpandedOn(b);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
-      it('on a terminal assignable sub target should include assignment operators', function() {
-        givenRef("ref").withSub('sub');
-        whenPaletteExpandedOn('sub');
+      it('on a assignable sub target should include assignment operators', function() {
+        given(sub(a, b));
+        whenPaletteExpandedOn(b);
         expect(paletteMenuItems).toIncludeAll(assignmentOperators);
       });
 
-      it('on a terminal non-assignable sub target should not include assignment operators', function() {
-        givenRef("ref").withSub("sub").withCall();
-        whenPaletteExpandedOn("sub");
+      it('on a assignable nested sub target should include assignment operators', function() {
+        given(sub(a, sub(b, c)));
+        whenPaletteExpandedOn(c);
+        expect(paletteMenuItems).toIncludeAll(assignmentOperators);
+      });
+
+      it('on a non-assignable sub target should not include assignment operators', function() {
+        given(sub(a, call(b)))
+        whenPaletteExpandedOn(b);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
-      it('on a non-terminal assignable sub target should not include assignment operators', function() {
-        givenRef("ref").withSub("sub1").withSub("sub2");
-        whenPaletteExpandedOn('sub1');
+      it('on a non-assignable nested sub target should not include assignment operators', function() {
+        given(sub(a, sub(call(b), c)));
+        whenPaletteExpandedOn(b);
         expect(paletteMenuItems).toIncludeNo(assignmentOperators);
       });
 
-      it('on a non-terminal non-assignable sub target should not include assignment operators', function() {
-        givenRef("ref").withSub("sub1").withCall().withSub("sub2");
-        whenPaletteExpandedOn('sub1');
-        expect(paletteMenuItems).toIncludeNo(assignmentOperators);
+      it('on a assignable ref target with sub should include assignment operators', function() {
+        given(sub(a, b));
+        whenPaletteExpandedOn(a);
+        expect(paletteMenuItems).toIncludeAll(assignmentOperators);
       });
+
+      it('on a assignable ref target with nested sub should include assignment operators', function() {
+        given(sub(a, sub(b, c)));
+        whenPaletteExpandedOn(a);
+        expect(paletteMenuItems).toIncludeAll(assignmentOperators);
+      });      
     });
 
-    var ref;
     var draggable;
     var paletteMenu;
     var paletteMenuItems;
     var assignmentOperators = ['=','+=','-=','*=','/=','%=','<<=','>>=','>>>=','&=','^=','|='];
+    var a = { ref: { name: 'a' } };
+    var b = { ref: { name: 'b' } };
+    var c = { ref: { name: 'c' } };
 
-    function givenDraggable() {
+    function givenDraggable(paletteBehavior) {
       draggable = $('<div/>')
-      draggable.withPaletteBehavior = withPaletteBehavior;
+      draggable.data('palette-behavior', paletteBehavior);
       return draggable;
     }
 
-    function withPaletteBehavior(behavior) {
-      this.data('palette-behavior', behavior);
-      return this;
-    }
-
-    function givenRef(name) { 
-      ref = { ref: { name: name } };
+    function given(expression) {
       var element = $('#fixture').append($('<div/>').attr('data-bind', '{ template: { name: template } }'));
-      $(document).trigger('loadexpressions', [ref, element[0]]);
-      expression = ko.toJS(ko.dataFor(element[0]));
-      return fluent(ref);
+      $(document).trigger('loadexpressions', [JSON.parse(JSON.stringify(expression)), element[0]]);
     }
 
-    function withProp(name) {
-      var expression = { prop: { ref: { name: name } } };
-      var prop = ko.toJS(this.addExpression(expression));
-      return fluent(prop);
+    function ref(name) {
+      return { ref: { name: name } };
     }
 
-    function withSub(name) {
-      var expression = { sub: { ref: { name: name } } };
-      var sub = ko.toJS(this.addExpression(expression));
-      return fluent(sub);
+    function call(object) {
+      return { call: { object: object, args: [] } };
     }
 
-    function withCall() {
-      var expression = { call: { args: [] } };
-      var called = ko.toJS(this.addExpression(expression));
-      return fluent(called);
+    function prop(object, key) {
+      return { prop: { object: object, key: key } };
     }
 
-    function fluent(expression) {
-      expression.withProp = withProp;
-      expression.withSub = withSub;
-      expression.withCall = withCall;
-      return expression;
+    function sub(object, key) {
+      return { sub: { object: object, key: key } };
     }
 
-    function whenPaletteExpandedOn(name) {
+    function assignment(lvalue, rvalue) {
+      return { assignment: { op: '=', lvalue: lvalue, rvalue: rvalue } };
+    }
+
+    function whenPaletteExpandedOn(symbol) {
       var menuElement = $('.palette-menu')[0];
-      var targetElement = $('.symbol :contains("' + name + '")').closest('.symbol');
+      var targetElement = $('.symbol :contains("' + symbol.ref.name + '")').closest('.symbol');
       var indicator = targetElement.next('.droppable')[0];
       $(document).trigger('expandpalette', [menuElement, draggable, indicator]);
       paletteMenuItems = _.map(ko.toJS(ko.dataFor(menuElement)).menu, function(item) {
@@ -181,7 +182,7 @@ describe('palette', function() {
       paletteMenu = $('<div/>').addClass('palette-menu').attr('data-bind', 'template: { name: "palette-menu" }');
       $('#fixture').append(paletteMenu);
 
-      givenDraggable().withPaletteBehavior('operator');
+      givenDraggable('operator');
 
       jasmine.addMatchers({
         toIncludeAll: function() {

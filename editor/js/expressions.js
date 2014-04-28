@@ -1,9 +1,53 @@
 (function expressions() {
 
+  var nextId = 0;
+  var tree = (function() {
+    var parents = {};
+
+    return {
+      add: function(id, parent, edge) {
+        parents[id] = { object: parent, edge: edge };
+      },
+      parentOf: function(id) {
+        if (parents[id] === undefined) {
+          return undefined;
+        }
+        return parents[id];
+      },
+      ancestorsOf: function(id) {
+        var ancestors = [];
+        var ancestor = { object: { id: id } };
+        do {
+          ancestor = this.parentOf(ancestor.object.id);
+          if (ancestor) { ancestors.push(ancestor); }
+        } while(ancestor !== undefined);
+        return ancestors;
+      }
+    };
+  })();
+
+  var properties = (function() {
+    var props = {};
+
+    return {
+      set: function(id, key, value) {
+        props[id] = props[id] || {};
+        props[id][key] = value;
+      },
+      get: function(id, key) {
+        if (props[id] === undefined) {
+          return undefined;
+        }
+        return props[id][key];
+      }
+    };
+  })();
+
   $(document).on('loadexpressions', function(event, expressions, element) {
     var viewModel = makeObservable(expressions);
     ko.applyBindings(viewModel, element);
     $.event.trigger('domchanged');
+    //dump(expressions);
   });
 
   $(document).on('itemdropped', function(event, draggable, droppable) {
@@ -25,7 +69,7 @@
   var dropHandlers = {
     'callarg': function(draggable, droppable) {
       var source = createSource(draggable);
-      var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'args').args;
+      var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'call').call().args;
       var dropPosition = $(droppable).attr('data-drop-position');
       targetArgs.splice(dropPosition, 0, source);
       return dereference(source);
@@ -130,13 +174,10 @@
         return { 'function': { 'ref': { name: '', editing: true }, args: [], expressions: [] } };
       },
       'var': function() {
-        return { 'var': { 'ref': { name: '', editing: true } } };
+        return { 'var': [ { 'ref': { name: '', editing: true } } ] };
       },
       'ref': function() {
         return { 'ref': { name: '', editing: true } };
-      },
-      'call': function() {
-        return { 'call': { args: [] } };
       },
       'literal': function() {
         return { 'literal': { type: 'string', value: '', editing: true }}
@@ -146,91 +187,109 @@
     return makeObservable(generators[type]());
   }
 
-  function makeObservable(expression, context) {
+  function makeObservable(expression) {
     if (!expression) {
       return;
     }
     var keys = _.keys(expression);
+    var expressionType = (keys.length === 1) ? keys[0] : undefined;
+
+    expression.id = nextId++;
+    if (expressionType) {
+      properties.set(expression.id, 'type', expressionType);
+    }
+    if (expressionType === 'call') {
+      properties.set(expression.id, 'call', true);
+    }
+
     keys.forEach(function(k) {
       if (expression[k] !== undefined) {
-        var context = getContext(k);
-        makeObservable(expression[k], context);
-        
+        makeObservable(expression[k]);
+
         if (Array.isArray(expression[k])) {
           expression[k] = ko.observableArray(expression[k]);
         } else {
           expression[k] = ko.observable(expression[k]);
         }
 
-        // TODO: only apply these properties to elements that need them
-        if (!expression.hasOwnProperty('prop')) { expression.prop = ko.observable(); }
-        if (!expression.hasOwnProperty('call')) { expression.call = ko.observable(); }
-        if (!expression.hasOwnProperty('sub')) { expression.sub = ko.observable(); }
+        setChildExpression(expression[k], expression, k);
+
         if (!expression.hasOwnProperty('editing')) { expression.editing = ko.observable(false); }
-      }
+      }6
     });
 
-    if (keys.length === 1) {
+    if (expressionType) {
       expression.template = function() {
-        return keys[0] + '-template';
+        return expressionType + '-template';
       }
     }
 
     expression.isAssignable = function() {
-      if (keys.length === 1 && typeof(expression[keys[0]]) === 'function' && typeof(expression[keys[0]]()) === 'object') {
-        return expression[keys[0]]().isAssignable();
+      var parent = tree.parentOf(expression.id);
+      if (parent === undefined) {
+        return true;
       }
-      if (expression['call'] && expression['call']()) {
+      var ancestors = tree.ancestorsOf(expression.id);
+      if (parent.edge === 'key') {
+        var grandParent = ancestors[1].object;
+        if (properties.get(grandParent.id, 'type') === 'sub') {
+          return true;
+        }
+      }
+      if (properties.get(expression.id, 'call') || properties.get(expression.id, 'lvalue')) {
         return false;
       }
-      if (expression.prop && expression.prop() && expression.prop().hasOwnProperty('isAssignable')) {
-        return expression.prop().isAssignable();
-      }
-      if (expression.sub && expression.sub() && expression.sub().hasOwnProperty('isAssignable')) {
-        return expression.sub().isAssignable();
-      }
-      if (context && context.lvalue) {
+      if (_.any(ancestors, function(a) {
+        return properties.get(a.object.id, 'call') || properties.get(a.object.id, 'lvalue');
+      })) {
         return false;
+      }
+      // element must be terminal to be assignable
+      for(var i=0; i<ancestors.length; i++) {
+        if (ancestors[i].edge === 'object' && properties.get(ancestors[i+1].object.id, 'type') === 'prop') {
+          return false;
+        }
       }
       return true;
     };
 
-    expression.isTerminal = function() {
-      if (keys.length === 1 && typeof(expression[keys[0]]) === 'function' && typeof(expression[keys[0]]()) === 'object') {
-        return expression[keys[0]]().isTerminal();
-      }
-      if (expression['call'] && expression['call']()) {
-        return false;
-      }
-      if (expression.prop && expression.prop()) {
-        return false;
-      }
-      if (expression.sub && expression.sub()) {
-        return false;
-      }
+    expression.isInitializable = function() {
       return true;
     };
 
-    expression.addExpression = function(subExpression) {
-      var expressionKey = _.keys(expression)[0];
-      var key = _.keys(subExpression)[0];
-      var body = subExpression[key];
-      var observable = makeObservable(subExpression, getContext(subExpression));
-      var targetExpression = expression[expressionKey]().ref || expression[expressionKey];
-      //console.log(JSON.stringify(ko.toJS(targetExpression), undefined, 2));
-      targetExpression()[key](observable[key]());
-      return observable;
-    };
+    function setChildExpression(child, parent, edge) {
+      var id = child().id;
+      if (id) {
+        tree.add(id, parent, edge);
 
-    function getContext(key) {
-      var localContext = _.clone(context || {});
-      if (key === 'lvalue') {
-        localContext.lvalue = true;
+        if (edge === 'lvalue') {
+          properties.set(id, 'lvalue', true);
+        }
+
+        if (properties.get(id, 'type')) {
+          if (properties.get(id, 'call')) {
+            properties.set(parent.id, 'call', true);
+          }
+        } 
       }
-      return localContext;
     }
 
     return expression;
+  }
+
+  function dump(expression, indent) {
+    indent = indent || 0;
+    if (!expression.id) {
+      return;
+    }
+    var parent = tree.parentOf(expression.id);
+    console.log(Array(indent * 2).join(' ') + expression.id + ': ' + (parent ? '(' + parent.object.id + '/' + parent.edge + ') ' : '') + properties.get(expression.id, 'type') + (properties.get(expression.id, 'call') ? ' (call)' : '') + (properties.get(expression.id, 'lvalue') ? ' (lvalue)' : ''));
+
+    _.keys(expression).forEach(function(k) {
+      if (ko.isObservable(expression[k])) {
+        dump(expression[k](), indent + 1);
+      }
+    });
   }
 
 })();

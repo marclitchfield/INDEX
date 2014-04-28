@@ -6,11 +6,13 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "var": {
-              "ref": {
-                "name": "Word"
+            "var": [
+              {
+                "ref": {
+                  "name": "Word"
+                }
               }
-            }
+            ]
           },
           "rvalue": {
             "function": {
@@ -27,21 +29,29 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": { 
-                        "ref": {
-                          "name": "lowercaseLetters"
+                      "var": [
+                        { 
+                          "ref": {
+                            "name": "lowercaseLetters"
+                          }
                         }
-                      }
+                      ]
                     },
                     "rvalue": {
-                      "ref": {
-                        "name": "letters",
-                        "prop": {
+                      "prop": {
+                        "object": {
                           "ref": {
-                            "name": "toLowerCase",
-                            "call": {
-                              "args": []
-                            }
+                            "name": "letters"
+                          }
+                        },
+                        "key": {
+                          "call": {
+                            "object": {
+                              "ref": {
+                                "name": "toLowerCase"
+                              }
+                            },
+                            "args": []
                           }
                         }
                       }
@@ -52,24 +62,28 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": {
-                        "ref": {
-                          "name": "lowercaseSortedLetters"
+                      "var": [
+                        {
+                          "ref": {
+                            "name": "lowercaseSortedLetters"
+                          }
                         }
-                      }
+                      ]
                     },
                     "rvalue": {
-                      "ref": {
-                        "name": "sortedLetters",
-                        "call": {
-                          "args": [
-                            {
-                              "ref": {
-                                "name": "lowercaseLetters"
-                              }
+                      "call": {
+                        "object": {
+                          "ref": {
+                            "name": "sortedLetters"
+                          }
+                        },
+                        "args": [
+                          {
+                            "ref": {
+                              "name": "lowercaseLetters"
                             }
-                          ]
-                        }
+                          }
+                        ]                        
                       }
                     }
                   }
@@ -87,44 +101,62 @@
                     "expressions": [
                       {
                         "return": {
-                          "ref": {
-                            "name": "letters",
-                            "prop": {
-                              "ref": {
-                                "name": "split",
-                                "call": {
-                                  "args": [
-                                    {
-                                      "literal": {
-                                        "type": "string",
-                                        "value": ""
-                                      }
-                                    }
-                                  ]
-                                },
-                                "prop": {
-                                  "ref": {
-                                    "name": "sort",
-                                    "call": {
-                                      "args": []
-                                    },
-                                    "prop": {
+                          "prop": {
+                            "object": {
+                              "prop": {
+                                "object": {
+                                  "prop": {
+                                    "object": {
                                       "ref": {
-                                        "name": "join",
-                                        "call": {
-                                          "args": [
-                                            {
-                                              "literal": {
-                                                "type": "string",
-                                                "value": ""
-                                              }
+                                        "name": "letters"
+                                      }
+                                    },
+                                    "key": {
+                                      "call": {
+                                        "object": {
+                                          "ref": {
+                                            "name": "split"
+                                          }
+                                        },
+                                        "args": [
+                                          {
+                                            "literal": {
+                                              "type": "string",
+                                              "value": ""
                                             }
-                                          ]                                          
-                                        }
+                                          }
+                                        ]
                                       }
                                     }
                                   }
+                                },
+                                "key": {
+                                  "call": {
+                                    "object": {
+                                      "ref": {
+                                        "name": "sort"
+                                      }
+                                    },
+                                    "args": []
+                                  }
                                 }
+                              }
+                            },
+                            "key": {
+                              "call": {
+                                "object": {
+                                  "ref": {
+                                    "name": "join"
+                                  }
+                                },
+                                "args": [
+                                  {
+                                    "literal": {
+                                      "type": "string",
+                                      "value": ""
+                                    }
+                                  }
+                                ]
                               }
                             }
                           }
@@ -165,14 +197,20 @@
                                         }
                                       },
                                       "right": {
-                                        "ref": {
-                                          "name": "otherWord",
-                                          "prop": {
+                                        "prop": {
+                                          "object": {
                                             "ref": {
-                                              "name": "toLowerCase",
-                                              "call": {
-                                                "args": []
-                                              }
+                                              "name": "otherWord"
+                                            }
+                                          },
+                                          "key": {
+                                            "call": {
+                                              "object": {
+                                                "ref": {
+                                                  "name": "toLowerCase"
+                                                }
+                                              },
+                                              "args": []
                                             }
                                           }
                                         }
@@ -197,11 +235,13 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "var": {
-              "ref": {
-                "name": "Anagram"
+            "var": [
+              {
+                "ref": {
+                  "name": "Anagram"
+                }
               }
-            }
+            ]
           },
           "rvalue": {
             "function": {
@@ -218,16 +258,22 @@
                   "assignment": {
                     "op": "=",
                     "lvalue": {
-                      "var": {
-                        "ref": {
-                          "name": "word"
+                      "var": [
+                        {
+                          "ref": {
+                            "name": "word"
+                          }
                         }
-                      }
+                      ]
                     },
                     "rvalue": {
                       "new": {
-                        "name": "Word",
                         "call": {
+                          "object": {
+                            "ref": {
+                              "name": "Word"
+                            }
+                          },
                           "args": [
                             {
                               "ref": {
@@ -256,39 +302,51 @@
                           "binary": {
                             "op": "&&",
                             "left": {
-                              "ref": {
-                                "name": "word",
-                                "prop": {
+                              "prop": {
+                                "object": {
                                   "ref": {
-                                    "name": "isDifferentThan",
-                                    "call": {
-                                      "args": [
-                                        {
-                                          "ref": {
-                                            "name": "testWord"
-                                          }
+                                    "name": "word"
+                                  }
+                                },
+                                "key": {
+                                  "call": {
+                                    "object": {
+                                      "ref": {
+                                        "name": "isDifferentThan"
+                                      }
+                                    },
+                                    "args": [
+                                      {
+                                        "ref": {
+                                          "name": "testWord"
                                         }
-                                      ]                                      
-                                    }
+                                      }
+                                    ]                                      
                                   }
                                 }
                               }
                             },
                             "right": {
-                              "ref": {
-                                "name": "word",
-                                "prop": {
+                              "prop": {
+                                "object": {
                                   "ref": {
-                                    "name": "hasSameLettersAs",
-                                    "call": {
-                                      "args": [
-                                        {
-                                          "ref": {
-                                            "name": "testWord"
-                                          }
+                                    "name": "word"
+                                  }
+                                },
+                                "key": {
+                                  "call": {
+                                    "object": {
+                                      "ref": {
+                                        "name": "hasSameLettersAs"
+                                      }
+                                    },
+                                    "args": [
+                                      {
+                                        "ref": {
+                                          "name": "testWord"
                                         }
-                                      ]                                      
-                                    }
+                                      }
+                                    ]                                      
                                   }
                                 }
                               }
@@ -323,20 +381,26 @@
                               "expressions": [
                                 {
                                   "return": {
-                                    "ref": {
-                                      "name": "testWords",
-                                      "prop": {
+                                    "prop": {
+                                      "object": {
                                         "ref": {
-                                          "name": "filter",
-                                          "call": {
-                                            "args": [
-                                              {
-                                                "ref": {
-                                                  "name": "isAnagramOf"
-                                                }
+                                          "name": "testWords"
+                                        }
+                                      },
+                                      "key": {
+                                        "call": {
+                                          "object": {
+                                            "ref": {
+                                              "name": "filter"
+                                            }
+                                          },
+                                          "args": [
+                                            {
+                                              "ref": {
+                                                "name": "isAnagramOf"
                                               }
-                                            ]                                            
-                                          }
+                                            }
+                                          ]                                            
                                         }
                                       }
                                     }
@@ -359,9 +423,13 @@
         "assignment": {
           "op": "=",
           "lvalue": {
-            "ref": {
-              "name": "module",
-              "prop": {
+            "prop": {
+              "object": {
+                "ref": {
+                  "name": "module"
+                }
+              },
+              "key": {
                 "ref": {
                   "name": "exports"
                 }

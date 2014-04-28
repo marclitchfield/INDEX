@@ -1,208 +1,185 @@
 describe('expressions', function() {
   describe('isAssignable', function() {
-    it('ref should be assignable', function() {
-      given(ref);
-      expect(ref.isAssignable()).toBe(true);
+    it('given a, a should be assignable', function() {
+      given(a);
+      expect(ref(a).isAssignable()).toBe(true);
     });
 
-    it('ref() should not be assignable', function() {
-      given(ref).withA(call);
-      expect(ref.isAssignable()).toBe(false);
+    it('given a(), a should not be assignable', function() {
+      given(call(a));
+      expect(ref(a).isAssignable()).toBe(false);
     });
 
-    it('ref.prop should be assignable', function() {
-      given(ref).withA(prop);
-      expect(ref.isAssignable()).toBe(true);
+    it('given a.b, a should not be assignable, b should be assignable', function() {
+      given(prop(a, b));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
     });
 
-    it('ref.prop() should not be assignable', function() {
-      given(ref).withA(prop).withA(call);
-      expect(ref.isAssignable()).toBe(false);
+    it('given a.b(), none should not be assignable', function() {
+      given(prop(a, call(b)));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
     });
 
-    it('ref.prop.prop2() should not be assignable', function() {
-      given(ref).withA(prop).withA(prop2).withA(call);
-      expect(ref.isAssignable()).toBe(false);
+    it('given a.b.c, a and b should not be assignable, c should be assignable', function() {
+      given(prop(prop(a, b), c));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(true);
     });
 
-    it('ref[sub] should be assignable', function() {
-      given(ref).withA(sub);
-      expect(ref.isAssignable()).toBe(true);
+    it('given a.b.c(), none should be assignable', function() {
+      given(prop(prop(a, b), call(c)));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(false);
     });
 
-    it('ref[sub]() should not be assignable', function() {
-      given(ref).withA(sub).withA(call)
-      expect(ref.isAssignable()).toBe(false);
+    it('given a[b], a and b should be assignable', function() {
+      given(sub(a, b));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(true);
     });
 
-    it('ref()[sub] should not be assignable', function() {
-      given(ref).withA(call).withA(sub);
-      expect(ref.isAssignable()).toBe(false);
+    it('given a[b](), a should not be assignable, b should be assignable', function() {
+      given(call(sub(a, b)));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
     });
 
-    it('ref.prop[sub] should be assignable', function() {
-      given(ref).withA(prop).withA(sub);
-      expect(ref.isAssignable()).toBe(true);
+    it('given a()[b], a should not be assignable, b should be assignable', function() {
+      given(sub(call(a), b));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
     });
 
-    it('ref.prop[sub]() should not be assignable', function() {
-      given(ref).withA(prop).withA(sub).withA(call);
-      expect(ref.isAssignable()).toBe(false);
+    it('given a.b[c], a should be assignable, b and c should be assignable', function() {
+      given(prop(a, sub(b, c)));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
+      expect(ref(c).isAssignable()).toBe(true);
     });
 
-    it('ref.prop()[sub] should not be assignable', function() {
-      given(ref).withA(prop).withA(call).withA(sub);
-      expect(ref.isAssignable()).toBe(false);
+    it('given a[b][c], all should be assignable', function() {
+      given(sub(a, sub(b, c)));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(true);
+      expect(ref(c).isAssignable()).toBe(true);
+    })
+
+    it('given a.b[c](), a and b should not be assignable, c should be assignable', function() {
+      given(call(prop(a, sub(b, c))));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(true);
     });
 
-    it('ref=ref2 lvalue should not be assignable', function() {
-      var assignment = givenAssignment(ref, ref2);
-      expect(assignment.lvalue.isAssignable()).toBe(false);
+    it('given a.b()[c], a and b should not be assignable, c should be assignable', function() {
+      given(sub(prop(a, call(b)), c));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(true);
     });
 
-    it('ref=ref2 rvalue should be assignable', function() {
-      givenAssignment(ref, given(ref2));
-      expect(ref2.isAssignable()).toBe(true);
+    it('given a[b].c.d, a and c should not be assignable, b and d should be assignable', function() {
+      given(prop(prop(sub(a,b),c),d));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
+      expect(ref(c).isAssignable()).toBe(false);
+      expect(ref(d).isAssignable()).toBe(true);
     });
 
-    it('ref=ref2() rvalue should not be assignable', function() {
-      given(ref2).withA(call);
-      givenAssignment(ref, ref2);
-      expect(ref2.isAssignable()).toBe(false);
+    it('given a=b, a should not be assignable, b should be assignable', function() {
+      given(assignment(a, b))
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
     });
 
-    it('ref=ref2.prop rvalue should be assignable', function() {
-      given(ref2).withA(prop);
-      givenAssignment(ref, ref2);
-      expect(ref2.isAssignable()).toBe(true);
+    it('given a=b(), none should be assignable', function() {
+      given(assignment(a, call(b)));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
     });
 
-    it('ref=ref2.prop() rvalue should not be assignable', function() {
-      given(ref2).withA(prop).withA(call);
-      givenAssignment(ref, ref2);
-      expect(ref2.isAssignable()).toBe(false);
+    it('given a=b.c, a and be should not be assignable, c should be assignable', function() {
+      given(assignment(a, prop(b, c)));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(true);
+    });
+
+    it('given a=b.c(), none should be assignable', function() {
+      given(assignment(a, prop(b, call(c))));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(false);
+    });
+
+    xit('given var a, a should not be assignable (it is initializable)', function() {
+      given(def(a))
+      expect(ref(a).isAssignable().toBe(false));
     });
   });
 
-  describe('isTerminal', function() {
-    describe('given ref', function() {
-      beforeEach(function() { given(ref); })
-
-      it('ref should be terminal', function() {
-        expect(ref.isTerminal()).toBe(true);
-      });
+  xdescribe('isInitializable', function() {
+    it('given var a, a should be initializable', function() {
+      given(def(a));
+      expect(ref(a).isInitializable()).toBe(true);
     });
 
-    describe('given ref.prop', function() {
-      beforeEach(function() { given(ref).withA(prop); })
-
-      it('ref should not be terminal', function() {
-        expect(ref.isTerminal()).toBe(false);
-      });
-
-      it('prop should be terminal', function() {
-        expect(prop.isTerminal()).toBe(true);
-      });
+    it('given var a=b, a should not be initializable', function() {
+      given(def(a, b));
+      expect(ref(a).isInitializable()).toBe(false);
     });
-
-    describe('given ref[sub]', function() {
-      beforeEach(function() { given(ref).withA(sub); })
-
-      it('ref should not be terminal', function() {
-        expect(ref.isTerminal()).toBe(false);
-      });
-
-      it('sub should be terminal', function() {
-        expect(sub.isTerminal()).toBe(true);
-      });
-    });
-
-    describe('given ref().prop', function() {
-      beforeEach(function() { given(ref).withA(call).withA(prop); })
-
-      it('ref should not be terminal', function() {
-        expect(ref.isTerminal()).toBe(false);
-      });
-
-      it('prop should be terminal', function() {
-        expect(prop.isTerminal()).toBe(true);
-      });
-    });
-
-    describe('given ref.prop()', function() {
-      beforeEach(function() { given(ref).withA(prop).withA(call); })
-
-      it('ref should not be terminal', function() {
-        expect(ref.isTerminal()).toBe(false);
-      });
-
-      it('prop should not be terminal', function() {
-        expect(prop.isTerminal()).toBe(false);
-      });
-    });
-
-    describe('given ref[sub].prop', function() {
-      beforeEach(function() { given(ref).withA(sub).withA(prop); })
-
-      it('ref should not be terminal', function() {
-        expect(ref.isTerminal()).toBe(false);
-      });
-
-      it('sub should not be terminal', function() {
-        expect(sub.isTerminal()).toBe(false);
-      });
-
-      it('prop should be terminal', function() {
-        expect(prop.isTerminal()).toBe(true);
-      });
-    });
-
-    describe('given ref.prop[sub]', function() {
-      beforeEach(function() { given(ref).withA(prop).withA(sub); })
-
-      it('ref should not be terminal', function() {
-        expect(ref.isTerminal()).toBe(false);
-      });
-
-      it('prop should not be terminal', function() {
-        expect(prop.isTerminal()).toBe(false);
-      });
-
-      it('sub should be terminal', function() {
-        expect(sub.isTerminal()).toBe(true);
-      });
-    });    
   });
 
-  var ref, ref2, prop, call, sub;
-
-  beforeEach(function() {
-    ref = { ref: { name: 'ref' } };
-    ref2 = { ref: { name: 'ref2' } };
-    prop = { prop: { ref: { name: 'prop' } } };
-    prop2 = { prop: { ref: { name: 'prop2' } } };
-    call = { call: { args: [] } };
-    sub = { sub: { ref: { name: 'sub' } } };
-    assignment = { lvalue: {}, rvalue: {} };
-  });
+  var a = { ref: { name: 'a' } };
+  var b = { ref: { name: 'b' } };
+  var c = { ref: { name: 'c' } };
+  var d = { ref: { name: 'd' } };
+  var givenExpression;
 
   function given(value) {
     var element = $('<div/>');
-    $(document).trigger('loadexpressions', [value, element[0]]);
-    return fluent(ko.toJS(ko.dataFor(element[0])));
+    $(document).trigger('loadexpressions', [JSON.parse(JSON.stringify(value)), element[0]]);
+    givenExpression = ko.dataFor(element[0]);
   }
 
-  function givenAssignment(lvalue, rvalue) {
-    var assignment = { assignment: { lvalue: ko.toJS(lvalue), rvalue: ko.toJS(rvalue) } };
-    return given(assignment)['assignment'];
+  function call(object) {
+    return { call: { object: object } };
   }
 
-  function withA(value) {
-    return fluent(ko.toJS(this.addExpression(value)));
+  function prop(object, key) {
+    return { prop: { object: object, key: key } };
   }
 
-  function fluent(value) {
-    value.withA = withA;
-    return value;
+  function sub(object, key) {
+    return { sub: { object: object, key: key } };
+  }
+
+  function assignment(lvalue, rvalue) {
+    return { assignment: { op: '=', lvalue: lvalue, rvalue: rvalue } };
+  }
+
+  function def(r, init) {
+    return { 'var': [ { ref: r.ref, init: init } ] }
+  }
+
+  function ref(r) {
+    return (function findRef(expression) {
+      if (typeof(expression) === 'object') {
+        if (expression.ref && expression.ref() && expression.ref().name() === r.ref.name) {
+          return expression;
+        } else {
+          var keys = _.keys(expression);
+          for (var i=0; i<keys.length; i++) {
+            var k = keys[i];
+            var found = ko.isObservable(expression[k]) ? findRef(expression[k]()) : findRef(expression[k]);
+            if (found) { return found; }
+          }
+        }
+      }
+    })(givenExpression);
   }
 });

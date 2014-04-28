@@ -1,17 +1,59 @@
 {
   "module": {
-    "name": "scratch.js",
+    "name": "wordCounts.js",
     "expressions": [
       {
-        "ref": {
-          "name": "assignable"
-        }
+        "var": [
+          {
+            "ref": {
+              "name": "a"
+            },
+            "init": {
+              "ref": {
+                "name": "b"
+              }
+            }
+          }
+        ]
       },
       {
-        "ref": {
-          "name": "nonassignable",
-          "call": {
-            "args": []
+        "var": [
+          {
+            "ref": {
+              "name": "c"
+            },
+            "init": {
+              "function": {
+                "ref": {
+                  "name": "f"
+                },
+                "args": [],
+                "expressions": []
+              }
+            }
+          }
+        ]
+      },
+      {
+        "prop": {
+          "object": {
+            "prop": {
+              "object": {
+                "ref": {
+                  "name": "a"
+                }
+              },
+              "key": {
+                "ref": {
+                  "name": "b"
+                }
+              }
+            }
+          },
+          "key": {
+            "ref": {
+              "name": "c"
+            }
           }
         }
       }

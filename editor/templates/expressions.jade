@@ -18,11 +18,16 @@ script#assignment-template(type="text/html")
     .rvalue(data-bind="template: { name: rvalue().template, data: rvalue }, style: { display: rvalue().template() === 'function-template' ? 'block' : 'inline-block' }")
 
 script#var-template(type="text/html")
-  .var.expression(data-bind="with: $data['var']")
+  .var.expression
     .keyword= 'var'
-    .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")
-      // ko template: { name: 'symbol-template', data: ref }
-      ///ko
+    // ko foreach: $data['var']
+    //   ko template: { name: 'ref-template', data: $data }
+    //  /ko
+    //   ko if: $data.init
+    .op='='
+    .rvalue(data-bind="template: { name: $data.init().template, data: $data.init }, style: { display: $data.init().template() === 'function-template' ? 'block' : 'inline-block' }")
+    //  /ko
+    ///ko
 
 script#ref-template(type="text/html")
   .ref.expression(data-bind="with: ref")
@@ -31,53 +36,40 @@ script#ref-template(type="text/html")
       ///ko
     // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'ref-postfix' }}
     ///ko
-  // ko template: { name: 'expression-operator-template', data: ref }
-  ///ko
-  // ko template: { name: 'prop-template', data: ref }
-  ///ko
-  // ko if: ref().sub
-  //   ko template: { name: 'sub-template', data: ref().sub }
-  //  /ko
-  ///ko
-
-script#expression-operator-template(type="text/html")
-  // ko if: $data['call']
-  //   ko template: { name: 'call-template', data: $data['call'] }
-  //  /ko
-  ///ko
 
 script#call-template(type="text/html")
+  // ko template: { name: call().object().template, data: call().object }
+  ///ko
   .call
     .args
       .expressions
-        // ko foreach: args
+        // ko foreach: call().args
         //   ko template: { name: template }
         //  /ko
         //   ko template: { name: 'drop-vertical-template', data: { mode: 'before', type: 'callarg', position: $index }}
         //  /ko
         ///ko
-        // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callarg', position: args().length }}
+        // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callarg', position: call().args().length }}
         ///ko
       // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'call-postfix' }}
       ///ko
-  // ko template: { name: 'expression-operator-template' }
-  ///ko
 
 script#sub-template(type="text/html")
+  // ko template: { name: sub().object().template, data: sub().object }
+  ///ko
   .sub
-    // ko template: { name: template }
+    // ko template: { name: sub().key().template, data: sub().key }
     ///ko
     // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'sub-postfix' }}
     ///ko
-  // ko template: { name: 'expression-operator-template' }
-  ///ko
 
 script#prop-template(type="text/html")
-  // ko if: $data.prop
-  .prop.op= '.'
-  //   ko template: { name: prop().template, data: prop }
-  //  /ko
-  ///ko
+  .prop
+    // ko template: { name: prop().object().template, data: prop().object }
+    ///ko
+    .op= '.'
+    // ko template: { name: prop().key().template, data: prop().key }
+    ///ko
 
 script#literal-template(type="text/html")
   .literal.draggable.expression(data-bind="with: literal", data-drop-target-types="['expression','callarg']")
@@ -128,10 +120,6 @@ script#parens-template(type="text/html")
     ///ko
     // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'paren-postfix' }}
     ///ko
-  // ko template: { name: 'expression-operator-template', data: parens }
-  ///ko
-  // ko template: { name: 'prop-template', data: parens }
-  ///ko
 
 script#hash-template(type="text/html")
   .hash.expression(data-bind="foreach: hash().entries")
@@ -185,12 +173,9 @@ script#return-template(type="text/html")
 script#new-template(type="text/html")
   .new.expression(data-bind="with: $data['new']")
     .keyword= 'new'
-    .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")
-      span(data-bind="text: name")
-      .spacer
-    // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'new-postfix' }}
+    // ko template: { name: template }
     ///ko
-    // ko template: { name: 'expression-operator-template' }
+    // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'new-postfix' }}
     ///ko
 
 script#symbol-template(type="text/html")

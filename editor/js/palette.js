@@ -103,25 +103,25 @@
     },
     operator: {
       menu: [
-        { '=':    { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '+=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '-=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '*=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '/=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '%=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '<<=':  { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '>>=':  { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '>>>=': { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '&=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '^=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
-        { '|=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable','terminal'] } },
+        { '=':    { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '+=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '-=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '*=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '/=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '%=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '<<=':  { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '>>=':  { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '>>>=': { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '&=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '^=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
+        { '|=':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'assignment', constraints: ['assignable'] } },
         // { '-':    { dropTargetTypes: ['unary-prefix'] } },
         // { '~':    { dropTargetTypes: ['unary-prefix'] } },
         // { '!':    { dropTargetTypes: ['unary-prefix'] } },
         // { '++':   { dropTargetTypes: ['unary-prefix', 'unary-postfix'] } },
         // { '--':   { dropTargetTypes: ['unary-prefix', 'unary-postfix'] } },
         // { '[]':   { dropTargetTypes: ['unary-postfix'] } },
-        { '()':   { dropTargetTypes: ['ref-postfix', 'sub-postfix'], expressionType: 'call' } },
+        { '()':   { dropTargetTypes: ['ref-postfix', 'sub-postfix', 'call-postfix'], expressionType: 'call' } },
         { '.':    { dropTargetTypes: ['binary-operator'], expressionType: 'prop' } },
         { '==':   { dropTargetTypes: ['binary-operator'], expressionType: 'binary' } },
         { '!=':   { dropTargetTypes: ['binary-operator'], expressionType: 'binary' } },
@@ -156,11 +156,8 @@
     assignable: function(droppable) {
       var context = ko.contextFor(droppable).$parentContext;
       var root = rootRef(context);
-      return root.isAssignable();
-    },
-    terminal: function(droppable) {
-      var context = ko.contextFor(droppable).$parentContext;
-      return context.$data.isTerminal();
+      var isAssignable = root.isAssignable();
+      return isAssignable;
     }
   };
 
@@ -169,10 +166,10 @@
       return context.$data;
     }
     var parentData = context.$parentContext.$data;
-    if (parentData.ref || parentData.prop() || parentData.sub()) {
-      return rootRef(context.$parentContext);
+    if (parentData.ref) {
+      return parentData;
     }
-    return context.$data;
+    return rootRef(context.$parentContext);
   }
 
 })();

@@ -18,13 +18,16 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'lib/jquery-2.1.0.min.js',
-      'lib/knockout-3.0.0.js',
-      'lib/lodash.min.js',
+      'js/lib/jquery-2.1.0.min.js',
+      'js/lib/knockout-3.0.0.js',
+      'js/lib/lodash.min.js',
+      'js/lib/peg-0.8.0.min.js',
       'js/expressions.js',
       'js/palette.js',
+      'js/parser.js',
       'templates/*.jade',
-      'test/**/*.spec.js'
+      'test/**/*.spec.js',
+      { pattern: 'js/lib/grammars/*.pegjs', watched: true, served: true, included: false }
     ],
 
     // list of files to exclude
@@ -35,7 +38,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['dots'],
 
 
     // web server port
@@ -63,7 +66,5 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false,
-
-    reporters: ['spec']
   });
 };

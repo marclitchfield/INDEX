@@ -2,7 +2,7 @@
   "name": "visualCodeEditor",
   "version": "0.0.0",
   "scripts": {
-    "test": "./node_modules/.bin/karma start --singleRun"
+    "test": "./node_modules/.bin/karma start --singleRun --reporters spec"
   },
   "devDependencies": {
     "grunt": "~0.4.4",

@@ -38,9 +38,9 @@ script#ref-template(type="text/html")
     ///ko
 
 script#call-template(type="text/html")
-  // ko template: { name: call().object().template, data: call().object }
-  ///ko
   .call
+    // ko template: { name: call().object().template, data: call().object }
+    ///ko
     .args
       .expressions
         // ko foreach: call().args

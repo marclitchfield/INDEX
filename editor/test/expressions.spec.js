@@ -62,11 +62,32 @@ describe('expressions', function() {
     });
 
     it('given a[b][c], all should be assignable', function() {
+      given(sub(sub(a, b), c));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(true);
+      expect(ref(c).isAssignable()).toBe(true);
+    });
+
+    it('given a[b[c]], all should be assignable', function() {
       given(sub(a, sub(b, c)));
       expect(ref(a).isAssignable()).toBe(true);
       expect(ref(b).isAssignable()).toBe(true);
       expect(ref(c).isAssignable()).toBe(true);
-    })
+    });
+
+    it('given a[b.c], a and c should be assignable, b should not be assignable', function() {
+      given(sub(a, prop(b, c)));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(true);
+    });
+
+    it('given a[b.c()], a should be assignable, b and c should not be assignable', function() {
+      given(sub(a, prop(b, call(c))));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(false);
+      expect(ref(c).isAssignable()).toBe(false);
+    });
 
     it('given a.b[c](), a and b should not be assignable, c should be assignable', function() {
       given(call(prop(a, sub(b, c))));
@@ -80,6 +101,12 @@ describe('expressions', function() {
       expect(ref(a).isAssignable()).toBe(false);
       expect(ref(b).isAssignable()).toBe(false);
       expect(ref(c).isAssignable()).toBe(true);
+    });
+
+    it('given a[b()], a should be assignable, b should not be assignable', function() {
+      given(sub(a, call(b)));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(false);
     });
 
     it('given a[b].c.d, a and c should not be assignable, b and d should be assignable', function() {

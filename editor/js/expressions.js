@@ -215,7 +215,7 @@
         setChildExpression(expression[k], expression, k);
 
         if (!expression.hasOwnProperty('editing')) { expression.editing = ko.observable(false); }
-      }6
+      }
     });
 
     if (expressionType) {
@@ -229,29 +229,44 @@
       if (parent === undefined) {
         return true;
       }
-      var ancestors = tree.ancestorsOf(expression.id);
-      if (parent.edge === 'key') {
-        var grandParent = ancestors[1].object;
-        if (properties.get(grandParent.id, 'type') === 'sub') {
-          return true;
-        }
-      }
-      if (properties.get(expression.id, 'call') || properties.get(expression.id, 'lvalue')) {
-        return false;
-      }
-      if (_.any(ancestors, function(a) {
-        return properties.get(a.object.id, 'call') || properties.get(a.object.id, 'lvalue');
-      })) {
+      var ancestors = getAncestorsOf(expression.id);
+      if (hasProperty(ancestors, 'call') || hasProperty(ancestors, 'lvalue')) {
         return false;
       }
       // element must be terminal to be assignable
+      return !isTerminal(ancestors);
+    };
+
+    function getAncestorsOf(id) {
+      var ancestors = tree.ancestorsOf(expression.id);
       for(var i=0; i<ancestors.length; i++) {
-        if (ancestors[i].edge === 'object' && properties.get(ancestors[i+1].object.id, 'type') === 'prop') {
-          return false;
+        if (ancestors[i].edge === 'key' && ancestors[i+1].edge === 'sub') {
+          break;
         }
       }
-      return true;
-    };
+      return _.first(ancestors, i);
+    }
+
+    function hasProperty(ancestors, property) {
+      if (properties.get(expression.id, property)) {
+        return true;
+      }
+      if (_.any(ancestors, function(a) {
+        return properties.get(a.object.id, property);
+      })) {
+        return true;
+      }
+      return false;
+    }
+
+    function isTerminal(ancestors) {
+      for(var i=0; i<ancestors.length; i++) {
+        if (ancestors[i].edge === 'object' && properties.get(ancestors[i+1].object.id, 'type') === 'prop') {
+          return true;
+        }
+      }
+      return false;
+    }
 
     expression.isInitializable = function() {
       return true;
@@ -265,12 +280,6 @@
         if (edge === 'lvalue') {
           properties.set(id, 'lvalue', true);
         }
-
-        if (properties.get(id, 'type')) {
-          if (properties.get(id, 'call')) {
-            properties.set(parent.id, 'call', true);
-          }
-        } 
       }
     }
 
@@ -279,7 +288,7 @@
 
   function dump(expression, indent) {
     indent = indent || 0;
-    if (!expression.id) {
+    if (expression.id === undefined) {
       return;
     }
     var parent = tree.parentOf(expression.id);

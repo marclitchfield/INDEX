@@ -150,31 +150,53 @@ describe('expressions', function() {
     });
 
     it('given var a, a should not be assignable (it is initializable)', function() {
-      given(def(a));
+      given(varStatement([{ def:a }]));
       expect(ref(a).isAssignable()).toBe(false);
     });
 
     it('given var a=b, a should not be assignable (it is initializable), b should be assignable', function() {
-      given(def(a, b));
+      given(varStatement([{ def:a, init:b }]));
       expect(ref(a).isAssignable()).toBe(false);
       expect(ref(b).isAssignable()).toBe(true);
     });
+
+    it('given var a=b, c=d, a and c should not be assignable, b and d should be assignable', function() {
+      given(varStatement([{ def:a, init:b },{ def:c, init:d }]));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
+      expect(ref(c).isAssignable()).toBe(false);
+      expect(ref(d).isAssignable()).toBe(true);
+    });
   });
 
-  xdescribe('isInitializable', function() {
+  describe('isInitializable', function() {
     it('given a, a should not be initializable', function() {
       given(a);
       expect(ref(a).isInitializable()).toBe(false);
     });
 
     it('given var a, a should be initializable', function() {
-      given(def(a));
+      given(varStatement([{ def:a }]));
       expect(ref(a).isInitializable()).toBe(true);
     });
 
     it('given var a=b, a should not be initializable', function() {
-      given(def(a, b));
+      given(varStatement([{ def:a, init:b }]));
       expect(ref(a).isInitializable()).toBe(false);
+    });
+
+    it('given var a, b, both should be initializable', function() {
+      given(varStatement([{ def:a },{ def: b }]));
+      expect(ref(a).isInitializable()).toBe(true);
+      expect(ref(b).isInitializable()).toBe(true);
+    });
+
+    it('given var a=b, c=d, none should be initializable', function() {
+      given(varStatement([{ def:a, init:b },{ def:c, init:d }]));
+      expect(ref(a).isInitializable()).toBe(false);
+      expect(ref(b).isInitializable()).toBe(false);
+      expect(ref(c).isInitializable()).toBe(false);
+      expect(ref(d).isInitializable()).toBe(false);
     });
   });
 
@@ -206,8 +228,8 @@ describe('expressions', function() {
     return { assignment: { op: '=', lvalue: lvalue, rvalue: rvalue } };
   }
 
-  function def(ref, init) {
-    return { 'var': [ { def: ref, init: init } ] }
+  function varStatement(list) {
+    return { 'var': list };
   }
 
   function ref(r) {

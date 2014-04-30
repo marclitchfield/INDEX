@@ -4,7 +4,9 @@ var parser = (function() {
     if (!expressionTranslators.hasOwnProperty(expression.type)) {
       throw new Error('No expression translator defined for ' + expression.type);
     }
-    return expressionTranslators[expression.type](expression);
+    var translated = expressionTranslators[expression.type](expression);
+    //console.log('xlate', JSON.stringify(expression), '-->', JSON.stringify(translated));
+    return translated;
   }
 
   function leaf(expression) {
@@ -29,11 +31,12 @@ var parser = (function() {
     },
 
     CallExpression: function(expression) {
-      var callee = translateExpression(expression.callee);
-      callee[_.keys(callee)[0]]['call'] = {
-        args: _.map(expression.arguments, function(a) { return translateExpression(a); })
+      return {
+        call: {
+          object: translateExpression(expression.callee),
+          args: _.map(expression.arguments, function(a) { return translateExpression(a); })
+        }
       };
-      return callee;
     },
 
     ExpressionStatement: function(expression) {
@@ -60,14 +63,13 @@ var parser = (function() {
       }
     },
 
-    // f(x).g(y).h
-    // member(call(member(call(f[x]).g)[y]).h)
-    // ref(f,call([x]),member(ref(g,call([y]),member(ref(h)))))
-
     MemberExpression: function(expression) {
-      var object = translateExpression(expression.object);
-      var prop = translateExpression(expression.property);
-      return object;
+      var member = {};
+      member[expression.computed ? 'sub' : 'prop'] = {
+        object: translateExpression(expression.object),
+        key: translateExpression(expression.property)
+      };
+      return member;
     },
 
     VariableDeclaration: function(expression) {
@@ -77,17 +79,10 @@ var parser = (function() {
     },
 
     VariableDeclarator: function(expression) {
-      if (expression.init) {
-        return {
-          assignment: {
-            op: '=',
-            lvalue: translateExpression(expression.id),
-            rvalue: translateExpression(expression.init)
-          }
-        };
-      } else {
-        return translateExpression(expression.id);
-      }
+      return {
+        def: translateExpression(expression.id),
+        init: expression.init ? translateExpression(expression.init) : undefined
+      };
     } 
   };
 

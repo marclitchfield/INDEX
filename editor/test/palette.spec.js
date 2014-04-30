@@ -119,7 +119,7 @@ describe('palette', function() {
         given(sub(a, sub(b, c)));
         whenPaletteExpandedOn(a);
         expect(paletteMenuItems).toIncludeAll(assignmentOperators);
-      });      
+      });
     });
 
     var draggable;

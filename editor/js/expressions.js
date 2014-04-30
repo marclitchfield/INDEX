@@ -260,6 +260,9 @@
         if (ancestors.length === 0) {
           return false;
         }
+        if (ancestors[0].edge === 'init' || properties.get(ancestors[0].object.id, 'init')) {
+          return false;
+        }
         return true;
       };
     }
@@ -280,8 +283,8 @@
               properties.set(parent.id, 'call', true);
             }
           }
-          if (properties.get(id, 'var')) {
-            properties.set(parent.id, 'var', true);
+          if (properties.get(parent.id, 'init') || edge === 'init') {
+            properties.set(parent.id, 'init', true);
           }
         }
       }
@@ -328,7 +331,7 @@
       return;
     }
     var parent = tree.parentOf(expression.id);
-    console.log(Array(indent * 2).join(' ') + expression.id + ': ' + (parent ? '(' + parent.object.id + '/' + parent.edge + ') ' : '') + properties.get(expression.id, 'type') + (properties.get(expression.id, 'call') ? ' (call)' : '') + (properties.get(expression.id, 'lvalue') ? ' (lvalue)' : ''));
+    console.log(Array(indent * 2).join(' ') + expression.id + ': ' + (parent ? '(' + parent.object.id + '/' + parent.edge + ') ' : '') + properties.get(expression.id, 'type') + (properties.get(expression.id, 'call') ? ' (call)' : '') + (properties.get(expression.id, 'lvalue') ? ' (lvalue)' : '' + (properties.get(expression.id, 'init') ? ' (init)' : '')));
 
     _.keys(expression).forEach(function(k) {
       if (ko.isObservable(expression[k])) {

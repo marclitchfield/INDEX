@@ -56,11 +56,24 @@ var parser = (function() {
     },
 
     Identifier: function(expression) {
+      if (expression.name === 'undefined') {
+        return this.Literal({ value: undefined });
+      }
+
       return {
         ref: {
           name: expression.name
         }
       }
+    },
+
+    Literal: function(expression) {
+      return {
+        literal: {
+          type: typeof(expression.value),
+          value: expression.value || ''
+        }
+      };
     },
 
     MemberExpression: function(expression) {

@@ -17,6 +17,30 @@ describe('parser', function() {
     expect(parseTree.assignment.rvalue.ref.name).toBe('rvalue');
   });
 
+  it('string literal', function() {
+    whenParsed('"use strict"');
+    expect(parseTree.literal.type).toBe('string');
+    expect(parseTree.literal.value).toBe('use strict');
+  });
+
+  it('number literal', function() {
+    whenParsed('123');
+    expect(parseTree.literal.type).toBe('number');
+    expect(parseTree.literal.value).toBe(123);
+  });
+
+  it('boolean literal', function() {
+    whenParsed('true');
+    expect(parseTree.literal.type).toBe('boolean');
+    expect(parseTree.literal.value).toBe(true);
+  });
+
+  it('undefined literal', function() {
+    whenParsed('undefined');
+    expect(parseTree.literal.type).toBe('undefined');
+    expect(parseTree.literal.value).toBe('');
+  });
+
   it('function definition', function() {
     whenParsed('function f(arg1,arg2) { ref }');
     expect(parseTree['function'].ref.name).toBe('f');
@@ -24,6 +48,15 @@ describe('parser', function() {
     expect(parseTree['function'].args[1].name).toBe('arg2');
     expect(parseTree['function'].expressions[0].ref.name).toBe('ref');
   });
+
+  it('function definition with expressions', function() {
+    whenParsed('function f() { console.log("hello, world!"); }');
+    expect(parseTree['function'].ref.name).toBe('f');
+    var expression = parseTree['function'].expressions[0];
+    expect(expression.call.object.prop.object.ref.name).toBe('console');
+    expect(expression.call.object.prop.key.ref.name).toBe('log');
+    expect(expression.call.args[0].literal.value).toBe('hello, world!');
+  })
 
   it('function call', function() {
     whenParsed('f(x)');

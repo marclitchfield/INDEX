@@ -8,8 +8,10 @@
           "lvalue": {
             "var": [
               {
-                "ref": {
-                  "name": "Word"
+                "def": {
+                  "ref": {
+                    "name": "Word"
+                  }                  
                 }
               }
             ]
@@ -31,8 +33,10 @@
                     "lvalue": {
                       "var": [
                         { 
-                          "ref": {
-                            "name": "lowercaseLetters"
+                          "def": {
+                            "ref": {
+                              "name": "lowercaseLetters"
+                            }                            
                           }
                         }
                       ]
@@ -64,8 +68,10 @@
                     "lvalue": {
                       "var": [
                         {
-                          "ref": {
-                            "name": "lowercaseSortedLetters"
+                          "def": {
+                            "ref": {
+                              "name": "lowercaseSortedLetters"
+                            }                            
                           }
                         }
                       ]
@@ -237,8 +243,10 @@
           "lvalue": {
             "var": [
               {
-                "ref": {
-                  "name": "Anagram"
+                "def": {
+                  "ref": {
+                    "name": "Anagram"
+                  }                  
                 }
               }
             ]
@@ -260,8 +268,10 @@
                     "lvalue": {
                       "var": [
                         {
-                          "ref": {
-                            "name": "word"
+                          "def": {
+                            "ref": {
+                              "name": "word"
+                            }                            
                           }
                         }
                       ]

@@ -21,8 +21,10 @@ script#var-template(type="text/html")
   .var.expression
     .keyword= 'var'
     // ko foreach: $data['var']
-    //   ko template: { name: 'ref-template', data: $data.def }
-    //  /ko
+    .ref.expression
+      .symbol.draggable(data-drop-target-types="['expression', 'function-name', 'defarg', 'callarg']")
+        // ko template: { name: 'symbol-template', data: $data.def().ref }
+        ///ko
     //   ko if: $data.init
     .op='='
     .rvalue(data-bind="template: { name: $data.init().template, data: $data.init }, style: { display: $data.init().template() === 'function-template' ? 'block' : 'inline-block' }")

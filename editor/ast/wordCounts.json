@@ -5,8 +5,10 @@
       {
         "var": [
           {
-            "ref": {
-              "name": "lowercaseWords"
+            "def": {
+              "ref": {
+                "name": "lowercaseWords"
+              }
             },
             "init": {
               "function": {
@@ -70,8 +72,10 @@
       {
         "var": [
           {
-            "ref": {
-              "name": "wordCounts"
+            "def": {
+              "ref": {
+                "name": "wordCounts"
+              }              
             },
             "init": {
               "function": {
@@ -87,8 +91,10 @@
                   {
                     "var": [
                       {
-                        "ref": {
-                          "name": "words"
+                        "def": {
+                          "ref": {
+                            "name": "words"
+                          }                          
                         },
                         "init": {
                           "call": {

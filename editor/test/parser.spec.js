@@ -31,28 +31,28 @@ describe('parser', function() {
     expect(parseTree.call.args[0].ref.name).toBe('x');
   });
 
-  xit('property reference', function() {
+  it('property reference', function() {
     whenParsed('a.b.c.d');
-    expect(parseTree.ref.name).toBe('a');
-    expect(parseTree.ref.prop.ref.name).toBe('b');
-    expect(parseTree.ref.prop.ref.prop.ref.name).toBe('c');
-    expect(parseTree.ref.prop.ref.prop.ref.prop.ref.name).toBe('d');
+    expect(parseTree.prop.object.prop.object.prop.object.ref.name).toBe('a');
+    expect(parseTree.prop.object.prop.object.prop.key.ref.name).toBe('b');
+    expect(parseTree.prop.object.prop.key.ref.name).toBe('c');
+    expect(parseTree.prop.key.ref.name).toBe('d');
   });
 
-  xit('property of function call', function() {
+  it('property of function call', function() {
     whenParsed('f(x).g');
-    expect(parseTree.ref.name).toBe('f');
-    expect(parseTree.ref.call.args[0].ref.name).toBe('x');
-    expect(parseTree.ref.prop.ref.name).toBe('g');
+    expect(parseTree.prop.object.call.object.ref.name).toBe('f');
+    expect(parseTree.prop.object.call.args[0].ref.name).toBe('x');
+    expect(parseTree.prop.key.ref.name).toBe('g');
   });
 
-  xit('property function call', function() {
+  it('property function call', function() {
     whenParsed('f(x).g(y).h');
-    expect(parseTree.ref.name).toBe('f');
-    expect(parseTree.ref.call.args[0].ref.name).toBe('x');
-    expect(parseTree.ref.prop.ref.name).toBe('g');
-    expect(parseTree.ref.prop.ref.call.args[0].ref.name).toBe('y');
-    expect(parseTree.ref.prop.ref.prop.ref.name).toBe('h');
+    expect(parseTree.prop.object.call.object.prop.object.call.object.ref.name).toBe('f');
+    expect(parseTree.prop.object.call.object.prop.object.call.args[0].ref.name).toBe('x');
+    expect(parseTree.prop.object.call.object.prop.key.ref.name).toBe('g');
+    expect(parseTree.prop.object.call.args[0].ref.name).toBe('y');
+    expect(parseTree.prop.key.ref.name).toBe('h');
   });
 
   it('sub', function() {

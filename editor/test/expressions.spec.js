@@ -22,6 +22,12 @@ describe('expressions', function() {
       expect(ref(b).isAssignable()).toBe(false);
     });
 
+    it('given a().b, none should be assignable', function() {
+      given(prop(call(a), b));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(false);
+    });
+
     it('given a.b.c, a and b should not be assignable, c should be assignable', function() {
       given(prop(prop(a, b), c));
       expect(ref(a).isAssignable()).toBe(false);
@@ -41,6 +47,12 @@ describe('expressions', function() {
       expect(ref(a).isAssignable()).toBe(true);
       expect(ref(b).isAssignable()).toBe(true);
     });
+
+    it('given a[b()], a should be assignable, b should not be assignable', function() {
+      given(sub(a, call(b)));
+      expect(ref(a).isAssignable()).toBe(true);
+      expect(ref(b).isAssignable()).toBe(false);
+    });    
 
     it('given a[b](), a should not be assignable, b should be assignable', function() {
       given(call(sub(a, b)));
@@ -103,12 +115,6 @@ describe('expressions', function() {
       expect(ref(c).isAssignable()).toBe(true);
     });
 
-    it('given a[b()], a should be assignable, b should not be assignable', function() {
-      given(sub(a, call(b)));
-      expect(ref(a).isAssignable()).toBe(true);
-      expect(ref(b).isAssignable()).toBe(false);
-    });
-
     it('given a[b].c.d, a and c should not be assignable, b and d should be assignable', function() {
       given(prop(prop(sub(a,b),c),d));
       expect(ref(a).isAssignable()).toBe(false);
@@ -143,13 +149,24 @@ describe('expressions', function() {
       expect(ref(c).isAssignable()).toBe(false);
     });
 
-    xit('given var a, a should not be assignable (it is initializable)', function() {
-      given(def(a))
-      expect(ref(a).isAssignable().toBe(false));
+    it('given var a, a should not be assignable (it is initializable)', function() {
+      given(def(a));
+      expect(ref(a).isAssignable()).toBe(false);
+    });
+
+    it('given var a=b, a should not be assignable (it is initializable), b should be assignable', function() {
+      given(def(a, b));
+      expect(ref(a).isAssignable()).toBe(false);
+      expect(ref(b).isAssignable()).toBe(true);
     });
   });
 
   xdescribe('isInitializable', function() {
+    it('given a, a should not be initializable', function() {
+      given(a);
+      expect(ref(a).isInitializable()).toBe(false);
+    });
+
     it('given var a, a should be initializable', function() {
       given(def(a));
       expect(ref(a).isInitializable()).toBe(true);
@@ -189,8 +206,8 @@ describe('expressions', function() {
     return { assignment: { op: '=', lvalue: lvalue, rvalue: rvalue } };
   }
 
-  function def(r, init) {
-    return { 'var': [ { ref: r.ref, init: init } ] }
+  function def(ref, init) {
+    return { 'var': [ { def: ref, init: init } ] }
   }
 
   function ref(r) {

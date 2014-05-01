@@ -70,7 +70,17 @@ describe('parser', function() {
       expect(expression.call.object.prop.object.ref.name).toBe('console');
       expect(expression.call.object.prop.key.ref.name).toBe('log');
       expect(expression.call.args[0].literal.value).toBe('hello, world!');
-    })
+    });
+
+    it('function expression', function() {
+      whenParsed('(function f() {}());')
+      expect(parseTree.call.object['function'].ref.name).toBe('f');
+    });
+
+    it('anonymous function', function() {
+      whenParsed('(function() {})');
+      expect(parseTree['function'].ref.name).toBe('');
+    });
 
     it('function call', function() {
       whenParsed('f(x)');
@@ -195,6 +205,9 @@ describe('parser', function() {
       expect(parseTree['new'].call.args[0].ref.name).toBe('x');
     });
 
+    it('program', function() {
+      whenParsed('var Word = function(letters) { var lowercaseLetters = letters.toLowerCase(); var lowercaseSortedLetters = sortedLetters(lowercaseLetters); function sortedLetters(letters) { }; var Anagram = function(letters) { return { match: function(testWords) { return testWords.filter(isAnagramOf); } }; }; module.exports = Anagram;');
+    });
   });
 
   describe('parseModule', function() {
@@ -219,7 +232,7 @@ describe('parser', function() {
   beforeEach(function(done) {
     if (parserInstance === undefined)
     {
-      parser.load('javascript', function(instance) {
+      parser.load('base/js/lib/grammars/javascript.pegjs', function(instance) {
         parserInstance = instance;
         done();
       });

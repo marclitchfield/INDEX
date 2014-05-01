@@ -1,8 +1,16 @@
 (function editor() {
-  var astFile = document.location.search.replace('?', '') || 'anagram.json';
+  var sourceFile = document.location.search.replace('?', '') || 'anagram.js';
 
-  $.getJSON('ast/' + astFile).success(function(ast) {
-    $.event.trigger('loadexpressions', [ast, $('.editor')[0]]);
+  console.log('loading parser');
+  parser.load('js/lib/grammars/javascript.pegjs', function(instance) {
+    console.log('getting code');
+    $.get('data/' + sourceFile, function(code) {
+      console.log('parsing code');
+      var moduleExpression = instance.parseModule(sourceFile, code);
+      console.log('loading expressions');
+      $.event.trigger('loadexpressions', [moduleExpression, $('.editor')[0]]);
+      console.log('done');
+    }, 'text')
   });
 
   $(document).on('editing', function(event, data) {

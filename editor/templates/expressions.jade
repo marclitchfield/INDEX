@@ -127,7 +127,7 @@ script#hash-template(type="text/html")
   .hash.expression(data-bind="foreach: hash().entries")
     .entry
       .key
-        // ko template: { name: 'literal-template', data: key }
+        // ko template: { name: key().template, data: key }
         ///ko
       span.op= ':'
       // ko template: { name: value().template, data: value }

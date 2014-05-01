@@ -71,13 +71,17 @@ var parser = (function() {
       return {
         'function': {
           ref: {
-            name: expression.id.name,
+            name: expression.id !== null ? expression.id.name : ''
           },
           args: _.map(expression.params, function(p) { return { name: p.name }; }),
           expressions: _.map(expression.body.body, function(b) { return translateExpression(b); })
         }
       };
     },
+
+    FunctionExpression: function(expression) {
+      return this.FunctionDeclaration(expression);
+    },    
 
     Identifier: function(expression) {
       if (expression.name === 'undefined') {
@@ -196,7 +200,7 @@ var parser = (function() {
 
   return {
     load: function(grammarPath, callback) {
-      $.get('base/js/lib/grammars/javascript.pegjs', function(grammar) {
+      $.get(grammarPath, function(grammar) {
         var pegParser = PEG.buildParser(grammar);
         callback(create(pegParser));
       });

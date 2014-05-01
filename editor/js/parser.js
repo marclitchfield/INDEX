@@ -201,7 +201,6 @@ var parser = (function() {
   return {
     load: function(grammarPath, callback) {
       $.get(grammarPath, function(grammar) {
-        console.log('building parser');
         var pegParser = PEG.buildParser(grammar);
         callback(create(pegParser));
       });

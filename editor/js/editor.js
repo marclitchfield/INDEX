@@ -5,7 +5,7 @@
     $.get('data/' + sourceFile, function(code) {
       var moduleExpression = instance.parseModule(sourceFile, code);
       $.event.trigger('loadexpressions', [moduleExpression, $('.editor')[0]]);
-    }, 'text')
+    }, 'text');
   });
 
   $(document).on('editing', function(event, data) {
@@ -36,9 +36,7 @@
   });
 
   $(document).on('click', function(event) {
-    //if (!$(event.target).hasClass('item')) {
-      $('.palette-menu').hide();
-    //}
+    $('.palette-menu').hide();
   });
 
   $('.editor').on('click', '.collapse', function() {

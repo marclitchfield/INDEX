@@ -29,6 +29,13 @@ describe('parser', function() {
     expect(parseTree.literal.value).toBe(123);
   });
 
+  it('assignment to zero literal', function() {
+    whenParsed('x=0');
+    expect(parseTree.assignment.lvalue.ref.name).toBe('x');
+    expect(parseTree.assignment.rvalue.literal.type).toBe('number');
+    expect(parseTree.assignment.rvalue.literal.value).toBe(0);
+  });
+
   it('boolean literal', function() {
     whenParsed('true');
     expect(parseTree.literal.type).toBe('boolean');
@@ -138,6 +145,47 @@ describe('parser', function() {
     whenParsed('a()[b]');
     expect(parseTree.sub.object.call.object.ref.name).toBe('a');
     expect(parseTree.sub.key.ref.name).toBe('b');
+  });
+
+  it('binary operator', function() {
+    whenParsed('1+2');
+    expect(parseTree.binary.op).toBe('+');
+    expect(parseTree.binary.left.literal.value).toBe(1);
+    expect(parseTree.binary.right.literal.value).toBe(2);
+  });
+
+  it('unary operator', function() {
+    whenParsed('!x');
+    expect(parseTree.unary.op).toBe('!');
+    expect(parseTree.unary.operand.ref.name).toBe('x');
+  });
+
+  it('ternary operator', function() {
+    whenParsed('a?1:0');
+    expect(parseTree.ternary['if'].ref.name).toBe('a');
+    expect(parseTree.ternary['then'].literal.value).toBe(1);
+    expect(parseTree.ternary['else'].literal.value).toBe(0);
+  });
+
+  it('if expression', function() {
+    whenParsed('if (true) { a() } else { b() }');
+    expect(parseTree['if'].condition.literal.value).toBe(true);
+    expect(parseTree['if']['then'].expressions[0].call.object.ref.name).toBe('a');
+    expect(parseTree['if']['else'].expressions[0].call.object.ref.name).toBe('b');
+  });
+
+  it('object literal', function() {
+    whenParsed('return { "a": 1, "b": 2 }');
+    expect(parseTree['return'].hash.entries[0].key.literal.value).toBe('a');
+    expect(parseTree['return'].hash.entries[0].value.literal.value).toBe(1);
+    expect(parseTree['return'].hash.entries[1].key.literal.value).toBe('b');
+    expect(parseTree['return'].hash.entries[1].value.literal.value).toBe(2);
+  });
+
+  it('new', function() {
+    whenParsed('new F(x)');
+    expect(parseTree['new'].call.object.ref.name).toBe('F');
+    expect(parseTree['new'].call.args[0].ref.name).toBe('x');
   });
 
   var parserInstance;

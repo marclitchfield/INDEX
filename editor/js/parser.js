@@ -30,11 +30,35 @@ var parser = (function() {
       };
     },
 
+    BinaryExpression: function(expression) {
+      return {
+        binary: {
+          op: '+',
+          left: translateExpression(expression.left),
+          right: translateExpression(expression.right)
+        }
+      };
+    },
+
+    BlockStatement: function(expression) {
+      return _.map(expression.body, function(e) { return translateExpression(e); });
+    },
+
     CallExpression: function(expression) {
       return {
         call: {
           object: translateExpression(expression.callee),
           args: _.map(expression.arguments, function(a) { return translateExpression(a); })
+        }
+      };
+    },
+
+    ConditionalExpression: function(expression) {
+      return {
+        ternary: {
+          'if': translateExpression(expression.test),
+          'then': translateExpression(expression.consequent),
+          'else': translateExpression(expression.alternate)
         }
       };
     },
@@ -67,11 +91,21 @@ var parser = (function() {
       }
     },
 
+    IfStatement: function(expression) {
+      return {
+        'if': {
+          condition: translateExpression(expression.test),
+          'then': { expressions: translateExpression(expression.consequent) },
+          'else': { expressions: translateExpression(expression.alternate) }
+        }
+      }
+    },
+
     Literal: function(expression) {
       return {
         literal: {
           type: typeof(expression.value),
-          value: expression.value || ''
+          value: expression.value !== undefined ? expression.value : ''
         }
       };
     },
@@ -83,6 +117,40 @@ var parser = (function() {
         key: translateExpression(expression.property)
       };
       return member;
+    },
+
+    ObjectExpression: function(expression) {
+      return {
+        'hash': {
+          entries: _.map(expression.properties, function(p) {
+            return {
+              key: translateExpression(p.key),
+              value: translateExpression(p.value)
+            };
+          })
+        }
+      };
+    },
+
+    NewExpression: function(expression) {
+      return {
+        'new': this.CallExpression(expression)
+      };
+    },
+
+    ReturnStatement: function(expression) {
+      return {
+        'return': translateExpression(expression.argument)
+      };
+    },
+
+    UnaryExpression: function(expression) {
+      return {
+        unary: {
+          op: expression.operator,
+          operand: translateExpression(expression.argument)
+        }
+      };
     },
 
     VariableDeclaration: function(expression) {

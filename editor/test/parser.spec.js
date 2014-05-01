@@ -204,10 +204,6 @@ describe('parser', function() {
       expect(parseTree['new'].call.object.ref.name).toBe('F');
       expect(parseTree['new'].call.args[0].ref.name).toBe('x');
     });
-
-    it('program', function() {
-      whenParsed('var Word = function(letters) { var lowercaseLetters = letters.toLowerCase(); var lowercaseSortedLetters = sortedLetters(lowercaseLetters); function sortedLetters(letters) { }; var Anagram = function(letters) { return { match: function(testWords) { return testWords.filter(isAnagramOf); } }; }; module.exports = Anagram;');
-    });
   });
 
   describe('parseModule', function() {

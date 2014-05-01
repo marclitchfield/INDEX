@@ -1,15 +1,10 @@
 (function editor() {
   var sourceFile = document.location.search.replace('?', '') || 'anagram.js';
 
-  console.log('loading parser');
   parser.load('js/lib/grammars/javascript.pegjs', function(instance) {
-    console.log('getting code');
     $.get('data/' + sourceFile, function(code) {
-      console.log('parsing code');
       var moduleExpression = instance.parseModule(sourceFile, code);
-      console.log('loading expressions');
       $.event.trigger('loadexpressions', [moduleExpression, $('.editor')[0]]);
-      console.log('done');
     }, 'text')
   });
 

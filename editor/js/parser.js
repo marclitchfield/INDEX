@@ -183,9 +183,7 @@ var parser = (function() {
   var create = function(pegParser) {
     return {
       parseExpression: function(code) {
-        console.log('PEG: parsing expression');
         var expression = pegParser.parse(code).body[0];
-        console.log('translating expression tree');
         return translateExpression(expression);
       },
 

@@ -178,9 +178,18 @@ var parser = (function() {
 
   var create = function(pegParser) {
     return {
-      parse: function(code) {
+      parseExpression: function(code) {
         var expression = pegParser.parse(code).body[0];
         return translateExpression(expression);
+      },
+
+      parseModule: function(moduleName, code) {
+        return {
+          module: {
+            name: moduleName,
+            expressions: this.parseExpression('{' + code + '}')
+          }
+        };
       }
     };
   };

@@ -102,6 +102,15 @@ var parser = (function() {
     },
 
     Literal: function(expression) {
+      if (expression.value instanceof RegExp) {
+        return {
+          literal: {
+            type: 'regex',
+            value: expression.value.toString()
+          }
+        };
+      }
+
       return {
         literal: {
           type: typeof(expression.value),

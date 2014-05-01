@@ -48,6 +48,12 @@ describe('parser', function() {
     expect(parseTree.literal.value).toBe('');
   });
 
+  it('regex literal', function() {
+    whenParsed('/\w+/g');
+    expect(parseTree.literal.type).toBe('regex');
+    expect(parseTree.literal.value).toBe('/\w+/g');
+  })
+
   it('function definition', function() {
     whenParsed('function f(arg1,arg2) { ref }');
     expect(parseTree['function'].ref.name).toBe('f');

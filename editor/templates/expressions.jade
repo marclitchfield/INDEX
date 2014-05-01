@@ -2,14 +2,18 @@ script#module-template(type="text/html")
   .module.expression
     .name(data-bind="text: name")
     .expressions
-      // ko foreach: expressions
-      //   ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: $index }}
-      //  /ko
-      //   ko template: { name: template }
-      //  /ko
+      // ko template: { name: 'expressions-template', data: expressions }
       ///ko
-      // ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: expressions().length }}
-      ///ko
+
+script#expressions-template(type="text/html")
+    // ko foreach: $data
+    //   ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: $index }}
+    //  /ko
+    //   ko template: { name: template }
+    //  /ko
+    ///ko
+    // ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: $data.length }}
+    ///ko
 
 script#assignment-template(type="text/html")
   .assignment.expression(data-bind="with: assignment")
@@ -92,11 +96,11 @@ script#if-template(type="text/html")
     .keyword= 'if'
     // ko template: { name: condition().template, data: condition }
     ///ko
-    .then(data-bind="template: { name: $data['then']().template, data: $data['then'] }")
+    .then(data-bind="template: { name: $data['then']().template, data: $data['then']().expressions }")
     // ko if: $data['else']
     div
       .keyword= 'else'
-      .else(data-bind="template: { name: $data['else']().template, data: $data['else'] }")
+      .else(data-bind="template: { name: $data['else']().template, data: $data['else']().expressions }")
     ///ko
 
 script#binary-template(type="text/html")
@@ -157,13 +161,7 @@ script#function-template(type="text/html")
       // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'defarg', position: args().length }}
       ///ko
     .collapsible.expanded.expressions
-      // ko foreach: expressions
-      //   ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: $index }}
-      //  /ko
-      //   ko template: { name: template }
-      //  /ko
-      ///ko
-      // ko template: { name: 'drop-horizontal-template', data: { type: 'expression', position: expressions().length }}
+      // ko template: { name: 'expressions-template', data: expressions }
       ///ko
 
 script#return-template(type="text/html")
@@ -192,3 +190,6 @@ script#drop-horizontal-template(type="text/html")
 
 script#drop-vertical-template(type="text/html")
   .droppable.vertical(data-bind="attr: { 'data-drop-type': type, 'data-drop-position': $data.position, 'data-drop-mode': $data.mode }")
+
+script#empty-template(type="text/html")
+  .empty

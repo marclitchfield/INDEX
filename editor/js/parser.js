@@ -63,6 +63,12 @@ var parser = (function() {
       };
     },
 
+    EmptyStatement: function(expression) {
+      return {
+        empty: {}
+      };
+    },
+
     ExpressionStatement: function(expression) {
       return translateExpression(expression.expression);
     },
@@ -96,13 +102,18 @@ var parser = (function() {
     },
 
     IfStatement: function(expression) {
-      return {
+      var ifExpression = {
         'if': {
           condition: translateExpression(expression.test),
-          'then': { expressions: translateExpression(expression.consequent) },
-          'else': { expressions: translateExpression(expression.alternate) }
+          'then': { expressions: translateExpression(expression.consequent) }
         }
+      };
+
+      if (expression.alternate) {
+        ifExpression['if']['else'] = { expressions: translateExpression(expression.alternate) };
       }
+
+      return ifExpression;
     },
 
     Literal: function(expression) {
@@ -191,7 +202,7 @@ var parser = (function() {
         return {
           module: {
             name: moduleName,
-            expressions: [].concat(this.parseExpression(code))
+            expressions: _.map(pegParser.parse(code).body, function(e) { return translateExpression(e); })
           }
         };
       }

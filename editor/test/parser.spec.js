@@ -185,6 +185,13 @@ describe('parser', function() {
     });
 
     it('if expression', function() {
+      whenParsed('if (true) { a() }');
+      expect(parseTree['if'].condition.literal.value).toBe(true);
+      expect(parseTree['if']['then'].expressions[0].call.object.ref.name).toBe('a');
+      expect(parseTree['if']['else']).toBeUndefined();
+    });
+
+    it('if/else expression', function() {
       whenParsed('if (true) { a() } else { b() }');
       expect(parseTree['if'].condition.literal.value).toBe(true);
       expect(parseTree['if']['then'].expressions[0].call.object.ref.name).toBe('a');
@@ -204,6 +211,11 @@ describe('parser', function() {
       expect(parseTree['new'].call.object.ref.name).toBe('F');
       expect(parseTree['new'].call.args[0].ref.name).toBe('x');
     });
+
+    it('empty', function() {
+      whenParsed(';');
+      expect(parseTree.empty).toBeDefined();
+    })
   });
 
   describe('parseModule', function() {
@@ -215,9 +227,19 @@ describe('parser', function() {
 
     it('module with function definition', function() {
       whenModuleParsed('file.js', 'function f() { console.log("hello, world!"); }');
-      expect(parseTree.module.name).toBe('file.js');
       expect(parseTree.module.expressions[0]['function'].ref.name).toBe('f');
-    })
+    });
+
+    it('module with multiple function definitions', function() {
+      whenModuleParsed('file.js', 'function f() {} function g() {}')
+      expect(parseTree.module.expressions[0]['function'].ref.name).toBe('f');
+      expect(parseTree.module.expressions[1]['function'].ref.name).toBe('g');
+    });
+
+    it('empty module', function() {
+      whenModuleParsed('file.js', ';')
+      expect(parseTree.module.expressions[0].empty).toBeDefined();
+    });
   });
 
   var parserInstance;

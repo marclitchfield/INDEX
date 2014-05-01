@@ -164,11 +164,18 @@ describe('parser', function() {
       expect(parseTree.sub.key.ref.name).toBe('b');
     });
 
-    it('binary operator', function() {
+    it('binary + operator', function() {
       whenParsed('1+2');
       expect(parseTree.binary.op).toBe('+');
       expect(parseTree.binary.left.literal.value).toBe(1);
       expect(parseTree.binary.right.literal.value).toBe(2);
+    });
+
+    it('binary || operator', function() {
+      whenParsed('x || 1');
+      expect(parseTree.binary.op).toBe('||');
+      expect(parseTree.binary.left.ref.name).toBe('x');
+      expect(parseTree.binary.right.literal.value).toBe(1);
     });
 
     it('unary operator', function() {

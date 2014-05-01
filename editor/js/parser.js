@@ -33,7 +33,7 @@ var parser = (function() {
     BinaryExpression: function(expression) {
       return {
         binary: {
-          op: '+',
+          op: expression.operator,
           left: translateExpression(expression.left),
           right: translateExpression(expression.right)
         }

@@ -212,6 +212,12 @@ describe('parser', function() {
       expect(parseTree.module.name).toBe('file.js');
       expect(parseTree.module.expressions[0].ref.name).toBe('x');
     });
+
+    it('module with function definition', function() {
+      whenModuleParsed('file.js', 'function f() { console.log("hello, world!"); }');
+      expect(parseTree.module.name).toBe('file.js');
+      expect(parseTree.module.expressions[0]['function'].ref.name).toBe('f');
+    })
   });
 
   var parserInstance;

@@ -191,7 +191,7 @@ var parser = (function() {
         return {
           module: {
             name: moduleName,
-            expressions: this.parseExpression('{' + code + '}')
+            expressions: [].concat(this.parseExpression(code))
           }
         };
       }
@@ -201,7 +201,7 @@ var parser = (function() {
   return {
     load: function(grammarPath, callback) {
       $.get(grammarPath, function(grammar) {
-        var pegParser = PEG.buildParser(grammar);
+        var pegParser = PEG.buildParser(grammar, { cache: true });
         callback(create(pegParser));
       });
     }

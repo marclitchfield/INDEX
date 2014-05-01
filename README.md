@@ -10,9 +10,9 @@ Focusing on javascript initially. Can currently build the UI from a synthetic sy
 
 ####Demo:
 
-* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?anagram.json
-* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?wordCounts.json
-* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?beerSong.json
+* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?anagram.js
+* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?wordCounts.js
+* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?beerSong.js
 
 
 ####Next steps:

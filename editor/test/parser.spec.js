@@ -222,7 +222,7 @@ describe('parser', function() {
     it('empty', function() {
       whenParsed(';');
       expect(parseTree.empty).toBeDefined();
-    })
+    });
   });
 
   describe('parseModule', function() {

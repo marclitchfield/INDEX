@@ -188,7 +188,7 @@
         return { 'ref': { name: '', editing: true } };
       },
       'literal': function() {
-        return { 'literal': { type: 'string', value: '', editing: true }}
+        return { 'literal': { type: 'string', value: '', editing: true } };
       }
     };
 

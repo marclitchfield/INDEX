@@ -60,7 +60,7 @@
 
     var resized = function() {
       $.event.trigger('layoutchanged');  
-    }
+    };
   })();
 
   ko.applyBindings({ themes: ['gray','green','pink'] }, $('.themepick')[0]);

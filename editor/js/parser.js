@@ -98,7 +98,7 @@ var parser = (function() {
         ref: {
           name: expression.name
         }
-      }
+      };
     },
 
     IfStatement: function(expression) {

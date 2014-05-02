@@ -91,11 +91,11 @@
     }
 
     function verticalCenterWithinParent(element) {
-      return element.parent().offset().top + (element.parent().outerHeight()/2 - element.outerHeight()/2) + 'px'
+      return element.parent().offset().top + (element.parent().outerHeight()/2 - element.outerHeight()/2) + 'px';
     }
 
     function horizontalCenterWithinParent(element) {
-      return element.parent().offset().left + (element.parent().outerWidth()/2 - element.outerWidth()/2) + 'px'
+      return element.parent().offset().left + (element.parent().outerWidth()/2 - element.outerWidth()/2) + 'px';
     }
   }
 

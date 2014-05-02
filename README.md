@@ -6,7 +6,9 @@ Visual code editor for programming on touch-based devices. This is very much a w
 
 ####Current status:
 
-Focusing on javascript initially. Can currently build the UI from a synthetic syntax tree, drag existing expressions to make new expressions (copy and insert mode), rename symbols, and create new symbols and functions. Color theme can be changed with selector at top right, but this will probably move to an options screen eventually.
+The current implementation of the Visual Code Editor* runs in the context of a web page. It parses javascript source code and renders it to the browser. The editor provides the ability to copy and insert symbols, rename symbols, and create expressions by dragging items from a palette onto the code.
+
+*Better name to be determined
 
 ####Demo:
 
@@ -14,16 +16,17 @@ Focusing on javascript initially. Can currently build the UI from a synthetic sy
 * http://marclitchfield.github.io/VisualProgramming/editor/editor.html?wordCounts.js
 * http://marclitchfield.github.io/VisualProgramming/editor/editor.html?beerSong.js
 
-
 ####Next steps:
 * Building expressions from the palette
 * Parse javascript into the syntax tree (will need to add support for more expression types)
 * Editing modes: move and insert, move and replace, copy and insert, copy and replace
 * Delete expressions
-* Performance tuning for large javascript files (may swap out Knockout for Angular)
+* Code generation
 * js-git integration
+* Text-based code editor (with syntax highlighting)
+* Performance tuning for large javascript files (may swap out Knockout for Angular)
 * Undo/Redo stack
-* Switch to text-based code editor (with syntax highlighting)
+* Phonegap App
 * Support for more languages
 * Code formatting options
 
@@ -36,14 +39,18 @@ npm install grunt-cli -g
 npm install karma-cli -g
 ````
 
-Start watch process to compile jade and less.
+Start watch process to compile jade and less, and run jshint.
 
 ````grunt watch````
 
-Start a test session in a new session
+Start karma in a new session. This will run the jasmine tests when any files are changed.
 
 ````karma start````
 
-Host the project in a web server. A simple way is to run python's built in SimpleHTTPServer in the ```editor``` directory.
+Host the project in a web server. A simple way is to run python's built-in SimpleHTTPServer in the ```editor``` directory.
 
 ````python -m SimpleHTTPServer````
+
+There is a grunt task to automate the current process of commiting and pushing up to github and publish to gh-pages.
+
+````grunt commit --m <commit message>````

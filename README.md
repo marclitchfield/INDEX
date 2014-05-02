@@ -6,7 +6,7 @@ Visual code editor for programming on touch-based devices. This is very much a w
 
 ####Current status:
 
-The current implementation of the Visual Code Editor* runs in the context of a web page. It parses javascript source code and renders it to the browser. The editor provides the ability to copy and insert symbols, rename symbols, and create expressions by dragging items from a palette onto the code.
+The current implementation of the Visual Code Editor* runs in the context of a web page. It parses javascript source code into a syntax tree and renders it to the browser. The editor provides the ability to copy and insert symbols, rename symbols, and create expressions by dragging items from a palette onto the code. Currently using jade, less, knockout, PEG.js, jQuery, jQueryUI dragdrop, lo-dash, jasmine, karma, and grunt.
 
 *Better name to be determined
 

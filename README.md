@@ -1,4 +1,4 @@
-INDEX  [![Build Status](https://travis-ci.org/marclitchfield/VisualProgramming.png?branch=master)](https://travis-ci.org/marclitchfield/VisualProgramming)
+INDEX  [![Build Status](https://travis-ci.org/marclitchfield/index.png?branch=master)](https://travis-ci.org/marclitchfield/index)
 ==================
 
 The INDEX code editor

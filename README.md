@@ -1,14 +1,12 @@
-Visual Programming  [![Build Status](https://travis-ci.org/marclitchfield/VisualProgramming.png?branch=master)](https://travis-ci.org/marclitchfield/VisualProgramming)
+INDEX  [![Build Status](https://travis-ci.org/marclitchfield/VisualProgramming.png?branch=master)](https://travis-ci.org/marclitchfield/VisualProgramming)
 ==================
 
-
-Visual code editor for programming on touch-based devices. This is very much a work in progress.
+The INDEX code editor
+For programming on touch-based devices. This is very much a work in progress.
 
 ####Current status:
 
-The current implementation of the Visual Code Editor* runs in the context of a web page. It parses javascript source code into a syntax tree and renders it to the browser. The editor provides the ability to copy and insert symbols, rename symbols, and create expressions by dragging items from a palette onto the code. Currently using jade, less, knockout, PEG.js, jQuery, jQueryUI dragdrop, lo-dash, jasmine, karma, and grunt.
-
-*Better name to be determined
+The current implementation of INDEX runs in the context of a web page. It parses javascript source code into a syntax tree and renders it to the browser. The editor provides the ability to copy and insert symbols, rename symbols, and create expressions by dragging items from a palette onto the code. Currently using jade, less, knockout, PEG.js, jQuery, jQueryUI dragdrop, lo-dash, jasmine, karma, and grunt.
 
 ####Demo:
 

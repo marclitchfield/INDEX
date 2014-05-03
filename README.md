@@ -10,9 +10,9 @@ The current implementation of INDEX runs in the context of a web page. It parses
 
 ####Demo:
 
-* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?anagram.js
-* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?wordCounts.js
-* http://marclitchfield.github.io/VisualProgramming/editor/editor.html?beerSong.js
+* http://marclitchfield.github.io/INDEX/editor/editor.html?anagram.js
+* http://marclitchfield.github.io/INDEX/editor/editor.html?wordCounts.js
+* http://marclitchfield.github.io/INDEX/editor/editor.html?beerSong.js
 
 ####Next steps:
 * Building expressions from the palette

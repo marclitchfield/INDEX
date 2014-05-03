@@ -16,8 +16,8 @@ The current implementation of INDEX runs in the context of a web page. It parses
 * http://marclitchfield.github.io/INDEX/editor/editor.html?beerSong.js
 
 ####Next steps:
-* Building expressions from the palette
-* Parse javascript into the syntax tree (will need to add support for more expression types)
+* Building expressions from the palette - in progress
+* Parse javascript into the syntax tree - in progress
 * Editing modes: move and insert, move and replace, copy and insert, copy and replace
 * Delete expressions
 * Code generation

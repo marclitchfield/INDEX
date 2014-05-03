@@ -151,6 +151,9 @@
   }
 
   function dereference(data) {
+    if (data.hasOwnProperty('def')) {
+      return dereference(data.def());
+    }
     if (data.hasOwnProperty('ref')) {
       return data.ref();
     }
@@ -205,6 +208,10 @@
     exportExpression(expression);
 
     function initializeExpression(expression) {
+      if (expression.id !== undefined) {
+        // expression has already been initialized
+        return;
+      }
       var keys = _.keys(expression);
       var expressionType = (keys.length === 1) ? keys[0] : undefined;
       expression.id = nextId++;

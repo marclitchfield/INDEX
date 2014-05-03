@@ -2,6 +2,7 @@ INDEX  [![Build Status](https://travis-ci.org/marclitchfield/INDEX.png?branch=ma
 ==================
 
 The INDEX code editor
+
 For programming on touch-based devices. This is very much a work in progress.
 
 ####Current status:

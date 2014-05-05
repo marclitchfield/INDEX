@@ -49,16 +49,20 @@ script#call-template(type="text/html")
     ///ko
     .args
       .expressions
-        // ko foreach: call().args
-        //   ko template: { name: template }
-        //  /ko
-        //   ko template: { name: 'drop-vertical-template', data: { mode: 'before', type: 'callarg', position: $index }}
-        //  /ko
-        ///ko
-        // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callarg', position: call().args().length }}
+        // ko template: { name: 'args-template', data: call().args }
         ///ko
       // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'call-postfix' }}
       ///ko
+
+script#args-template(type="text/html")
+  // ko foreach: $data
+  //   ko template: { name: template }
+  //  /ko
+  //   ko template: { name: 'drop-vertical-template', data: { mode: 'before', type: 'callarg', position: $index }}
+  //  /ko
+  ///ko
+  // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callarg', position: $data.length }}
+  ///ko
 
 script#sub-template(type="text/html")
   // ko template: { name: sub().object().template, data: sub().object }

@@ -1,4 +1,6 @@
-var parser = (function() {
+var INDEX = INDEX || {};
+
+INDEX.parser = (function() {
 
   function translateExpression(expression) {
     if (!expressionTranslators.hasOwnProperty(expression.type)) {

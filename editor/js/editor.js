@@ -1,4 +1,4 @@
-(function editor() {
+(function editor(parser) {
   var sourceFile = document.location.search.replace('?', '') || 'anagram.js';
 
   parser.load('js/lib/grammars/javascript.pegjs', function(instance) {
@@ -73,6 +73,4 @@
     });
     $.getScript('lib/less-1.7.0.min.js' + reload);
   });
-})();
-
-
+})(INDEX.parser);

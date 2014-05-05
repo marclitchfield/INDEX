@@ -1,5 +1,172 @@
 (function expressions() {
 
+  // 1. builds the expression tree and applies knockout bindings
+  //      a. assigns id to each element
+  //      b. computes the type and template for each element
+  //      c. adds each element to the tree and adds properties to each element
+  //      d. defines constrain functions on each element
+  // 2. responds to itemdropped event and expands the palette or creates a new expression
+  //      a. defines drop handlers for each drop target type
+  //      b. drop handlers build a new expression from the draggable data
+  //      c. drop handlers walk the tree to find the target element to be modified
+  //      d. drop handlers modify the target element
+  // 3. responds to edit events and gets the data for the element being edited
+
+  // elements: module to handle all interaction with knockout: making an expression observable, and traversing the parent contexts
+  // expressions: module to handle expression building: assigns ids, computes types, adds to tree and properties, defines constraints
+  // manipulation: module to handle changes to the expression tree: responds to itemdropped and edit events, defines drop handlers for each drop target type
+
+  // expressions and manipulation both depend on elements
+
+  $(document).on('loadexpressions', function(event, expressions, element) {
+    var viewModel = createExpression(expressions);
+    ko.applyBindings(viewModel, element);
+    $.event.trigger('domchanged');
+    //dump(expressions);
+  });
+
+  $(document).on('itemdropped', function(event, draggable, droppable) {
+    if ($(draggable).data('palette-behavior')) {
+      $.event.trigger('expandpalette', [$('.palette-menu')[0], draggable, droppable]);
+    } else {
+      var dropType = $(droppable).data('drop-type');
+      var source = dropHandlers[dropType](draggable, droppable);
+      if (source && source.editing()) { 
+        $.event.trigger('editing', source);
+      }
+    }
+  });
+
+  $(document).on('edit', function(event, element) {
+    $.event.trigger('editing', dereference(ko.dataFor(element)));
+  });
+
+  var dropHandlers = {
+    'callarg': function(draggable, droppable) {
+      var source = createSource(draggable);
+      var targetArgs = ancestorWithArray(ko.contextFor(droppable), 'call').call().args;
+      var dropPosition = $(droppable).attr('data-drop-position');
+      targetArgs.splice(dropPosition, 0, source);
+      return dereference(source);
+    },
+
+    'defarg': function(draggable, droppable) {
+      var source = createSource(draggable);
+      if (source.hasOwnProperty('ref')) {
+        source = source.ref();
+      }
+      var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'args').args;
+      var dropPosition = $(droppable).attr('data-drop-position');
+      targetArgs.splice(dropPosition, 0, source);
+      return dereference(source);
+    },
+
+    'expression': function(draggable, droppable) {
+      var source = createSource(draggable);
+      var targetExpressions = ancestorWithProperty(ko.contextFor(droppable), 'expressions').expressions;
+      var dropPosition = $(droppable).attr('data-drop-position');
+      targetExpressions.splice(dropPosition, 0, source);
+      return dereference(source);
+    },
+
+    'function-name': function(draggable, droppable) {
+      var source = createSource(draggable);
+      var targetFunction = ancestorWithProperty(ko.contextFor(droppable), 'function')['function']();
+      targetFunction.ref().name(getText(source));
+      return dereference(source);
+    },
+
+    'ref-postfix': function(draggable, droppable) {
+      var target = ko.contextFor(droppable).$parent;
+      // TODO: Handle drop on ref-postfix
+    },
+
+    'sub-postfix': function(draggable, droppable) {
+      var target = ko.contextFor(droppable).$parent;
+      // TODO: Handle drop on sub-postfix
+    }
+  };
+
+  function getText(data) {
+    var dereferenced = dereference(data);
+    if (dereferenced.hasOwnProperty('name')) {
+      return dereferenced.name();
+    }
+    if (dereferenced.hasOwnProperty('value')) {
+      return dereferenced.value();
+    }
+  }
+
+  function createSource(draggable) {
+    var expressionType = $(draggable).data('expression-type');
+    if (expressionType) {
+      return generateExpression(expressionType);
+    }
+    var data = ko.dataFor(draggable);
+    if (typeof data === 'object' && data.hasOwnProperty('literal')) {
+      return createExpression(ko.toJS(data));
+    }
+    return createExpression({ ref: { name: dereference(data).name() } });
+  }
+
+  function dereference(data) {
+    if (data.hasOwnProperty('def')) {
+      return dereference(data.def());
+    }
+    if (data.hasOwnProperty('ref')) {
+      return data.ref();
+    }
+    if (data.hasOwnProperty('literal')) {
+      return data.literal();
+    }
+    if (data.hasOwnProperty('var')) {
+      return data['var']().ref();
+    }
+    if (data.hasOwnProperty('function')) {
+      return data['function']().ref();
+    }
+    return data;
+  }
+
+  function ancestorWithArray(context, type) {
+    if (!context) {
+      return undefined;
+    }
+    if (Array.isArray(context.$data) && context.$parent && context.$parent.hasOwnProperty(type)) {
+      return context.$parent;
+    }
+    return ancestorWithArray(context.$parentContext, type);
+  }
+  
+  function ancestorWithProperty(context, type) {
+    if (!context) {
+      return undefined;
+    }
+    if (typeof context.$data === 'object' && context.$data.hasOwnProperty(type)) {
+      return context.$data;
+    }
+    return ancestorWithProperty(context.$parentContext, type);
+  }
+
+  function generateExpression(type) {
+    var generators = {
+      'function': function() {
+        return { 'function': { 'ref': { name: '', editing: true }, args: [], expressions: [] } };
+      },
+      'var': function() {
+        return { 'var': [ { 'ref': { name: '', editing: true } } ] };
+      },
+      'ref': function() {
+        return { 'ref': { name: '', editing: true } };
+      },
+      'literal': function() {
+        return { 'literal': { type: 'string', value: '', editing: true } };
+      }
+    };
+
+    return createExpression(generators[type]());
+  }
+
   var nextId = 0;
   var tree = (function() {
     var parents = {};
@@ -50,153 +217,6 @@
       }
     };
   })();
-
-  $(document).on('loadexpressions', function(event, expressions, element) {
-    var viewModel = createExpression(expressions);
-    ko.applyBindings(viewModel, element);
-    $.event.trigger('domchanged');
-    //dump(expressions);
-  });
-
-  $(document).on('itemdropped', function(event, draggable, droppable) {
-    if ($(draggable).data('palette-behavior')) {
-      $.event.trigger('expandpalette', [$('.palette-menu')[0], draggable, droppable]);
-    } else {
-      var dropType = $(droppable).data('drop-type');
-      var source = dropHandlers[dropType](draggable, droppable);
-      if (source && source.editing()) { 
-        $.event.trigger('editing', source);
-      }
-    }
-  });
-
-  $(document).on('edit', function(event, element) {
-    $.event.trigger('editing', dereference(ko.dataFor(element)));
-  });
-
-  var dropHandlers = {
-    'callarg': function(draggable, droppable) {
-      var source = createSource(draggable);
-      var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'call').call().args;
-      var dropPosition = $(droppable).attr('data-drop-position');
-      targetArgs.splice(dropPosition, 0, source);
-      return dereference(source);
-    },
-
-    'defarg': function(draggable, droppable) {
-      var source = createSource(draggable);
-      if (source.hasOwnProperty('ref')) {
-        source = source.ref();
-      }
-      var targetArgs = ancestorWithProperty(ko.contextFor(droppable), 'args').args;
-      var dropPosition = $(droppable).attr('data-drop-position');
-      targetArgs.splice(dropPosition, 0, source);
-      return dereference(source);
-    },
-
-    'expression': function(draggable, droppable) {
-      var source = createSource(draggable);
-      var targetExpressions = ancestorWithProperty(ko.contextFor(droppable), 'expressions').expressions;
-      var dropPosition = $(droppable).attr('data-drop-position');
-      targetExpressions.splice(dropPosition, 0, source);
-      return dereference(source);
-    },
-
-    'function-name': function(draggable, droppable) {
-      var source = createSource(draggable);
-      var targetFunction = ancestorWithProperty(ko.contextFor(droppable), 'function')['function']();
-      targetFunction.ref().name(getText(source));
-      return dereference(source);
-    },
-
-    'ref-postfix': function(draggable, droppable) {
-      var target = ko.contextFor(droppable).$parent;
-      // TODO: Handle drop on ref-postfix
-    },
-
-    'sub-postfix': function(draggable, droppable) {
-      var target = ko.contextFor(droppable).$parent;
-      // TODO: Handle drop on sub-postfix
-    }
-  };
-
-  function insertNewExpression(target, property) {
-    var existing = createExpression(ko.toJS(target[property]));
-    target[property](generateExpression(property)[property]);
-    if (existing) {
-      target[property]()()[property](existing);
-    }
-  }
-
-  function getText(data) {
-    var dereferenced = dereference(data);
-    if (dereferenced.hasOwnProperty('name')) {
-      return dereferenced.name();
-    }
-    if (dereferenced.hasOwnProperty('value')) {
-      return dereferenced.value();
-    }
-  }
-
-  function createSource(draggable) {
-    var expressionType = $(draggable).data('expression-type');
-    if (expressionType) {
-      return generateExpression(expressionType);
-    }
-    var data = ko.dataFor(draggable);
-    if (typeof data === 'object' && data.hasOwnProperty('literal')) {
-      return createExpression(ko.toJS(data));
-    }
-    return createExpression({ ref: { name: dereference(data).name() } });
-  }
-
-  function dereference(data) {
-    if (data.hasOwnProperty('def')) {
-      return dereference(data.def());
-    }
-    if (data.hasOwnProperty('ref')) {
-      return data.ref();
-    }
-    if (data.hasOwnProperty('literal')) {
-      return data.literal();
-    }
-    if (data.hasOwnProperty('var')) {
-      return data['var']().ref();
-    }
-    if (data.hasOwnProperty('function')) {
-      return data['function']().ref();
-    }
-    return data;
-  }      
-  
-  function ancestorWithProperty(context, type) {
-    if (!context) {
-      return undefined;
-    }
-    if (typeof context.$data === 'object' && context.$data.hasOwnProperty(type)) {
-      return context.$data;
-    }
-    return ancestorWithProperty(context.$parentContext, type);
-  }
-
-  function generateExpression(type) {
-    var generators = {
-      'function': function() {
-        return { 'function': { 'ref': { name: '', editing: true }, args: [], expressions: [] } };
-      },
-      'var': function() {
-        return { 'var': [ { 'ref': { name: '', editing: true } } ] };
-      },
-      'ref': function() {
-        return { 'ref': { name: '', editing: true } };
-      },
-      'literal': function() {
-        return { 'literal': { type: 'string', value: '', editing: true } };
-      }
-    };
-
-    return createExpression(generators[type]());
-  }
 
   function createExpression(expression) {
     if (!expression) {

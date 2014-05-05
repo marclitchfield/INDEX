@@ -22,6 +22,7 @@ module.exports = function(config) {
       'js/lib/knockout-3.0.0.js',
       'js/lib/lodash.min.js',
       'js/lib/peg-0.8.0.min.js',
+      'js/elements.js',
       'js/expressions.js',
       'js/palette.js',
       'js/parser.js',

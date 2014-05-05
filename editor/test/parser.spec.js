@@ -263,7 +263,7 @@ describe('parser', function() {
   beforeEach(function(done) {
     if (parserInstance === undefined)
     {
-      parser.load('base/js/lib/grammars/javascript.pegjs', function(instance) {
+      INDEX.parser.load('base/js/lib/grammars/javascript.pegjs', function(instance) {
         parserInstance = instance;
         done();
       });

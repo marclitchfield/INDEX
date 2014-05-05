@@ -1,1 +1,1 @@
-f(g(x,y))
+!$(this).hasClass('collapsed')

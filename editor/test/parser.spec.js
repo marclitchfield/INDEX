@@ -213,6 +213,13 @@ describe('parser', function() {
       expect(parseTree['return'].hash.entries[1].value.literal.value).toBe(2);
     });
 
+    it('array', function() {
+      whenParsed('[1,2,3]');
+      expect(parseTree.array.items[0].literal.value).toBe(1);
+      expect(parseTree.array.items[1].literal.value).toBe(2);
+      expect(parseTree.array.items[2].literal.value).toBe(3);
+    })
+
     it('new', function() {
       whenParsed('new F(x)');
       expect(parseTree['new'].call.object.ref.name).toBe('F');
@@ -222,6 +229,21 @@ describe('parser', function() {
     it('empty', function() {
       whenParsed(';');
       expect(parseTree.empty).toBeDefined();
+    });
+
+    it('this', function() {
+      whenParsed('this.that');
+      expect(parseTree.prop.object.this).toBeDefined();
+      expect(parseTree.prop.key.ref.name).toBe('that');
+    });
+
+    it('unary with property and call', function() {
+      whenParsed('!$(this).hasClass("collapsed")');
+      expect(parseTree.unary.op).toBe('!');
+      expect(parseTree.unary.operand.call.object.prop.object.call.object.ref.name).toBe('$');
+      expect(parseTree.unary.operand.call.object.prop.object.call.args[0].this).toBeDefined();
+      expect(parseTree.unary.operand.call.object.prop.key.ref.name).toBe('hasClass');
+      expect(parseTree.unary.operand.call.args[0].literal.value).toBe('collapsed');
     });
   });
 

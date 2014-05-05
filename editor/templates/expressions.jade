@@ -64,6 +64,13 @@ script#args-template(type="text/html")
   // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'callarg', position: $data.length }}
   ///ko
 
+script#array-template(type="text/html")
+  .array
+    // ko foreach: $data.item
+    //   ko template: { name: $data.template }
+    //  /ko
+    ///ko
+
 script#sub-template(type="text/html")
   // ko template: { name: sub().object().template, data: sub().object }
   ///ko
@@ -106,6 +113,11 @@ script#if-template(type="text/html")
       .keyword= 'else'
       .else(data-bind="template: { name: $data['else']().template, data: $data['else']().expressions }")
     ///ko
+
+script#unary-template(type="text/html")
+  .unary.expression(data-bind="with: unary")
+    .op(data-bind="text: op")
+    .operand(data-bind="template: { name: operand().template, data: operand }")
 
 script#binary-template(type="text/html")
   .binary.expression(data-bind="with: binary")
@@ -188,6 +200,9 @@ script#symbol-template(type="text/html")
   ///ko
   span(data-bind="text: name")
   .spacer
+
+script#this-template(type="text/html")
+  .keyword= 'this'
 
 script#drop-horizontal-template(type="text/html")
   .droppable.horizontal(data-bind="attr: { 'data-drop-type': type, 'data-drop-position': $data.position }")

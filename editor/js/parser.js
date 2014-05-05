@@ -32,6 +32,14 @@ INDEX.parser = (function() {
       };
     },
 
+    ArrayExpression: function(expression) {
+      return {
+        array: {
+          items: _.map(expression.elements, function(e) { return translateExpression(e); })
+        }
+      };
+    },
+
     BinaryExpression: function(expression) {
       return {
         binary: {
@@ -155,6 +163,12 @@ INDEX.parser = (function() {
             };
           })
         }
+      };
+    },
+
+    ThisExpression: function(expression) {
+      return {
+        this: {}
       };
     },
 

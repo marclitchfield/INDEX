@@ -75,7 +75,7 @@ body {
   }
 }
 
-.assignment, .if, .binary, .ternary, .call, .new {
+.assignment, .if, .unary, .binary, .ternary, .call, .new {
   display: inline-block;
   color: @expression-color;
   vertical-align: middle;
@@ -86,9 +86,10 @@ body {
   margin-right: .4rem;
   color: @expression-color;
   vertical-align: middle;
+  display: inline-block;
 }
 
-.binary, .ternary, .call, .new, .keyword, .name {
+.unary .operand {
   display: inline-block;
 }
 
@@ -187,7 +188,7 @@ body {
   background: none;
 }
 
-.sub {
+.sub, .array {
   display: inline-block;
   min-height: 1.2rem;
   margin: .2rem 0;
@@ -240,7 +241,7 @@ body {
     display: inline-block;
     vertical-align: middle;
 
-    & > .call, & > .new, & > .binary, & > .ternary {
+    & > .call, & > .new, & > .unary, & > .binary, & > .ternary {
       padding: .1rem .2rem;
     }
   }

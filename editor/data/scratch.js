@@ -1,1 +1,1 @@
-!$(this).hasClass('collapsed')
+return { a: ["x","y"] };

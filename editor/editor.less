@@ -161,6 +161,10 @@ body {
   padding-right: .3rem;
 }
 
+.function > .args {
+  min-width: 1.2rem;
+}
+
 .args > .symbol {
   margin-left: .2rem;
   margin-right: .2rem;
@@ -188,34 +192,34 @@ body {
   background: none;
 }
 
+
 .sub, .array {
   display: inline-block;
   min-height: 1.2rem;
-  margin: .2rem 0;
   vertical-align: middle;
+  background-color: @expression-background-color;
   color: @symbol-color;
-  padding: .2rem 0;
-  border: none;
+  padding: .2rem;
+  box-shadow: 0px 0px 3px 1px @args-box-shadow;
 
-  & > .expression {
-    background-color: @args-background-color;
-  }
-
-  & > div:first-child::before {
+  &::before {
     content: '[';
     font-weight: bold;
     margin-left: .2rem;
     margin-right: .2rem;
   }
 
-  & > div:first-child::after {
+  &::after {
     content: ']';
     font-weight: bold;
     margin-left: .2rem;
     margin-right: .2rem;
   }
-} 
 
+  & .expression {
+    margin: 0 .1rem;
+  } 
+}
 
 .spacer {
   display: inline-block;
@@ -242,7 +246,7 @@ body {
     vertical-align: middle;
 
     & > .call, & > .new, & > .unary, & > .binary, & > .ternary {
-      padding: .1rem .2rem;
+      padding: .1rem 0;
     }
   }
 }

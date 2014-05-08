@@ -245,6 +245,14 @@ describe('parser', function() {
       expect(parseTree.unary.operand.call.object.prop.key.ref.name).toBe('hasClass');
       expect(parseTree.unary.operand.call.args[0].literal.value).toBe('collapsed');
     });
+
+    it('object literal with array', function() {
+      whenParsed('return { a: ["x","y"] }');
+      var entry = parseTree['return'].hash.entries[0];
+      expect(entry.key.ref.name).toBe('a');
+      expect(entry.value.array.items[0].literal.value).toBe('x');
+      expect(entry.value.array.items[1].literal.value).toBe('y');
+    })
   });
 
   describe('parseModule', function() {

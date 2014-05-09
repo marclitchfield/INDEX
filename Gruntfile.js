@@ -20,7 +20,8 @@ module.exports = function(grunt) {
         files: {
           'editor/css/themes/gray.css': 'editor/themes/gray.less',
           'editor/css/themes/green.css': 'editor/themes/green.less',
-          'editor/css/themes/pink.css': 'editor/themes/pink.less'
+          'editor/css/themes/pink.css': 'editor/themes/pink.less',
+          'editor/css/themes/heroku.css': 'editor/themes/heroku.less'
         }
       }
     },

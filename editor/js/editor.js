@@ -63,7 +63,7 @@
     };
   })();
 
-  ko.applyBindings({ themes: ['gray','green','pink'] }, $('.themepick')[0]);
+  ko.applyBindings({ themes: ['gray','green','pink','heroku'] }, $('.themepick')[0]);
 
   $('.themepick').change(function() {
     var theme = $(this).val();

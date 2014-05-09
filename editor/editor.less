@@ -82,7 +82,7 @@ body {
 }
 
 .keyword {
-  font-weight: bold;
+  font-weight: @keyword-font-weight;
   margin-right: .4rem;
   color: @expression-color;
   vertical-align: middle;
@@ -127,7 +127,7 @@ body {
 
 .op {
   display: inline-block;
-  font-weight: bold;
+  font-weight: @operator-font-weight;
   margin: .2rem .4rem;
   color: @operator-color;
 }
@@ -208,14 +208,14 @@ body {
 
   &::before {
     content: '[';
-    font-weight: bold;
+    font-weight: @operator-font-weight;
     margin-left: .2rem;
     margin-right: .2rem;
   }
 
   &::after {
     content: ']';
-    font-weight: bold;
+    font-weight: @operator-font-weight;
     margin-left: .2rem;
     margin-right: .2rem;
   }
@@ -322,12 +322,12 @@ body {
 
   &::before {
     content: '{';
-    font-weight: bold;
+    font-weight: @operator-font-weight;
   }
 
   &::after {
     content: '}';
-    font-weight: bold;
+    font-weight: @operator-font-weight;
   }
 
   .entry {
@@ -463,7 +463,7 @@ body {
 
   .new-keyword {
     background-color: @expressions-background-color;
-    font-weight: bold;
+    font-weight: @keyword-font-weight;
     color: @expression-color;
   }
 
@@ -491,7 +491,7 @@ body {
     float: right;
     margin-right: 1.2rem;
     background-color: #000;
-    font-weight: bold;
+    font-weight: @keyword-font-weight;
     color: #fff;
   }
 }

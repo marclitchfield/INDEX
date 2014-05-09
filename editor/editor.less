@@ -192,8 +192,11 @@ body {
   background: none;
 }
 
+.sub {
+  display: inline-block;
+}
 
-.sub, .array {
+.sub > .key, .array {
   display: inline-block;
   min-height: 1.2rem;
   vertical-align: middle;
@@ -216,8 +219,8 @@ body {
     margin-right: .2rem;
   }
 
-  & .expression {
-    margin: 0 .1rem;
+  & > .expression {
+    margin: 0 .2rem;
   } 
 }
 

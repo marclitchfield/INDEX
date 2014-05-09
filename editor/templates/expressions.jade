@@ -44,7 +44,7 @@ script#ref-template(type="text/html")
     ///ko
 
 script#call-template(type="text/html")
-  .call
+  .call.expression
     // ko template: { name: call().object().template, data: call().object }
     ///ko
     .args
@@ -65,23 +65,24 @@ script#args-template(type="text/html")
   ///ko
 
 script#array-template(type="text/html")
-  .array
+  .array.expression
     // ko foreach: array().items
     //   ko template: { name: $data.template }
     //  /ko
     ///ko
 
 script#sub-template(type="text/html")
-  // ko template: { name: sub().object().template, data: sub().object }
-  ///ko
-  .sub
-    // ko template: { name: sub().key().template, data: sub().key }
+  .sub.expression
+    // ko template: { name: sub().object().template, data: sub().object }
     ///ko
-    // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'sub-postfix' }}
-    ///ko
+    .key
+      // ko template: { name: sub().key().template, data: sub().key }
+      ///ko
+      // ko template: { name: 'drop-vertical-template', data: { mode: 'after', type: 'sub-postfix' }}
+      ///ko
 
 script#prop-template(type="text/html")
-  .prop
+  .prop.expression
     // ko template: { name: prop().object().template, data: prop().object }
     ///ko
     .op= '.'
